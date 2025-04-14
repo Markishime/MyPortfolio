@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Lloyd Cuizon - AI & Tech Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/4.1.17/framer-motion.min.js"></script>
+    <script src="https://unpkg.com/heroicons@2.0.18/dist/heroicons.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;500&family=Orbitron:wght@400;700&family=Exo+2:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            overflow-x: hidden;
+        }
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 3.5s steps(60, end) infinite alternate, blink 0.5s step-end infinite;
+            font-family: 'Roboto Mono', monospace;
+        }
+        @keyframes typing {
+            0% { width: 0 }
+            50% { width: 100% }
+            100% { width: 100% }
+        }
+        @keyframes blink {
+            50% { border-color: transparent }
+        }
+        .circuit-bg {
+            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.1"%3E%3Cpath d="M0 100h50v50h50v-50h50v50h50" stroke="%2300ffaa" stroke-width="5"/%3E%3C/svg%3E');
+            background-repeat: repeat;
+        }
+        .carousel-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            filter: blur(2px);
+        }
+        .carousel-slide.active {
+            opacity: 0.25;
+        }
+        .carousel-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .glass-effect {
+            background: rgba(10, 25, 47, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 255, 170, 0.1);
+        }
+        .glow-on-hover:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.5);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 255, 170, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-move 10s linear infinite;
+        }
+        @keyframes particle-move {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100vh); }
+        }
+        .tooltip {
+            position: relative;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: #0a192f;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 12px;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .profile-img {
+            border-radius: 50%;
+            border: 3px solid rgba(0, 255, 170, 0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full glass-effect z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-cyan-400" style="font-family: 'Exo 2', sans-serif;">MLC</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="hover:text-cyan-400 transition tooltip" style="font-family: 'Exo 2', sans-serif;">
+                    Home
+                    <span class="tooltip-text">Go to Home</span>
+                </a>
+                <a href="#about" class="hover:text-cyan-400 transition tooltip" style="font-family: 'Exo 2', sans-serif;">
+                    About
+                    <span class="tooltip-text">Learn About Me</span>
+                </a>
+                <a href="#projects" class="hover:text-cyan-400 transition tooltip" style="font-family: 'Exo 2', sans-serif;">
+                    Projects
+                    <span class="tooltip-text">View Projects</span>
+                </a>
+                <a href="#skills" class="hover:text-cyan-400 transition tooltip" style="font-family: 'Exo 2', sans-serif;">
+                    Skills
+                    <span class="tooltip-text">My Skillset</span>
+                </a>
+                <a href="#contact" class="hover:text-cyan-400 transition tooltip" style="font-family: 'Exo 2', sans-serif;">
+                    Contact
+                    <span class="tooltip-text">Get in Touch</span>
+                </a>
+            </div>
+            <button class="md:hidden focus:outline-none" onclick="toggleMenu()">
+                <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden glass-effect px-4 py-2">
+            <a href="#home" class="block py-2 hover:text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Home</a>
+            <a href="#about" class="block py-2 hover:text-cyan-400" style="font-family: 'Exo 2', sans-serif;">About</a>
+            <a href="#projects" class="block py-2 hover:text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Projects</a>
+            <a href="#skills" class="block py-2 hover:text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Skills</a>
+            <a href="#contact" class="block py-2 hover:text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-cyan-950 circuit-bg relative">
+        <div class="carousel-container">
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1516321310763-383e7b37e665?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+        </div>
+        <div class="text-center max-w-4xl mx-auto px-4 z-10 glass-effect p-8 rounded-lg glow-on-hover">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Mark Lloyd Cuizon</h1>
+            <p class="typewriter text-xl md:text-2xl mb-6 text-gray-300">Computer Engineer | Full-Stack Developer with Embedded Systems and AI Experience</p>
+            <div class="flex justify-center space-x-4">
+                <a href="#projects" class="inline-block bg-cyan-600 text-white py-3 px-6 rounded-full hover:bg-cyan-700 transition font-semibold glow-on-hover" style="font-family: 'Exo 2', sans-serif;">
+                    Explore My Creations
+                </a>
+                <a href="#contact" class="inline-block bg-transparent border border-cyan-600 text-cyan-600 py-3 px-6 rounded-full hover:bg-cyan-600 hover:text-white transition font-semibold glow-on-hover" style="font-family: 'Exo 2', sans-serif;">
+                    Get in Touch
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 circuit-bg scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-center text-cyan-300" style="font-family: 'Exo 2', sans-serif;">About Me</h2>
+            <div class="glass-effect p-6 rounded-lg glow-on-hover">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="md:w-1/2 flex justify-center">
+                        <img src="mark.jpeg" alt="Mark Lloyd Cuizon" class="profile-img w-48 h-48 md:w-64 md:h-64 object-cover">
+                    </div>
+                    <div class="md:w-1/2">
+                        <p class="text-lg mb-4 text-gray-300" style="font-family: 'Roboto Mono', monospace;">
+                            I'm a Computer Engineer fueled by a passion for AI, IoT, and full-stack development. From crafting intelligent resume analyzers, developing AI-powered Reviewers, making interactive and modern websites and creating a smart team builder to designing secure IoT lock systems, I thrive on building solutions that bridge the physical and digital worlds.
+                        </p>
+                        <p class="text-lg text-gray-300" style="font-family: 'Roboto Mono', monospace;">
+                            I'm driven to push boundaries in tech, contributing to innovative projects while honing my expertise in dynamic, collaborative environments.
+                        </p>
+                    </div>    
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                    <div class="bg-gray-900/50 p-4 rounded-lg text-center border border-cyan-500/30 glow-on-hover">
+                        <h3 class="font-semibold text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Education</h3>
+                        <p class="text-gray-300" style="font-family: 'Roboto Mono', monospace;">BS Computer Engineering<br>Cebu Institute of Technology-University<br>2021-2025</p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-lg text-center border border-cyan-500/30 glow-on-hover">
+                        <h3 class="font-semibold text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Location</h3>
+                        <p class="text-gray-300" style="font-family: 'Roboto Mono', monospace;">Minglanilla, Cebu City</p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-lg text-center border border-cyan-500/30 glow-on-hover">
+                        <h3 class="font-semibold text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Hackathons</h3>
+                        <p class="text-gray-300" style="font-family: 'Roboto Mono', monospace;">CopernicusLAC Panamá<br>Connect AI Solutions<br>Starknet Winter</p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-lg text-center border border-cyan-500/30 glow-on-hover">
+                        <h3 class="font-semibold text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Certificates</h3>
+                        <p class="text-gray-300" style="font-family: 'Roboto Mono', monospace;">13+ in AI, Data, IoT</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+<!-- Projects Section -->
+<section id="projects" class="py-20 circuit-bg scroll-reveal">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Projects</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Cebu Voyage -->
+            <div class="glass-effect p-6 rounded-lg hover:shadow-2xl transition transform hover:-translate-y-2 glow-on-hover">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Cebu Voyage</h3>
+                <p class="text-gray-300 mb-4" style="font-family: 'Roboto Mono', monospace;">A cross-platform travel app built with Flutter and Dart, leveraging Firebase for real-time data.</p>
+                <span class="inline-block bg-cyan-600 text-white py-1 px-3 rounded-full text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">Mobile App</span>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/Markishime/cebuvoyage" target="_blank" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                        View Code
+                        <span class="tooltip-text">GitHub Repo</span>
+                    </a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M3 3a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm2 0h10v14H5V3z" clip-rule="evenodd"></path></svg>
+                        Live Demo
+                        <span class="tooltip-text">Coming Soon</span>
+                    </a>
+                </div>
+            </div>
+            <!-- TravelLink -->
+            <div class="glass-effect p-6 rounded-lg hover:shadow-2xl transition transform hover:-translate-y-2 glow-on-hover">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">TravelLink</h3>
+                <p class="text-gray-300 mb-4" style="font-family: 'Roboto Mono', monospace;">A web platform for booking hotels and rides, built with React.js and Firebase.</p>
+                <span class="inline-block bg-cyan-600 text-white py-1 px-3 rounded-full text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">Web Development</span>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/Markishime/travelink-react" target="_blank" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                        View Code
+                        <span class="tooltip-text">GitHub Repo</span>
+                    </a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M3 3a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm2 0h10v14H5V3z" clip-rule="evenodd"></path></svg>
+                        Live Demo
+                        <span class="tooltip-text">Click Me</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Smart EcoLock -->
+            <div class="glass-effect p-6 rounded-lg hover:shadow-2xl transition transform hover:-translate-y-2 glow-on-hover">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Smart EcoLock</h3>
+                <p class="text-gray-300 mb-4" style="font-family: 'Roboto Mono', monospace;">An IoT door lock with ESP32-S3, RFID, and Firebase for classroom management.</p>
+                <span class="inline-block bg-cyan-600 text-white py-1 px-3 rounded-full text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">Embedded System</span>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/Markishime/smart-ecolock" target="_blank" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                        View Code
+                        <span class="tooltip-text">GitHub Repo</span>
+                    </a>
+                    <a href="https://smart-ecolock-mark-lloyd-cuizons-projects.vercel.app/login" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M3 3a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm2 0h10v14H5V3z" clip-rule="evenodd"></path></svg>
+                        Live Demo
+                        <span class="tooltip-text">Click Me</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Smart Salary -->
+            <div class="glass-effect p-6 rounded-lg hover:shadow-2xl transition transform hover:-translate-y-2 glow-on-hover">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Smart Salary</h3>
+                <p class="text-gray-300 mb-4" style="font-family: 'Roboto Mono', monospace;">A Flask app using Llama3.2 LLM to analyze resumes and estimate salaries.</p>
+                <span class="inline-block bg-cyan-600 text-white py-1 px-3 rounded-full text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">AI/ML</span>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/Markishime/SmartSalary" target="_blank" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                        View Code
+                        <span class="tooltip-text">GitHub Repo</span>
+                    </a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M3 3a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm2 0h10v14H5V3z" clip-rule="evenodd"></path></svg>
+                        Live Demo
+                        <span class="tooltip-text">Coming Soon</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Team Builder -->
+            <div class="glass-effect p-6 rounded-lg hover:shadow-2xl transition transform hover:-translate-y-2 glow-on-hover">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Team Builder</h3>
+                <p class="text-gray-300 mb-4" style="font-family: 'Roboto Mono', monospace;">A Streamlit app for job role optimization with Llama3.2 LLM.</p>
+                <span class="inline-block bg-cyan-600 text-white py-1 px-3 rounded-full text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">AI/ML</span>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/Markishime/Ollama_TeamBuilder" target="_blank" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                        View Code
+                        <span class="tooltip-text">GitHub Repo</span>
+                    </a>
+                    <a href="https://teambuilder.streamlit.app/" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M3 3a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm2 0h10v14H5V3z" clip-rule="evenodd"></path></svg>
+                        Live Demo
+                        <span class="tooltip-text">Click Me</span>
+                    </a>
+                </div>
+            </div>
+            <!-- LockMate -->
+            <div class="glass-effect p-6 rounded-lg hover:shadow-2xl transition transform hover:-translate-y-2 glow-on-hover">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">LockMate</h3>
+                <p class="text-gray-300 mb-4" style="font-family: 'Roboto Mono', monospace;">An IoT bicycle lock system with ESP32 and real-time tracking.</p>
+                <span class="inline-block bg-cyan-600 text-white py-1 px-3 rounded-full text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">Embedded System</span>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/markcuizon/lockmate" target="_blank" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                        View Code
+                        <span class="tooltip-text">GitHub Repo</span>
+                    </a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M3 3a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm2 0h10v14H5V3z" clip-rule="evenodd"></path></svg>
+                        Live Demo
+                        <span class="tooltip-text">Coming Soon</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Smart Reviewer -->
+            <div class="glass-effect p-6 rounded-lg hover:shadow-2xl transition transform hover:-translate-y-2 glow-on-hover">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Smart Reviewer</h3>
+                <p class="text-gray-300 mb-4" style="font-family: 'Roboto Mono', monospace;">A Flask web application using Llama3.2 LLM to analyze PDF lesson files, generate summaries, and create Q&A pairs for effective study review.</p>
+                <span class="inline-block bg-cyan-600 text-white py-1 px-3 rounded-full text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">AI/ML</span>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/Markishime/SmartReviewer" target="_blank" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                        View Code
+                        <span class="tooltip-text">GitHub Repo</span>
+                    </a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M3 3a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm2 0h10v14H5V3z" clip-rule="evenodd"></path></svg>
+                        Live Demo
+                        <span class="tooltip-text">Click Me</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Jun Travelcations -->
+            <div class="glass-effect p-6 rounded-lg hover:shadow-2xl transition transform hover:-translate-y-2 glow-on-hover">
+                <h3 class="text-xl font-semibold mb-2 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Jun Travelcations</h3>
+                <p class="text-gray-300 mb-4" style="font-family: 'Roboto Mono', monospace;">A travel app focused on South Cebu, featuring boat rentals and accommodations.</p>
+                <span class="inline-block bg-cyan-600 text-white py-1 px-3 rounded-full text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">Web Development</span>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/CIT-SD2/travel-web-app" target="_blank" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+                        View Code
+                        <span class="tooltip-text">GitHub Repo</span>
+                    </a>
+                    <a href="#" class="text-cyan-400 hover:text-cyan-300 flex items-center tooltip" style="font-family: 'Roboto Mono', monospace;">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M3 3a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm2 0h10v14H5V3z" clip-rule="evenodd"></path></svg>
+                        Live Demo
+                        <span class="tooltip-text">Coming Soon</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 circuit-bg scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-effect p-6 rounded-lg glow-on-hover">
+                    <h3 class="text-xl font-semibold mb-4 text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Programming Languages</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center tooltip">
+                            <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span style="font-family: 'Roboto Mono', monospace;">Python</span>
+                            <span class="tooltip-text">AI & Backend</span>
+                        </li>
+                        <li class="flex items-center tooltip">
+                            <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span style="font-family: 'Roboto Mono', monospace;">C/C++, C#</span>
+                            <span class="tooltip-text">Embedded Systems</span>
+                        </li>
+                        <li class="flex items-center tooltip">
+                            <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span style="font-family: 'Roboto Mono', monospace;">JavaScript</span>
+                            <span class="tooltip-text">Web Development</span>
+                        </li>
+                        <li class="flex items-center tooltip">
+                            <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span style="font-family: 'Roboto Mono', monospace;">Dart</span>
+                            <span class="tooltip-text">Mobile Apps</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="glass-effect p-6 rounded-lg glow-on-hover">
+                    <h3 class="text-xl font-semibold mb-4 text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Frameworks & Tools</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center tooltip">
+                            <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span style="font-family: 'Roboto Mono', monospace;">Flutter</span>
+                            <span class="tooltip-text">Cross-Platform</span>
+                        </li>
+                        <li class="flex items-center tooltip">
+                            <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span style="font-family: 'Roboto Mono', monospace;">React.js</span>
+                            <span class="tooltip-text">Frontend</span>
+                        </li>
+                        <li class="flex items-center tooltip">
+                            <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span style="font-family: 'Roboto Mono', monospace;">Flask</span>
+                            <span class="tooltip-text">Backend</span>
+                        </li>
+                        <li class="flex items-center tooltip">
+                            <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span style="font-family: 'Roboto Mono', monospace;">Firebase</span>
+                            <span class="tooltip-text">Cloud</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="glass-effect p-6 rounded-lg glow-on-hover">
+                    <div class="relative">
+                        <h3 class="text-xl font-semibold mb-4 text-cyan-400" style="font-family: 'Exo 2', sans-serif;">Microcontrollers</h3>
+                        <ul class="space-y-2">
+                            <li class="flex items-center tooltip">
+                                <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                <span style="font-family: 'Roboto Mono', monospace;">ESP32</span>
+                                <span class="tooltip-text">IoT</span>
+                            </li>
+                            <li class="flex items-center tooltip">
+                                <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                <span style="font-family: 'Roboto Mono', monospace;">Arduino Uno</span>
+                                <span class="tooltip-text">Prototyping</span>
+                            </li>
+                            <li class="flex items-center tooltip">
+                                <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                <span style="font-family: 'Roboto Mono', monospace;">Sensors (RFID, LDR)</span>
+                                <span class="tooltip-text">Hardware</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 circuit-bg scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-cyan-300" style="font-family: 'Exo 2', sans-serif;">Connect with Me</h2>
+            <p class="text-lg mb-6 text-gray-300" style="font-family: 'Roboto Mono', monospace;">Ready to collaborate on cutting-edge tech projects? Let's talk!</p>
+            <div class="flex justify-center space-x-6 flex-wrap">
+                <a href="cmark7781@gmail.com" class="flex items-center text-cyan-400 hover:text-cyan-300 m-2 tooltip" style="font-family: 'Roboto Mono', monospace;">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                    cmark7781@gmail.com
+                    <span class="tooltip-text">Send Email</span>
+                </a>
+                <a href="tel:+639260853647" class="flex items-center text-cyan-400 hover:text-cyan-300 m-2 tooltip" style="font-family: 'Roboto Mono', monospace;">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                    +639260853647
+                    <span class="tooltip-text">Call Me</span>
+                </a>
+                <a href="https://www.linkedin.com/in/mark-lloyd-cuizon-06a74820a/" target="_blank" class="flex items-center text-cyan-400 hover:text-cyan-300 m-2 tooltip" style="font-family: 'Roboto Mono', monospace;">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path></svg>
+                    LinkedIn
+                    <span class="tooltip-text">Connect on LinkedIn</span>
+                </a>
+                <a href="https://github.com/Markishime" target="_blank" class="flex items-center text-cyan-400 hover:text-cyan-300 m-2 tooltip" style="font-family: 'Roboto Mono', monospace;">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.66-.22.66-.49v-1.73c-2.78.61-3.36-1.34-3.36-1.34-.46-1.16-1.12-1.47-1.12-1.47-.91-.62.07-.61.07-.61 1.01.07 1.54 1.04 1.54 1.04.89 1.53 2.34 1.09 2.91.83.09-.62.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.58 9.58 0 0 1 12 6.82c.85 0 1.71.11 2.51.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.94.68 1.9v2.82c0 .27.16.58.67.49A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10z"></path></svg>
+                    GitHub
+                    <span class="tooltip-text">View GitHub</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-effect py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-300" style="font-family: 'Roboto Mono', monospace;">© 2025 Mark Lloyd Cuizon. Built for the Future.</p>
+            <div class="mt-4 flex justify-center space-x-4">
+                <button onclick="toggleTheme()" class="text-cyan-400 hover:text-cyan-300" style="font-family: 'Roboto Mono', monospace;">
+                    <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Toggle Theme
+                </button>
+                <a href="#home" class="text-cyan-400 hover:text-cyan-300" style="font-family: 'Roboto Mono', monospace;">
+                    <svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                    Back to Top
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Interactive Hover Effects
+        document.querySelectorAll('.hover\\:shadow-2xl').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.background = 'rgba(0, 255, 170, 0.1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.background = 'rgba(10, 25, 47, 0.7)';
+            });
+        });
+
+        // Carousel Logic
+        const slides = document.querySelectorAll('.carousel-slide');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        showSlide(currentSlide);
+        setInterval(nextSlide, 5000);
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.scroll-reveal');
+        const revealOnScroll = () => {
+            revealElements.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // Particle Animation
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDuration = Math.random() * 5 + 5 + 's';
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 10000);
+        }
+        setInterval(createParticle, 300);
+
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            if (document.body.classList.contains('light-theme')) {
+                document.body.style.background = 'linear-gradient(135deg, #e0e7ff 0%, #c3dafe 100%)';
+                document.querySelectorAll('.glass-effect').forEach(el => {
+                    el.style.background = 'rgba(255, 255, 255, 0.7)';
+                    el.style.border = '1px solid rgba(0, 255, 170, 0.3)';
+                });
+                document.querySelectorAll('.text-gray-300').forEach(el => {
+                    el.style.color = '#1f2937';
+                });
+                document.querySelectorAll('.text-cyan-300').forEach(el => {
+                    el.style.color = '#0891b2';
+                });
+                document.querySelectorAll('.text-cyan-400').forEach(el => {
+                    el.style.color = '#06b6d4';
+                });
+                document.querySelectorAll('.bg-cyan-600').forEach(el => {
+                    el.style.backgroundColor = '#0891b2';
+                });
+                document.querySelectorAll('.hover\\:text-cyan-300').forEach(el => {
+                    el.classList.add('hover:text-cyan-500');
+                });
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%)';
+                document.querySelectorAll('.glass-effect').forEach(el => {
+                    el.style.background = 'rgba(10, 25, 47, 0.7)';
+                    el.style.border = '1px solid rgba(0, 255, 170, 0.3)';
+                });
+                document.querySelectorAll('.text-gray-300').forEach(el => {
+                    el.style.color = '#d1d5db';
+                });
+                document.querySelectorAll('.text-cyan-300').forEach(el => {
+                    el.style.color = '#67e8f9';
+                });
+                document.querySelectorAll('.text-cyan-400').forEach(el => {
+                    el.style.color = '#22d3ee';
+                });
+                document.querySelectorAll('.bg-cyan-600').forEach(el => {
+                    el.style.backgroundColor = '#0891b2';
+                });
+                document.querySelectorAll('.hover\\:text-cyan-300').forEach(el => {
+                    el.classList.remove('hover:text-cyan-500');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
