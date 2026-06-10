@@ -89,6 +89,26 @@ export const siteConfig = {
       gradient: "from-rose-500/20 to-pink-500/20",
       icon: "🤖",
     },
+    {
+      title: "Suretech Website",
+      description:
+        "A modern, AI-powered company website for Suretech Network and Data Solution — a trusted ICT provider in Cebu, Philippines. Features a 24/7 Gemini AI chatbot, Firebase-backed contact and inquiry forms, SEO optimization, and smooth Framer Motion animations.",
+      tag: "Web + AI/ML",
+      github: "https://github.com/Markishime/suretech",
+      live: "https://suretech-beta.vercel.app/",
+      gradient: "from-teal-500/20 to-cyan-500/20",
+      icon: "🌐",
+    },
+    {
+      title: "MasbateToday",
+      description:
+        "A full-featured tourism and news platform for Masbate Province, Philippines. Includes local news, travel destinations with booking (GCash, Stripe, cash), a Gemini AI chatbot, real-time officials directory, weather widget, video/photo gallery, and a Firebase-powered admin dashboard.",
+      tag: "Web + AI/ML",
+      github: "https://github.com/Markishime/MasbateToday",
+      live: "https://masbatetoday.vercel.app/",
+      gradient: "from-sky-500/20 to-blue-500/20",
+      icon: "🏝️",
+    },
   ],
   skills: {
     languages: [
