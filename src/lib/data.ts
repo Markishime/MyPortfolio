@@ -45,7 +45,7 @@ export const siteConfig = {
         "All-in-one fitness app: Train Smarter. Move Better. Live Stronger. Replaces separate workout, nutrition, GPS, progress, and social apps with one product sharing the same user data. Deep onboarding (body stats, goals, experience, equipment, schedule, injuries, diet, sleep, stress) feeds a 52-week periodized engine with progressive overload, equipment-aware swaps, rest timers, and XP. Kine, a Gemini-powered AI coach, designs programs, answers with your history, and speaks hands-free. Nutrition covers macros, water, and AI meal photo scanning. Live GPS for runs, rides, and walks with Kalman-filtered tracking. Progress, readiness, streaks, and social (feed, DMs, stories, workout sharing). React + TanStack + Firebase web app; Android via Capacitor.",
       tag: "Fitness + AI",
       github: "https://github.com/Markishime/Kinestra",
-      live: null,
+      live: "https://kinestra.web.app/",
       gradient: "from-orange-500/25 to-rose-500/20",
       icon: "💪",
     },
