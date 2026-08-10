@@ -13,9 +13,12 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 220]);
+  const opacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.55], [1, 0.88]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.55], [0, 8]);
+  const blur = useTransform(scrollYProgress, [0, 0.55], [0, 6]);
+  const filter = useTransform(blur, (b) => `blur(${b}px)`);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -30,32 +33,43 @@ export default function Hero() {
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* 3D Particle Background */}
+      {/* Cinematic 3D stage */}
       <ParticleField />
 
-      {/* Gradient Orbs */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[128px] animate-pulse-glow" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyber/10 rounded-full blur-[128px] animate-pulse-glow delay-1000" />
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-violet-500/5 rounded-full blur-[100px] animate-float" />
+      {/* Atmospheric light volumes */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[15%] left-[18%] w-[28rem] h-[28rem] bg-accent/12 rounded-full blur-[140px] animate-pulse-glow" />
+        <div className="absolute bottom-[12%] right-[14%] w-[26rem] h-[26rem] bg-cyber/10 rounded-full blur-[130px] animate-pulse-glow [animation-delay:1.2s]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-violet-500/8 rounded-full blur-[110px] animate-float" />
+        <div className="hero-light-beam absolute top-0 left-1/2 -translate-x-1/2 w-[min(90vw,720px)] h-full opacity-40" />
       </div>
 
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 dot-grid opacity-30 z-0" />
+      {/* Perspective floor cue */}
+      <div className="absolute inset-x-0 bottom-0 h-1/2 z-[1] pointer-events-none perspective-grid opacity-40" />
 
-      {/* Content */}
+      {/* Content — camera dolly on scroll */}
       <motion.div
-        style={{ y, opacity, scale }}
+        style={{
+          y,
+          opacity,
+          scale,
+          rotateX,
+          filter,
+          transformPerspective: 1200,
+        }}
         className="relative z-10 text-center max-w-5xl mx-auto px-6"
       >
         {/* Status Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20, z: -40 }}
+          animate={{ opacity: 1, y: 0, z: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 shadow-[0_0_30px_rgba(0,255,170,0.08)]"
         >
-          <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-60" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
+          </span>
           <span className="text-sm font-mono text-accent/80">
             Available for opportunities
           </span>
@@ -63,13 +77,17 @@ export default function Hero() {
 
         {/* Main Title */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 48 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
           <h1 className="text-5xl sm:text-7xl lg:text-8xl font-display font-bold tracking-tight mb-4 leading-[0.95]">
-            <span className="block text-white">Mark Lloyd</span>
-            <span className="block gradient-text mt-2">Cuizon</span>
+            <span className="block text-white cinematic-title-shadow">
+              Mark Lloyd
+            </span>
+            <span className="block gradient-text mt-2 cinematic-title-glow">
+              Cuizon
+            </span>
           </h1>
         </motion.div>
 
@@ -114,10 +132,11 @@ export default function Hero() {
         >
           <motion.a
             href="#projects"
-            whileHover={{ scale: 1.05, y: -2 }}
+            whileHover={{ scale: 1.05, y: -3 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative px-8 py-4 rounded-full bg-accent text-cyber-dark font-semibold text-sm overflow-hidden transition-shadow hover:shadow-[0_0_30px_rgba(0,255,170,0.3)]"
+            className="group relative px-8 py-4 rounded-full bg-accent text-cyber-dark font-semibold text-sm overflow-hidden transition-shadow hover:shadow-[0_0_40px_rgba(0,255,170,0.4)]"
           >
+            <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             <span className="relative z-10 flex items-center gap-2">
               Explore My Work
               <svg
@@ -138,16 +157,16 @@ export default function Hero() {
 
           <motion.a
             href="#contact"
-            whileHover={{ scale: 1.05, y: -2 }}
+            whileHover={{ scale: 1.05, y: -3 }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 rounded-full border border-accent/30 text-accent text-sm font-semibold hover:bg-accent/10 transition-all hover:border-accent/50 hover:shadow-[0_0_20px_rgba(0,255,170,0.1)]"
+            className="px-8 py-4 rounded-full border border-accent/30 text-accent text-sm font-semibold hover:bg-accent/10 transition-all hover:border-accent/50 hover:shadow-[0_0_28px_rgba(0,255,170,0.15)] backdrop-blur-sm"
           >
             Get in Touch
           </motion.a>
         </motion.div>
       </motion.div>
 
-      {/* Scroll Indicator — positioned relative to the section */}
+      {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -162,7 +181,7 @@ export default function Hero() {
           <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">
             Scroll
           </span>
-          <div className="w-5 h-8 rounded-full border border-gray-600 flex justify-center pt-1.5">
+          <div className="w-5 h-8 rounded-full border border-gray-600/80 flex justify-center pt-1.5 shadow-[0_0_20px_rgba(0,255,170,0.1)]">
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{

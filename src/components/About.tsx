@@ -30,9 +30,10 @@ const itemVariants = {
 
 export default function About() {
   return (
-    <section id="about" className="relative py-32 overflow-hidden">
+    <section id="about" className="relative py-32 overflow-hidden section-cinematic">
       {/* Background */}
       <div className="absolute inset-0 dot-grid opacity-20" />
+      <div className="absolute inset-0 cinematic-depth-fog pointer-events-none opacity-60" />
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">

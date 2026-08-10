@@ -25,12 +25,13 @@ export default function SectionHeading({
       className={cn("text-center mb-16", className)}
     >
       {badge && (
-        <span className="inline-block px-4 py-1.5 rounded-full text-xs font-mono text-accent/80 glass mb-4 uppercase tracking-widest">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono text-accent/80 glass mb-4 uppercase tracking-widest shadow-[0_0_24px_rgba(0,255,170,0.08)]">
+          <span className="w-1 h-1 rounded-full bg-accent animate-pulse" />
           {badge}
         </span>
       )}
       <h2 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold tracking-tight">
-        <span className="gradient-text">{title}</span>
+        <span className="gradient-text cinematic-title-glow">{title}</span>
       </h2>
       {subtitle && (
         <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">

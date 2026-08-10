@@ -53,12 +53,13 @@ const socialLinks = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="relative py-32 overflow-hidden">
+    <section id="contact" className="relative py-32 overflow-hidden section-cinematic">
       <div className="absolute inset-0 dot-grid opacity-20" />
+      <div className="absolute inset-0 cinematic-depth-fog pointer-events-none" />
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       {/* Gradient orbs */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[200px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[200px] animate-pulse-glow" />
 
       <div className="max-w-4xl mx-auto px-6 lg:px-8 relative">
         <SectionHeading

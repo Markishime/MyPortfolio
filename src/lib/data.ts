@@ -30,6 +30,26 @@ export const siteConfig = {
   ],
   projects: [
     {
+      title: "Orbit AI",
+      description:
+        "A personal life OS that brings everyday planning into one hub: tasks, habits, bills, meds, notes, goals, projects, focus work, and an AI planning assistant. Built as a single HTML/JavaScript PWA with Capacitor packaging for Google Play and the App Store. Firebase Auth, Cloud Firestore sync, and Cloud Storage power accounts and data; demo mode with localStorage works when Firebase is not configured. Offline-ready via Firestore persistence plus a localStorage mirror. Architecture: Orbit AI.dc.html UI over a shared OrbitBackend layer for auth, database, and storage.",
+      tag: "Life OS + AI",
+      github: "https://github.com/Markishime/Orbit-AI",
+      live: null,
+      gradient: "from-indigo-500/25 to-cyan-500/20",
+      icon: "🛰️",
+    },
+    {
+      title: "Kinestra",
+      description:
+        "All-in-one fitness app: Train Smarter. Move Better. Live Stronger. Replaces separate workout, nutrition, GPS, progress, and social apps with one product sharing the same user data. Deep onboarding (body stats, goals, experience, equipment, schedule, injuries, diet, sleep, stress) feeds a 52-week periodized engine with progressive overload, equipment-aware swaps, rest timers, and XP. Kine, a Gemini-powered AI coach, designs programs, answers with your history, and speaks hands-free. Nutrition covers macros, water, and AI meal photo scanning. Live GPS for runs, rides, and walks with Kalman-filtered tracking. Progress, readiness, streaks, and social (feed, DMs, stories, workout sharing). React + TanStack + Firebase web app; Android via Capacitor.",
+      tag: "Fitness + AI",
+      github: "https://github.com/Markishime/Kinestra",
+      live: null,
+      gradient: "from-orange-500/25 to-rose-500/20",
+      icon: "💪",
+    },
+    {
       title: "Smart EcoLock",
       description:
         "An IoT-based classroom door lock using ESP32-S3 with RFID access control, LDR-based auto-lighting, weight-sensor attendance tracking, and a real-time React.js admin dashboard with Firebase authentication and OTA updates.",
@@ -88,16 +108,6 @@ export const siteConfig = {
       live: "https://simplabots.com/",
       gradient: "from-rose-500/20 to-pink-500/20",
       icon: "🤖",
-    },
-    {
-      title: "Suretech Website",
-      description:
-        "A modern, AI-powered company website for Suretech Network and Data Solution — a trusted ICT provider in Cebu, Philippines. Features a 24/7 Gemini AI chatbot, Firebase-backed contact and inquiry forms, SEO optimization, and smooth Framer Motion animations.",
-      tag: "Web + AI/ML",
-      github: "https://github.com/Markishime/suretech",
-      live: "https://suretech-beta.vercel.app/",
-      gradient: "from-teal-500/20 to-cyan-500/20",
-      icon: "🌐",
     },
     {
       title: "MasbateToday",

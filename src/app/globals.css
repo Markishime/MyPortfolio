@@ -85,11 +85,17 @@ body {
 }
 
 .glass-card:hover {
-  border-color: rgba(0, 255, 170, 0.25);
+  border-color: rgba(0, 255, 170, 0.28);
   box-shadow:
-    0 8px 40px rgba(0, 255, 170, 0.08),
+    0 16px 48px rgba(0, 0, 0, 0.35),
+    0 0 36px rgba(0, 255, 170, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transform: translateY(-4px);
+  transform: translateY(-6px) scale(1.01);
+}
+
+/* Tilt-managed cards: skip CSS transform so 3D tilt owns motion */
+.glass-card.cinematic-card:hover {
+  transform: none;
 }
 
 /* ===== Gradient Text ===== */
@@ -288,4 +294,137 @@ body {
 /* ===== Hide for GSAP ===== */
 .gsap-hidden {
   visibility: hidden;
+}
+
+/* ===== Cinematic 3D Stage ===== */
+.cinematic-stage {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.cinematic-vignette {
+  background: radial-gradient(
+    ellipse 75% 70% at 50% 45%,
+    transparent 35%,
+    rgba(6, 11, 20, 0.55) 100%
+  );
+}
+
+.cinematic-scanlines {
+  opacity: 0.035;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.35) 2px,
+    rgba(0, 0, 0, 0.35) 4px
+  );
+  mix-blend-mode: overlay;
+}
+
+.cinematic-depth-fog {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 255, 170, 0.05), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(34, 211, 238, 0.04), transparent 50%),
+    linear-gradient(180deg, transparent 0%, rgba(6, 11, 20, 0.4) 100%);
+}
+
+.perspective-grid {
+  background-image:
+    linear-gradient(rgba(0, 255, 170, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 170, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 70%, transparent 100%);
+  transform: perspective(600px) rotateX(58deg) scale(1.4);
+  transform-origin: center bottom;
+}
+
+.hero-light-beam {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 170, 0.08) 0%,
+    rgba(34, 211, 238, 0.03) 35%,
+    transparent 70%
+  );
+  clip-path: polygon(38% 0%, 62% 0%, 100% 100%, 0% 100%);
+  filter: blur(2px);
+}
+
+.cinematic-title-shadow {
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.3),
+    0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.cinematic-title-glow {
+  filter: drop-shadow(0 0 28px rgba(0, 255, 170, 0.25));
+}
+
+.cinematic-card {
+  transform-style: preserve-3d;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.25),
+    0 20px 50px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.cinematic-card:hover {
+  transform: none; /* tilt handled by TiltCard */
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.35),
+    0 0 40px rgba(0, 255, 170, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.cinematic-card-featured {
+  border-color: rgba(0, 255, 170, 0.14);
+  background: linear-gradient(
+    145deg,
+    rgba(20, 40, 70, 0.7),
+    rgba(10, 22, 42, 0.5)
+  );
+}
+
+.cinematic-border-glow {
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(0, 255, 170, 0.35) 50%,
+    transparent 80%
+  );
+  filter: blur(1px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Section cinematic entrance helpers */
+.section-cinematic {
+  position: relative;
+  isolation: isolate;
+}
+
+.section-cinematic::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 50% 30% at 50% 0%,
+    rgba(0, 255, 170, 0.04),
+    transparent 70%
+  );
+  z-index: 0;
+}
+
+/* Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-scanlines,
+  .hero-light-beam {
+    display: none;
+  }
+
+  .glass-card:hover {
+    transform: none;
+  }
 }

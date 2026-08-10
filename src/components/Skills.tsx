@@ -24,13 +24,14 @@ const itemVariants = {
 
 export default function Skills() {
   return (
-    <section id="skills" className="relative py-32 overflow-hidden">
+    <section id="skills" className="relative py-32 overflow-hidden section-cinematic">
       <div className="absolute inset-0 dot-grid opacity-20" />
+      <div className="absolute inset-0 cinematic-depth-fog pointer-events-none opacity-50" />
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       {/* Floating Orbs */}
-      <div className="absolute top-1/3 right-0 w-72 h-72 bg-accent/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/3 left-0 w-72 h-72 bg-cyber/5 rounded-full blur-[120px]" />
+      <div className="absolute top-1/3 right-0 w-72 h-72 bg-accent/5 rounded-full blur-[120px] animate-pulse-glow" />
+      <div className="absolute bottom-1/3 left-0 w-72 h-72 bg-cyber/5 rounded-full blur-[120px] animate-float" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
         <SectionHeading
