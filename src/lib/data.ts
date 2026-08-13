@@ -149,7 +149,7 @@ export const siteConfig = {
       lanes: ["ai", "web"],
       stack: ["Next.js", "Firebase", "Gemini", "Stripe"],
       github: "https://github.com/Markishime/MasbateToday",
-      live: "https://masbatetoday.vercel.app/",
+      live: "https://masbatetoday.web.app/",
       gradient: "from-sky-500/20 to-blue-500/20",
       icon: "🏝️",
       image: "/media/masbate.jpg",
