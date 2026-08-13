@@ -14,13 +14,19 @@ interface TiltCardProps {
   children: ReactNode;
   className?: string;
   intensity?: number;
+  hoverScale?: number;
   glare?: boolean;
+}
+
+function isInteractiveTarget(target: EventTarget | null) {
+  return target instanceof Element && Boolean(target.closest("a, button, [role='button']"));
 }
 
 export default function TiltCard({
   children,
   className,
-  intensity = 12,
+  intensity = 4,
+  hoverScale = 1.008,
   glare = true,
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -29,7 +35,7 @@ export default function TiltCard({
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
 
-  const springConfig = { stiffness: 180, damping: 22, mass: 0.6 };
+  const springConfig = { stiffness: 140, damping: 28, mass: 0.8 };
   const rx = useSpring(
     useTransform(my, [-0.5, 0.5], [intensity, -intensity]),
     springConfig
@@ -50,6 +56,8 @@ export default function TiltCard({
   );
 
   const onMove = (e: MouseEvent) => {
+    // Keep the card still once the pointer is over a CTA so the hit target does not slide away.
+    if (isInteractiveTarget(e.target)) return;
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -61,7 +69,7 @@ export default function TiltCard({
 
   const onEnter = () => {
     setHovering(true);
-    scaleTarget.set(1.025);
+    scaleTarget.set(hoverScale);
   };
 
   const onLeave = () => {

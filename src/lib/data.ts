@@ -38,6 +38,8 @@ export const siteConfig = {
       live: null,
       gradient: "from-indigo-500/25 to-cyan-500/20",
       icon: "🛰️",
+      image: "/media/orbit-ai.jpg",
+      video: "/media/orbit-ai.mp4",
     },
     {
       title: "Kinestra",
@@ -48,6 +50,8 @@ export const siteConfig = {
       live: "https://kinestra.web.app/",
       gradient: "from-orange-500/25 to-rose-500/20",
       icon: "💪",
+      image: "/media/kinestra.jpg",
+      video: "/media/kinestra.mp4",
     },
     {
       title: "Smart EcoLock",
@@ -58,6 +62,8 @@ export const siteConfig = {
       live: null,
       gradient: "from-emerald-500/20 to-cyan-500/20",
       icon: "🔒",
+      image: "/media/ecolock.jpg",
+      video: "/media/ecolock.mp4",
     },
     {
       title: "AGS AI Assistant",
@@ -68,6 +74,8 @@ export const siteConfig = {
       live: "https://cropdrive.ai",
       gradient: "from-violet-500/20 to-fuchsia-500/20",
       icon: "🌿",
+      image: "/media/cropdrive.jpg",
+      video: null,
     },
     {
       title: "Team Builder",
@@ -78,6 +86,8 @@ export const siteConfig = {
       live: "https://mcteambuilder.streamlit.app/",
       gradient: "from-amber-500/20 to-orange-500/20",
       icon: "👥",
+      image: "/media/teambuilder.jpg",
+      video: null,
     },
     {
       title: "LockMate",
@@ -88,6 +98,8 @@ export const siteConfig = {
       live: null,
       gradient: "from-blue-500/20 to-indigo-500/20",
       icon: "🚲",
+      image: "/media/lockmate.jpg",
+      video: "/media/lockmate.mp4",
     },
     {
       title: "CropDrive AI",
@@ -98,6 +110,8 @@ export const siteConfig = {
       live: "https://cropdrive.ai",
       gradient: "from-green-500/20 to-teal-500/20",
       icon: "🌾",
+      image: "/media/cropdrive.jpg",
+      video: null,
     },
     {
       title: "Simplabots",
@@ -108,6 +122,8 @@ export const siteConfig = {
       live: "https://simplabots.com/",
       gradient: "from-rose-500/20 to-pink-500/20",
       icon: "🤖",
+      image: "/media/simplabots.jpg",
+      video: null,
     },
     {
       title: "MasbateToday",
@@ -118,6 +134,8 @@ export const siteConfig = {
       live: "https://masbatetoday.vercel.app/",
       gradient: "from-sky-500/20 to-blue-500/20",
       icon: "🏝️",
+      image: "/media/masbate.jpg",
+      video: null,
     },
   ],
   skills: {

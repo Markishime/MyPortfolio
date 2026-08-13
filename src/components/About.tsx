@@ -57,15 +57,13 @@ export default function About() {
             className="bento-item-wide glass-card rounded-3xl p-8 flex flex-col sm:flex-row items-center gap-8"
           >
             <div className="relative shrink-0">
-              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-gradient-to-br from-accent/20 to-cyber/20 flex items-center justify-center overflow-hidden border border-accent/20">
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-gradient-to-br from-accent/20 to-cyber/20 flex items-center justify-center overflow-hidden border border-accent/20 shadow-[0_0_28px_rgba(0,255,170,0.12)]">
                 <img
-                  src="/mark.jpeg"
+                  src="/media/mark-cinematic.jpg"
                   alt="Mark Lloyd Cuizon"
-                  className="w-full h-full object-cover rounded-2xl"
+                  className="w-full h-full object-cover object-top rounded-2xl"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                    (e.target as HTMLImageElement).parentElement!.innerHTML =
-                      '<span class="text-5xl">👨‍💻</span>';
+                    (e.target as HTMLImageElement).src = "/mark.jpeg";
                   }}
                 />
               </div>
@@ -124,9 +122,15 @@ export default function About() {
           {/* Location Card */}
           <motion.div
             variants={itemVariants}
-            className="glass-card rounded-3xl p-6 flex flex-col justify-between"
+            className="glass-card rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden"
           >
-            <div className="w-10 h-10 rounded-xl bg-cyber/10 flex items-center justify-center mb-4">
+            <img
+              src="/media/cebu-night.jpg"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-25 cinematic-kenburns"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#071018] via-[#071018]/70 to-[#071018]/30" />
+            <div className="relative w-10 h-10 rounded-xl bg-cyber/10 flex items-center justify-center mb-4">
               <svg
                 className="w-5 h-5 text-cyber"
                 fill="none"
@@ -147,7 +151,7 @@ export default function About() {
                 />
               </svg>
             </div>
-            <div>
+            <div className="relative">
               <p className="text-xs font-mono text-cyber/60 uppercase tracking-wider mb-1">
                 Location
               </p>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import ParticleField from "./ParticleField";
+import CinematicMedia from "./CinematicMedia";
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -31,21 +32,35 @@ export default function Hero() {
     <section
       ref={containerRef}
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center lg:justify-start overflow-hidden"
     >
+      <CinematicMedia
+        image="/media/hero-portrait.jpg"
+        video="/media/hero-portrait.mp4"
+        alt="Mark Lloyd Cuizon, cinematic studio portrait"
+        priority
+        objectPosition="78% 18%"
+        className="pointer-events-none absolute inset-0 z-0"
+        overlayClassName="from-[#060b14]/50 via-transparent to-transparent"
+      />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[#060b14]/50 md:hidden" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-[#060b14] via-[#060b14]/78 to-[#060b14]/15 md:via-[#060b14]/70 md:to-transparent" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[#060b14] via-transparent to-[#060b14]/35" />
+      <div className="cinematic-vignette pointer-events-none absolute inset-0 z-[1]" />
+
       {/* Cinematic 3D stage */}
-      <ParticleField />
+      <div className="pointer-events-none absolute inset-0 z-[1] opacity-25">
+        <ParticleField />
+      </div>
 
       {/* Atmospheric light volumes */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[15%] left-[18%] w-[28rem] h-[28rem] bg-accent/12 rounded-full blur-[140px] animate-pulse-glow" />
-        <div className="absolute bottom-[12%] right-[14%] w-[26rem] h-[26rem] bg-cyber/10 rounded-full blur-[130px] animate-pulse-glow [animation-delay:1.2s]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-violet-500/8 rounded-full blur-[110px] animate-float" />
-        <div className="hero-light-beam absolute top-0 left-1/2 -translate-x-1/2 w-[min(90vw,720px)] h-full opacity-40" />
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        <div className="absolute top-[18%] left-[12%] w-[26rem] h-[26rem] bg-accent/10 rounded-full blur-[140px] animate-pulse-glow" />
+        <div className="absolute bottom-[10%] left-[20%] w-[20rem] h-[20rem] bg-cyber/8 rounded-full blur-[120px] animate-pulse-glow [animation-delay:1.2s]" />
       </div>
 
       {/* Perspective floor cue */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 z-[1] pointer-events-none perspective-grid opacity-40" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 z-[1] pointer-events-none perspective-grid opacity-20" />
 
       {/* Content — camera dolly on scroll */}
       <motion.div
@@ -57,8 +72,9 @@ export default function Hero() {
           filter,
           transformPerspective: 1200,
         }}
-        className="relative z-10 text-center max-w-5xl mx-auto px-6"
+        className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 text-center lg:text-left"
       >
+        <div className="max-w-xl mx-auto lg:mx-0">
         {/* Status Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20, z: -40 }}
@@ -115,7 +131,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.9 }}
-          className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-lg text-gray-400 max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed"
         >
           Building the future with{" "}
           <span className="text-accent">code</span>,{" "}
@@ -128,7 +144,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.1 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
         >
           <motion.a
             href="#projects"
@@ -164,6 +180,7 @@ export default function Hero() {
             Get in Touch
           </motion.a>
         </motion.div>
+        </div>
       </motion.div>
 
       {/* Scroll Indicator */}

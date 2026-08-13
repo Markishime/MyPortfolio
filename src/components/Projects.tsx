@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import SectionHeading from "./SectionHeading";
 import TiltCard from "./TiltCard";
+import CinematicMedia from "./CinematicMedia";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -103,7 +104,8 @@ export default function Projects() {
                 style={{ transformStyle: "preserve-3d" }}
               >
                 <TiltCard
-                  intensity={isFeatured ? 8 : 11}
+                  intensity={isFeatured ? 3 : 4}
+                  hoverScale={1.006}
                   className="h-full"
                 >
                   <div
@@ -113,7 +115,7 @@ export default function Projects() {
                   >
                     {/* Depth layers */}
                     <div
-                      className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-700`}
+                      className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-35 transition-opacity duration-700`}
                     />
                     <div className="absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 cinematic-border-glow" />
 
@@ -126,14 +128,26 @@ export default function Projects() {
                       }}
                     />
 
+                    <CinematicMedia
+                      image={project.image}
+                      video={project.video}
+                      alt={`${project.title} cinematic still`}
+                      className={
+                        wide
+                          ? "h-48 sm:h-60"
+                          : "h-40 sm:h-48"
+                      }
+                      overlayClassName="from-[#071018] via-[#071018]/25 to-transparent"
+                    />
+
                     <div
                       className="relative p-6 sm:p-8 h-full flex flex-col"
-                      style={{ transform: "translateZ(24px)" }}
+                      style={{ transform: "translateZ(8px)" }}
                     >
                       <div className="flex items-start justify-between mb-4">
                         <span
                           className="text-3xl drop-shadow-[0_8px_16px_rgba(0,255,170,0.25)]"
-                          style={{ transform: "translateZ(40px)" }}
+                          style={{ transform: "translateZ(12px)" }}
                         >
                           {project.icon}
                         </span>
@@ -150,7 +164,7 @@ export default function Projects() {
                         {project.description}
                       </p>
 
-                      <div className="flex gap-3">
+                      <div className="relative z-10 flex gap-3">
                         {project.github && (
                           <a
                             href={project.github}

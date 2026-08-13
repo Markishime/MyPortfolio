@@ -54,6 +54,14 @@ const socialLinks = [
 export default function Contact() {
   return (
     <section id="contact" className="relative py-32 overflow-hidden section-cinematic">
+      <div className="absolute inset-0">
+        <img
+          src="/media/cebu-night.jpg"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-30 cinematic-kenburns"
+        />
+        <div className="absolute inset-0 bg-[#060b14]/75" />
+      </div>
       <div className="absolute inset-0 dot-grid opacity-20" />
       <div className="absolute inset-0 cinematic-depth-fog pointer-events-none" />
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />

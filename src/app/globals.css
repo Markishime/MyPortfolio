@@ -398,6 +398,42 @@ body {
   pointer-events: none;
 }
 
+.cinematic-kenburns {
+  animation: cinematic-kenburns 22s ease-in-out infinite alternate;
+  transform-origin: 52% 42%;
+  will-change: transform;
+}
+
+@keyframes cinematic-kenburns {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to { transform: scale(1.14) translate3d(-1.5%, -1.1%, 0); }
+}
+
+.cinematic-rain {
+  background-image: linear-gradient(
+    185deg,
+    transparent 0%,
+    rgba(190, 220, 255, 0.09) 48%,
+    transparent 100%
+  );
+  background-size: 3px 34px;
+  animation: cinematic-rain 0.65s linear infinite;
+  mix-blend-mode: screen;
+  opacity: 0.28;
+}
+
+@keyframes cinematic-rain {
+  from { background-position: 0 0; }
+  to { background-position: 6px 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-kenburns,
+  .cinematic-rain {
+    animation: none;
+  }
+}
+
 /* Section cinematic entrance helpers */
 .section-cinematic {
   position: relative;
