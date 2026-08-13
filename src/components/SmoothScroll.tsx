@@ -12,7 +12,7 @@ export default function SmoothScroll({
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.7,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
@@ -24,6 +24,11 @@ export default function SmoothScroll({
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
+
+    const resize = () => lenis.resize();
+    window.addEventListener("resize", resize);
+    const observer = new ResizeObserver(resize);
+    observer.observe(document.body);
 
     // Handle anchor links
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
@@ -39,6 +44,8 @@ export default function SmoothScroll({
     });
 
     return () => {
+      window.removeEventListener("resize", resize);
+      observer.disconnect();
       lenis.destroy();
     };
   }, []);

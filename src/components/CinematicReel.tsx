@@ -54,22 +54,21 @@ export default function CinematicReel() {
           {stills.map((still, i) => (
             <motion.div
               key={still.src}
-              initial={{ opacity: 0, y: 30, rotateY: -18 }}
-              whileInView={{ opacity: 1, y: 0, rotateY: -8 + i * 3 }}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{
-                duration: 0.7,
-                delay: 0.08 * i,
+                duration: 0.35,
+                delay: 0.04 * i,
                 ease: [0.22, 1, 0.36, 1],
               }}
               className="relative h-28 flex-1 overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.45)]"
-              style={{ transformStyle: "preserve-3d" }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={still.src}
                 alt={still.alt}
-                className="h-full w-full object-cover cinematic-kenburns"
+                className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
             </motion.div>

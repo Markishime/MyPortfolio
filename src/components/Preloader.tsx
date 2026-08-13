@@ -12,7 +12,7 @@ export default function Preloader() {
       setCount((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setTimeout(() => setIsLoading(false), 300);
+          setTimeout(() => setIsLoading(false), 120);
           return 100;
         }
         return prev + Math.floor(Math.random() * 8) + 2;
@@ -26,7 +26,7 @@ export default function Preloader() {
     <AnimatePresence>
       {isLoading && (
         <motion.div
-          exit={{ y: "-100%", transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }}
+          exit={{ opacity: 0, transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } }}
           className="fixed inset-0 z-[99999] bg-cyber-deeper flex flex-col items-center justify-center overflow-hidden"
         >
           <div className="absolute inset-0 cinematic-vignette" />

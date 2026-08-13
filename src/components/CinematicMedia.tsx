@@ -12,6 +12,7 @@ interface CinematicMediaProps {
   objectPosition?: string;
   priority?: boolean;
   kenBurns?: boolean;
+  playing?: boolean;
 }
 
 export default function CinematicMedia({
@@ -23,11 +24,12 @@ export default function CinematicMedia({
   objectPosition = "50% 50%",
   priority = false,
   kenBurns = true,
+  playing,
 }: CinematicMediaProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [active, setActive] = useState(priority);
+  const [active, setActive] = useState(priority || playing === true);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -38,7 +40,17 @@ export default function CinematicMedia({
   }, []);
 
   useEffect(() => {
-    if (priority || !video || reduceMotion) return;
+    if (playing !== undefined) {
+      setActive(playing);
+      return;
+    }
+    if (priority) {
+      setActive(true);
+    }
+  }, [playing, priority]);
+
+  useEffect(() => {
+    if (playing !== undefined || priority || !video || reduceMotion) return;
     const node = rootRef.current;
     if (!node) return;
     const observer = new IntersectionObserver(
@@ -47,7 +59,7 @@ export default function CinematicMedia({
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [priority, video, reduceMotion]);
+  }, [priority, video, reduceMotion, playing]);
 
   useEffect(() => {
     const el = videoRef.current;

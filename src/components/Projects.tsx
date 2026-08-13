@@ -1,37 +1,20 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
 import { siteConfig } from "@/lib/data";
+import { cn } from "@/lib/utils";
 import SectionHeading from "./SectionHeading";
-import TiltCard from "./TiltCard";
 import CinematicMedia from "./CinematicMedia";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.15 },
-  },
-};
+type Project = (typeof siteConfig.projects)[number];
+type Lane = "all" | "ai" | "embedded" | "web";
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 60, rotateX: 12 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-function hrefLabel(url: string) {
-  try {
-    const parsed = new URL(url);
-    return `${parsed.hostname.replace(/^www\./, "")}${parsed.pathname.replace(/\/$/, "")}`;
-  } catch {
-    return url;
-  }
-}
+const LANES: { id: Lane; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "ai", label: "AI" },
+  { id: "web", label: "Web" },
+  { id: "embedded", label: "Embedded" },
+];
 
 function GitHubIcon({ className }: { className?: string }) {
   return (
@@ -50,213 +33,320 @@ function LiveIcon({ className }: { className?: string }) {
   );
 }
 
-export default function Projects() {
-  return (
-    <section id="projects" className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 perspective-grid opacity-30" />
-      <div className="absolute inset-0 cinematic-depth-fog pointer-events-none" />
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
-      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-accent/[0.04] rounded-full blur-[140px]" />
+function matchesProject(project: Project, lane: Lane, tech: string | null) {
+  if (tech && !(project.stack as readonly string[]).includes(tech)) return false;
+  if (lane === "all") return true;
+  return (project.lanes as readonly string[]).includes(lane);
+}
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
+function ProjectCard({
+  project,
+  wide,
+  featured,
+  open,
+  previewing,
+  activeTech,
+  onToggle,
+  onPreview,
+  onTech,
+}: {
+  project: Project;
+  wide: boolean;
+  featured: boolean;
+  open: boolean;
+  previewing: boolean;
+  activeTech: string | null;
+  onToggle: () => void;
+  onPreview: (next: boolean) => void;
+  onTech: (tech: string) => void;
+}) {
+  return (
+    <article
+      className={cn(
+        "group relative h-full overflow-hidden rounded-3xl glass-card cinematic-card",
+        featured && "cinematic-card-featured",
+        open && "ring-1 ring-accent/35"
+      )}
+      onMouseEnter={() => onPreview(true)}
+      onMouseLeave={() => onPreview(false)}
+    >
+      <div
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-20 group-focus-within:opacity-20`}
+      />
+
+      <div className="relative flex h-full flex-col">
+        <div className="relative">
+          <CinematicMedia
+            image={project.image}
+            video={project.video}
+            alt={`${project.title} preview`}
+            kenBurns={false}
+            playing={previewing || open}
+            className={wide ? "h-48 sm:h-56" : "h-40 sm:h-48"}
+            overlayClassName="from-[#071018] via-[#071018]/25 to-transparent"
+          />
+
+          {project.video && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggle();
+              }}
+              className="absolute bottom-3 left-3 z-20 rounded-full border border-white/15 bg-[#071018]/80 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-gray-200 backdrop-blur-md transition-colors hover:border-accent/40 hover:text-accent"
+              aria-pressed={previewing || open}
+            >
+              {previewing || open ? "Previewing" : "Preview"}
+            </button>
+          )}
+
+          <div className="absolute top-3 right-3 z-20 flex gap-2">
+            {featured && (
+              <span className="rounded-full border border-accent/25 bg-accent/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-accent">
+                Featured
+              </span>
+            )}
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${project.title} on GitHub`}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-[#071018]/75 text-gray-200 backdrop-blur-md transition-colors hover:border-accent/50 hover:text-accent"
+              >
+                <GitHubIcon className="h-4 w-4" />
+              </a>
+            )}
+            {project.live && (
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${project.title} live site`}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/30 bg-accent/15 text-accent backdrop-blur-md transition-colors hover:border-accent/60 hover:bg-accent/25"
+              >
+                <LiveIcon className="h-3.5 w-3.5" />
+              </a>
+            )}
+          </div>
+        </div>
+
+        <div className="relative flex flex-1 flex-col p-6 sm:p-8">
+          <div className="mb-4 flex items-start justify-between">
+            <span className="text-3xl">{project.icon}</span>
+            <span className="rounded-full border border-accent/10 bg-accent/5 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-accent/70">
+              {project.tag}
+            </span>
+          </div>
+
+          <h3 className="mb-3 font-display text-xl font-bold text-white transition-colors duration-200 group-hover:text-accent sm:text-2xl">
+            {project.title}
+          </h3>
+
+          <p
+            className={cn(
+              "mb-4 text-sm leading-relaxed text-gray-400",
+              !open && "line-clamp-3"
+            )}
+          >
+            {project.description}
+          </p>
+
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={open}
+            className="mb-5 self-start font-mono text-[11px] uppercase tracking-wider text-accent/80 transition-colors hover:text-accent"
+          >
+            {open ? "Show less" : "Read more"}
+          </button>
+
+          <div className="mb-6 flex flex-wrap gap-2">
+            {project.stack.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => onTech(item)}
+                aria-pressed={activeTech === item}
+                className={cn(
+                  "rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition-colors",
+                  activeTech === item
+                    ? "border-accent/50 bg-accent/15 text-accent"
+                    : "border-white/10 bg-white/[0.03] text-gray-400 hover:border-accent/30 hover:text-accent"
+                )}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative z-10 mt-auto flex flex-wrap gap-2">
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-gray-700/50 px-4 py-2 font-mono text-xs text-gray-300 transition-colors hover:border-accent/30 hover:bg-accent/5 hover:text-accent"
+              >
+                <GitHubIcon className="h-4 w-4 shrink-0" />
+                GitHub
+              </a>
+            )}
+            {project.live && (
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-accent/25 bg-accent/10 px-4 py-2 font-mono text-xs text-accent transition-colors hover:border-accent/45 hover:bg-accent/15"
+              >
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                Live
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default function Projects() {
+  const [lane, setLane] = useState<Lane>("all");
+  const [tech, setTech] = useState<string | null>(null);
+  const [openTitle, setOpenTitle] = useState<string | null>(null);
+  const [previewTitle, setPreviewTitle] = useState<string | null>(null);
+
+  const visible = useMemo(
+    () => siteConfig.projects.filter((project) => matchesProject(project, lane, tech)),
+    [lane, tech]
+  );
+
+  const techOptions = useMemo(() => {
+    const counts = new Map<string, number>();
+    siteConfig.projects.forEach((project) => {
+      if (lane !== "all" && !(project.lanes as readonly string[]).includes(lane)) return;
+      project.stack.forEach((item) => {
+        counts.set(item, (counts.get(item) ?? 0) + 1);
+      });
+    });
+    return [...counts.entries()]
+      .filter(([, count]) => count > 1)
+      .sort((a, b) => a[0].localeCompare(b[0]));
+  }, [lane]);
+
+  const toggleTech = (value: string) => {
+    setTech((current) => (current === value ? null : value));
+  };
+
+  return (
+    <section id="projects" className="relative overflow-hidden py-32">
+      <div className="perspective-grid absolute inset-0 opacity-20" />
+      <div className="cinematic-depth-fog pointer-events-none absolute inset-0" />
+      <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
+
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <SectionHeading
           badge="Work"
           title="Featured Projects"
           subtitle="From IoT systems to life OS and adaptive fitness platforms"
         />
 
-        {/* Marquee Tech Stack */}
-        <div className="mb-16 overflow-hidden relative">
-          <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-cyber-deeper to-transparent z-10" />
-          <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-cyber-deeper to-transparent z-10" />
-          <div className="flex animate-marquee gap-8 whitespace-nowrap">
-            {[
-              "React.js",
-              "Next.js",
-              "ESP32",
-              "TensorFlow",
-              "Firebase",
-              "Flutter",
-              "Python",
-              "LangChain",
-              "Gemini AI",
-              "Capacitor",
-              "Supabase",
-              "Node.js",
-              "TypeScript",
-              "React.js",
-              "Next.js",
-              "ESP32",
-              "TensorFlow",
-              "Firebase",
-              "Flutter",
-              "Python",
-              "LangChain",
-              "Gemini AI",
-              "Capacitor",
-              "Supabase",
-              "Node.js",
-              "TypeScript",
-            ].map((tech, i) => (
-              <span
-                key={i}
-                className="text-sm font-mono text-gray-600 uppercase tracking-wider"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* 3D Project Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
-          style={{ perspective: 1400 }}
-        >
-          {siteConfig.projects.map((project, i) => {
-            const isFeatured =
-              project.title === "Orbit AI" || project.title === "Kinestra";
-            const wide = isFeatured || i === 0 || i === 5;
+        <div className="mb-6 flex flex-wrap gap-2" role="toolbar" aria-label="Filter projects">
+          {LANES.map((item) => {
+            const count =
+              item.id === "all"
+                ? siteConfig.projects.length
+                : siteConfig.projects.filter((project) =>
+                    (project.lanes as readonly string[]).includes(item.id)
+                  ).length;
 
             return (
-              <motion.div
-                key={project.title}
-                variants={cardVariants}
-                className={wide ? "md:col-span-2 lg:col-span-2" : ""}
-                style={{ transformStyle: "preserve-3d" }}
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setLane(item.id)}
+                aria-pressed={lane === item.id}
+                className={cn(
+                  "min-h-11 rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-colors",
+                  lane === item.id
+                    ? "border-accent/40 bg-accent/15 text-accent"
+                    : "border-white/10 text-gray-400 hover:border-accent/25 hover:text-accent"
+                )}
               >
-                <TiltCard
-                  intensity={isFeatured ? 3 : 4}
-                  hoverScale={1.006}
-                  className="h-full"
-                >
-                  <div
-                    className={`group relative glass-card cinematic-card rounded-3xl overflow-hidden h-full ${
-                      isFeatured ? "cinematic-card-featured" : ""
-                    }`}
-                  >
-                    {/* Depth layers */}
-                    <div
-                      className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-35 transition-opacity duration-700`}
-                    />
-                    <div className="absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 cinematic-border-glow" />
-
-                    {/* Floating orb accent */}
-                    <div
-                      className="absolute -top-10 -right-10 w-36 h-36 rounded-full blur-3xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"
-                      style={{
-                        background:
-                          "radial-gradient(circle, rgba(0,255,170,0.5), transparent 70%)",
-                      }}
-                    />
-
-                    <div className="relative flex h-full flex-col">
-                    <div className="relative">
-                    <CinematicMedia
-                      image={project.image}
-                      video={project.video}
-                      alt={`${project.title} cinematic still`}
-                      className={
-                        wide
-                          ? "h-48 sm:h-60"
-                          : "h-40 sm:h-48"
-                      }
-                      overlayClassName="from-[#071018] via-[#071018]/25 to-transparent"
-                    />
-                    {(project.github || project.live) && (
-                      <div className="absolute top-3 right-3 z-20 flex gap-2">
-                        {project.github && (
-                          <a
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`${project.title} GitHub: ${hrefLabel(project.github)}`}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-[#071018]/75 text-gray-200 backdrop-blur-md transition-colors hover:border-accent/50 hover:text-accent"
-                          >
-                            <GitHubIcon className="h-4 w-4" />
-                          </a>
-                        )}
-                        {project.live && (
-                          <a
-                            href={project.live}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`${project.title} live site: ${hrefLabel(project.live)}`}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/30 bg-accent/15 text-accent backdrop-blur-md transition-colors hover:border-accent/60 hover:bg-accent/25"
-                          >
-                            <LiveIcon className="h-3.5 w-3.5" />
-                          </a>
-                        )}
-                      </div>
-                    )}
-                    </div>
-
-                    <div
-                      className="relative flex flex-1 flex-col p-6 sm:p-8"
-                      style={{ transform: "translateZ(8px)" }}
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <span
-                          className="text-3xl drop-shadow-[0_8px_16px_rgba(0,255,170,0.25)]"
-                          style={{ transform: "translateZ(12px)" }}
-                        >
-                          {project.icon}
-                        </span>
-                        <span className="px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider text-accent/70 bg-accent/5 border border-accent/10">
-                          {project.tag}
-                        </span>
-                      </div>
-
-                      <h3 className="text-xl sm:text-2xl font-display font-bold text-white mb-3 group-hover:text-accent transition-colors duration-300">
-                        {project.title}
-                      </h3>
-
-                      <p className="text-sm text-gray-400 leading-relaxed mb-6 flex-grow">
-                        {project.description}
-                      </p>
-
-                      <div className="relative z-10 mt-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                        {project.github && (
-                          <a
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex min-w-0 items-center gap-2 rounded-full border border-gray-700/50 px-4 py-2 font-mono text-xs text-gray-300 transition-all duration-300 hover:border-accent/30 hover:bg-accent/5 hover:text-accent"
-                          >
-                            <GitHubIcon className="h-4 w-4 shrink-0" />
-                            <span className="shrink-0">GitHub</span>
-                            <span className="truncate text-gray-500 group-hover:text-gray-400">
-                              {hrefLabel(project.github)}
-                            </span>
-                          </a>
-                        )}
-                        {project.live && (
-                          <a
-                            href={project.live}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex min-w-0 items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-2 font-mono text-xs text-accent transition-all duration-300 hover:border-accent/40 hover:bg-accent/10"
-                          >
-                            <LiveIcon className="h-3 w-3 shrink-0" />
-                            <span className="shrink-0">Live</span>
-                            <span className="truncate text-accent/70">
-                              {hrefLabel(project.live)}
-                            </span>
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                    </div>
-                  </div>
-                </TiltCard>
-              </motion.div>
+                {item.label}
+                <span className="ml-2 text-[10px] opacity-70">{count}</span>
+              </button>
             );
           })}
-        </motion.div>
+        </div>
+
+        <div className="mb-12 flex flex-wrap gap-2" role="toolbar" aria-label="Filter by stack">
+          {techOptions.map(([item, count]) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => toggleTech(item)}
+              aria-pressed={tech === item}
+              className={cn(
+                "rounded-full border px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider transition-colors",
+                tech === item
+                  ? "border-accent/40 bg-accent/10 text-accent"
+                  : "border-white/10 text-gray-500 hover:border-accent/25 hover:text-accent"
+              )}
+            >
+              {item}
+              <span className="ml-1.5 opacity-60">{count}</span>
+            </button>
+          ))}
+          {tech && (
+            <button
+              type="button"
+              onClick={() => setTech(null)}
+              className="rounded-full px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-gray-500 underline-offset-4 hover:text-accent hover:underline"
+            >
+              Clear stack
+            </button>
+          )}
+        </div>
+
+        {visible.length === 0 ? (
+          <p className="rounded-2xl border border-white/10 px-6 py-10 text-sm text-gray-400">
+            No projects match that mix. Clear the stack filter or pick another lane.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {visible.map((project, i) => {
+              const featured =
+                project.title === "Orbit AI" || project.title === "Kinestra";
+              const wide = featured || i === 0 || i === 5;
+
+              return (
+                <div
+                  key={project.title}
+                  className={wide ? "md:col-span-2 lg:col-span-2" : ""}
+                >
+                  <ProjectCard
+                    project={project}
+                    wide={wide}
+                    featured={featured}
+                    open={openTitle === project.title}
+                    previewing={previewTitle === project.title}
+                    activeTech={tech}
+                    onToggle={() =>
+                      setOpenTitle((current) =>
+                        current === project.title ? null : project.title
+                      )
+                    }
+                    onPreview={(next) =>
+                      setPreviewTitle(next ? project.title : null)
+                    }
+                    onTech={toggleTech}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

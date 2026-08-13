@@ -14,12 +14,8 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 220]);
-  const opacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.55], [1, 0.88]);
-  const rotateX = useTransform(scrollYProgress, [0, 0.55], [0, 8]);
-  const blur = useTransform(scrollYProgress, [0, 0.55], [0, 6]);
-  const filter = useTransform(blur, (b) => `blur(${b}px)`);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 72]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.35]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -67,10 +63,6 @@ export default function Hero() {
         style={{
           y,
           opacity,
-          scale,
-          rotateX,
-          filter,
-          transformPerspective: 1200,
         }}
         className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 text-center lg:text-left"
       >
@@ -148,9 +140,9 @@ export default function Hero() {
         >
           <motion.a
             href="#projects"
-            whileHover={{ scale: 1.05, y: -3 }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative px-8 py-4 rounded-full bg-accent text-cyber-dark font-semibold text-sm overflow-hidden transition-shadow hover:shadow-[0_0_40px_rgba(0,255,170,0.4)]"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative px-8 py-4 rounded-full bg-accent text-cyber-dark font-semibold text-sm overflow-hidden transition-shadow hover:shadow-[0_0_28px_rgba(0,255,170,0.28)]"
           >
             <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             <span className="relative z-10 flex items-center gap-2">
@@ -173,8 +165,8 @@ export default function Hero() {
 
           <motion.a
             href="#contact"
-            whileHover={{ scale: 1.05, y: -3 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             className="px-8 py-4 rounded-full border border-accent/30 text-accent text-sm font-semibold hover:bg-accent/10 transition-all hover:border-accent/50 hover:shadow-[0_0_28px_rgba(0,255,170,0.15)] backdrop-blur-sm"
           >
             Get in Touch

@@ -34,6 +34,8 @@ export const siteConfig = {
       description:
         "A personal life OS that brings everyday planning into one hub: tasks, habits, bills, meds, notes, goals, projects, focus work, and an AI planning assistant. Built as a single HTML/JavaScript PWA with Capacitor packaging for Google Play and the App Store. Firebase Auth, Cloud Firestore sync, and Cloud Storage power accounts and data; demo mode with localStorage works when Firebase is not configured. Offline-ready via Firestore persistence plus a localStorage mirror. Architecture: Orbit AI.dc.html UI over a shared OrbitBackend layer for auth, database, and storage.",
       tag: "Life OS + AI",
+      lanes: ["ai", "web"],
+      stack: ["JavaScript", "Capacitor", "Firebase", "PWA"],
       github: "https://github.com/Markishime/ORBIT-AI",
       live: "https://gen-lang-client-0890430729.web.app/",
       gradient: "from-indigo-500/25 to-cyan-500/20",
@@ -46,6 +48,8 @@ export const siteConfig = {
       description:
         "All-in-one fitness app: Train Smarter. Move Better. Live Stronger. Replaces separate workout, nutrition, GPS, progress, and social apps with one product sharing the same user data. Deep onboarding (body stats, goals, experience, equipment, schedule, injuries, diet, sleep, stress) feeds a 52-week periodized engine with progressive overload, equipment-aware swaps, rest timers, and XP. Kine, a Gemini-powered AI coach, designs programs, answers with your history, and speaks hands-free. Nutrition covers macros, water, and AI meal photo scanning. Live GPS for runs, rides, and walks with Kalman-filtered tracking. Progress, readiness, streaks, and social (feed, DMs, stories, workout sharing). React + TanStack + Firebase web app; Android via Capacitor.",
       tag: "Fitness + AI",
+      lanes: ["ai", "web"],
+      stack: ["React", "Firebase", "Gemini", "Capacitor"],
       github: "https://github.com/Markishime/Kinestra",
       live: "https://kinestra.web.app/",
       gradient: "from-orange-500/25 to-rose-500/20",
@@ -58,6 +62,8 @@ export const siteConfig = {
       description:
         "An IoT-based classroom door lock using ESP32-S3 with RFID access control, LDR-based auto-lighting, weight-sensor attendance tracking, and a real-time React.js admin dashboard with Firebase authentication and OTA updates.",
       tag: "Embedded System",
+      lanes: ["embedded"],
+      stack: ["ESP32", "RFID", "React", "Firebase"],
       github: "https://github.com/Markishime/smart-ecolock",
       live: null,
       gradient: "from-emerald-500/20 to-cyan-500/20",
@@ -70,6 +76,8 @@ export const siteConfig = {
       description:
         "An AI-powered agronomic assistant for Malaysian oil palm plantations — embedded as the core AI engine of CropDrive AI. Processes soil and leaf data against MPOB 2022 standards for nutrient analysis, fertilizer recommendations, and 3-year ROI projections.",
       tag: "AI/ML Integration",
+      lanes: ["ai"],
+      stack: ["Python", "Gemini", "TensorFlow"],
       github: "https://github.com/Markishime/Ags-AI",
       live: "https://cropdrive.ai",
       gradient: "from-violet-500/20 to-fuchsia-500/20",
@@ -82,6 +90,8 @@ export const siteConfig = {
       description:
         "An AI-powered staffing cost calculator built with Streamlit and Google Gemini AI for Connext Global Solutions — helping prospective clients visualize offshore team savings in the Philippines.",
       tag: "AI/ML",
+      lanes: ["ai", "web"],
+      stack: ["Python", "Streamlit", "Gemini"],
       github: "https://github.com/Markishime/team_builder",
       live: "https://mcteambuilder.streamlit.app/",
       gradient: "from-amber-500/20 to-orange-500/20",
@@ -94,6 +104,8 @@ export const siteConfig = {
       description:
         "An IoT keyless bicycle lock powered by ESP32 with web-based remote lock/unlock, real-time GPS tracking via NEO-8M, tampering alerts via Pushbullet, proximity theft alarm, and live weather updates.",
       tag: "Embedded System",
+      lanes: ["embedded"],
+      stack: ["ESP32", "GPS", "IoT"],
       github: "https://github.com/Markishime/LockMate",
       live: null,
       gradient: "from-blue-500/20 to-indigo-500/20",
@@ -106,6 +118,8 @@ export const siteConfig = {
       description:
         "An AI-powered precision agriculture platform. Farmers upload soil or leaf lab reports; Gemini AI + OCR extracts and analyzes data against MPOB standards, delivering recommendations via Palmira — a bilingual AI chat assistant.",
       tag: "Web + AI/ML",
+      lanes: ["ai", "web"],
+      stack: ["Gemini", "OCR", "Firebase"],
       github: "https://github.com/Markishime/cropdrive",
       live: "https://cropdrive.ai",
       gradient: "from-green-500/20 to-teal-500/20",
@@ -118,6 +132,8 @@ export const siteConfig = {
       description:
         "An AI-powered business automation platform with custom agents for chatbot support, email automation, call handling, image generation, ad copywriting, domain naming, and recruitment workflows.",
       tag: "Web + AI/ML",
+      lanes: ["ai", "web"],
+      stack: ["AI Agents", "Automation"],
       github: null,
       live: "https://simplabots.com/",
       gradient: "from-rose-500/20 to-pink-500/20",
@@ -130,6 +146,8 @@ export const siteConfig = {
       description:
         "A full-featured tourism and news platform for Masbate Province, Philippines. Includes local news, travel destinations with booking (GCash, Stripe, cash), a Gemini AI chatbot, real-time officials directory, weather widget, video/photo gallery, and a Firebase-powered admin dashboard.",
       tag: "Web + AI/ML",
+      lanes: ["ai", "web"],
+      stack: ["Next.js", "Firebase", "Gemini", "Stripe"],
       github: "https://github.com/Markishime/MasbateToday",
       live: "https://masbatetoday.vercel.app/",
       gradient: "from-sky-500/20 to-blue-500/20",
