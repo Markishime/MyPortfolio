@@ -34,8 +34,8 @@ export const siteConfig = {
       description:
         "A personal life OS that brings everyday planning into one hub: tasks, habits, bills, meds, notes, goals, projects, focus work, and an AI planning assistant. Built as a single HTML/JavaScript PWA with Capacitor packaging for Google Play and the App Store. Firebase Auth, Cloud Firestore sync, and Cloud Storage power accounts and data; demo mode with localStorage works when Firebase is not configured. Offline-ready via Firestore persistence plus a localStorage mirror. Architecture: Orbit AI.dc.html UI over a shared OrbitBackend layer for auth, database, and storage.",
       tag: "Life OS + AI",
-      github: "https://github.com/Markishime/Orbit-AI",
-      live: null,
+      github: "https://github.com/Markishime/ORBIT-AI",
+      live: "https://gen-lang-client-0890430729.web.app/",
       gradient: "from-indigo-500/25 to-cyan-500/20",
       icon: "🛰️",
       image: "/media/orbit-ai.jpg",
