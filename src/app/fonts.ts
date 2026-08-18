@@ -1,22 +1,19 @@
-import { Azeret_Mono, Bricolage_Grotesque, Source_Sans_3 } from "next/font/google";
+import { Inter, JetBrains_Mono, Outfit } from "next/font/google";
 
-export const display = Bricolage_Grotesque({
+export const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-inter",
   display: "swap",
-  weight: ["600", "800"],
 });
 
-export const sans = Source_Sans_3({
+export const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-jetbrains",
   display: "swap",
-  weight: ["400", "500", "600"],
 });
 
-export const mono = Azeret_Mono({
+export const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-outfit",
   display: "swap",
-  weight: ["400", "500"],
 });

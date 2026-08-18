@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import ScrollEngine from "@/components/ScrollEngine";
+import SmoothScroll from "@/components/SmoothScroll";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -12,6 +12,7 @@ import Certifications from "@/components/Certifications";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
+import Preloader from "@/components/Preloader";
 
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
   ssr: false,
@@ -19,20 +20,23 @@ const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
 
 export default function Home() {
   return (
-    <ScrollEngine>
+    <>
+      <Preloader />
       <CustomCursor />
-      <Navbar />
-      <main id="main-content">
-        <Hero />
-        <About />
-        <CinematicReel />
-        <Projects />
-        <Skills />
-        <Certifications />
-        <Contact />
-      </main>
-      <Footer />
-      <BackToTop />
-    </ScrollEngine>
+      <SmoothScroll>
+        <Navbar />
+        <main>
+          <Hero />
+          <About />
+          <CinematicReel />
+          <Projects />
+          <Skills />
+          <Certifications />
+          <Contact />
+        </main>
+        <Footer />
+        <BackToTop />
+      </SmoothScroll>
+    </>
   );
 }
