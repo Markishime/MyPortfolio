@@ -1,208 +1,164 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useLayoutEffect, useRef, useState } from "react";
 import { siteConfig } from "@/lib/data";
-import ParticleField from "./ParticleField";
+import { getGsap } from "@/lib/gsap";
 import CinematicMedia from "./CinematicMedia";
+import { useScrollExperience } from "./ScrollEngine";
 
 export default function Hero() {
-  const containerRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const { tier } = useScrollExperience();
   const [roleIndex, setRoleIndex] = useState(0);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 72]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.35]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
+  useLayoutEffect(() => {
+    if (tier === "reduced") return;
+    const id = window.setInterval(() => {
       setRoleIndex((prev) => (prev + 1) % siteConfig.roles.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
+    }, 2600);
+    return () => window.clearInterval(id);
+  }, [tier]);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section || tier !== "full") return;
+    if (window.matchMedia("(max-width: 900px)").matches) return;
+
+    const { gsap } = getGsap();
+    const ctx = gsap.context(() => {
+      const media = section.querySelector<HTMLElement>("[data-hero-media]");
+      const ghost = section.querySelector<HTMLElement>("[data-hero-ghost]");
+
+      if (media) {
+        gsap.to(media, {
+          scale: 1.08,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+          },
+        });
+      }
+      if (ghost) {
+        gsap.to(ghost, {
+          xPercent: -8,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+          },
+        });
+      }
+    }, section);
+
+    return () => ctx.revert();
+  }, [tier]);
 
   return (
     <section
-      ref={containerRef}
+      ref={sectionRef}
       id="home"
-      className="relative min-h-screen flex items-center justify-center lg:justify-start overflow-hidden"
+      aria-label="Hero"
+      className="scene scene-hero"
     >
-      <CinematicMedia
-        image="/media/hero-portrait.jpg"
-        video="/media/hero-portrait.mp4"
-        alt="Mark Lloyd Cuizon, cinematic studio portrait"
-        priority
-        objectPosition="78% 18%"
-        className="pointer-events-none absolute inset-0 z-0"
-        overlayClassName="from-[#060b14]/50 via-transparent to-transparent"
-      />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-[#060b14]/50 md:hidden" />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-[#060b14] via-[#060b14]/78 to-[#060b14]/15 md:via-[#060b14]/70 md:to-transparent" />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[#060b14] via-transparent to-[#060b14]/35" />
-      <div className="cinematic-vignette pointer-events-none absolute inset-0 z-[1]" />
-
-      {/* Cinematic 3D stage */}
-      <div className="pointer-events-none absolute inset-0 z-[1] opacity-25">
-        <ParticleField />
-      </div>
-
-      {/* Atmospheric light volumes */}
-      <div className="absolute inset-0 z-[1] pointer-events-none">
-        <div className="absolute top-[18%] left-[12%] w-[26rem] h-[26rem] bg-accent/10 rounded-full blur-[140px] animate-pulse-glow" />
-        <div className="absolute bottom-[10%] left-[20%] w-[20rem] h-[20rem] bg-cyber/8 rounded-full blur-[120px] animate-pulse-glow [animation-delay:1.2s]" />
-      </div>
-
-      {/* Perspective floor cue */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 z-[1] pointer-events-none perspective-grid opacity-20" />
-
-      {/* Content — camera dolly on scroll */}
-      <motion.div
-        style={{
-          y,
-          opacity,
-        }}
-        className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 text-center lg:text-left"
-      >
-        <div className="max-w-xl mx-auto lg:mx-0">
-        {/* Status Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20, z: -40 }}
-          animate={{ opacity: 1, y: 0, z: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 shadow-[0_0_30px_rgba(0,255,170,0.08)]"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-60" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
-          </span>
-          <span className="text-sm font-mono text-accent/80">
-            Available for opportunities
-          </span>
-        </motion.div>
-
-        {/* Main Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 48 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-display font-bold tracking-tight mb-4 leading-[0.95]">
-            <span className="block text-white cinematic-title-shadow">
-              Mark Lloyd
-            </span>
-            <span className="block gradient-text mt-2 cinematic-title-glow">
-              Cuizon
-            </span>
-          </h1>
-        </motion.div>
-
-        {/* Animated Role */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="h-10 mt-6 mb-8 overflow-hidden"
-        >
-          <motion.div
-            key={roleIndex}
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl sm:text-2xl font-mono text-gray-400"
-          >
-            {`{ ${siteConfig.roles[roleIndex]} }`}
-          </motion.div>
-        </motion.div>
-
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="text-lg text-gray-400 max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed"
-        >
-          Building the future with{" "}
-          <span className="text-accent">code</span>,{" "}
-          <span className="text-cyber">circuits</span>, and{" "}
-          <span className="text-violet-400">intelligence</span>.
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.1 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
-        >
-          <motion.a
-            href="#projects"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="group relative px-8 py-4 rounded-full bg-accent text-cyber-dark font-semibold text-sm overflow-hidden transition-shadow hover:shadow-[0_0_28px_rgba(0,255,170,0.28)]"
-          >
-            <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-            <span className="relative z-10 flex items-center gap-2">
-              Explore My Work
-              <svg
-                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </span>
-          </motion.a>
-
-          <motion.a
-            href="#contact"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-8 py-4 rounded-full border border-accent/30 text-accent text-sm font-semibold hover:bg-accent/10 transition-all hover:border-accent/50 hover:shadow-[0_0_28px_rgba(0,255,170,0.15)] backdrop-blur-sm"
-          >
-            Get in Touch
-          </motion.a>
-        </motion.div>
+      <div className="scene-stage flex items-center">
+        <div className="layer depth-0" data-depth="0" data-hero-media>
+          <CinematicMedia
+            image="/media/hero-portrait.jpg"
+            video="/media/hero-portrait.mp4"
+            alt="Mark Lloyd Cuizon, cinematic studio portrait"
+            priority
+            objectPosition="78% 18%"
+            className="pointer-events-none absolute inset-0"
+            overlayClassName="from-[oklch(0.15_0.026_240)] via-transparent to-transparent"
+          />
         </div>
-      </motion.div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-2"
-        >
-          <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">
-            Scroll
-          </span>
-          <div className="w-5 h-8 rounded-full border border-gray-600/80 flex justify-center pt-1.5 shadow-[0_0_20px_rgba(0,255,170,0.1)]">
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-1 h-2 rounded-full bg-accent"
-            />
+        <div className="layer depth-1" data-depth="1" aria-hidden="true">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[oklch(0.15_0.026_240)] via-[oklch(0.15_0.026_240_/_0.78)] to-transparent md:via-[oklch(0.15_0.026_240_/_0.68)]" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[oklch(0.15_0.026_240)] via-transparent to-[oklch(0.15_0.026_240_/_0.4)]" />
+          <div className="cinematic-vignette pointer-events-none absolute inset-0" />
+          <div className="glow-blob left-[8%] top-[18%] h-[26rem] w-[26rem] bg-accent/25" />
+          <div className="glow-blob bottom-[8%] left-[22%] h-[18rem] w-[18rem] bg-cyan-300/15" />
+        </div>
+
+        <div className="layer depth-2" data-depth="2" aria-hidden="true">
+          <p
+            data-hero-ghost
+            className="ghost-type absolute -left-[4vw] top-[12%] hidden lg:block"
+          >
+            02 YRS
+          </p>
+          <div
+            data-hero-grid
+            className="perspective-grid absolute inset-x-0 bottom-0 h-1/2 opacity-30"
+          />
+        </div>
+
+        <div className="layer depth-5 hidden md:block" aria-hidden="true">
+          <span className="float-mote left-[18%] top-[28%]" />
+          <span className="float-mote left-[24%] top-[62%] [animation-delay:-2s]" />
+          <span className="float-mote left-[42%] top-[22%] [animation-delay:-4s]" />
+          <span className="float-mote right-[18%] top-[36%] [animation-delay:-1s]" />
+        </div>
+
+        <div className="scene-content mx-auto w-full max-w-7xl px-6 lg:px-8">
+          <div data-hero-copy className="max-w-xl">
+            <p className="chapter-index mb-6 inline-flex items-center gap-3">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-50" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+              </span>
+              01 / Available
+            </p>
+
+            <h1
+              className="font-display text-5xl font-extrabold leading-[0.9] tracking-tight text-[oklch(0.95_0.02_220)] sm:text-7xl lg:text-8xl"
+              aria-label="Mark Lloyd Cuizon"
+            >
+              <span className="block">Mark Lloyd</span>
+              <span className="mt-2 block text-accent">Cuizon</span>
+            </h1>
+
+            <p className="mt-6 h-8 overflow-hidden font-mono text-lg text-[oklch(0.74_0.03_220)] sm:text-xl">
+              <span key={roleIndex} className="block">
+                {siteConfig.roles[roleIndex]}
+              </span>
+            </p>
+
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-[oklch(0.78_0.03_220)]">
+              Two years shipping{" "}
+              <span className="text-accent">code</span>,{" "}
+              <span className="text-cyan-300">circuits</span>, and intelligence
+              as one picture.
+            </p>
+
+            <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row">
+              <a
+                href="#projects"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-accent px-7 py-3 text-sm font-semibold text-[oklch(0.16_0.03_240)] transition-transform duration-200 hover:translate-y-[-1px]"
+              >
+                Enter the reel
+                <span aria-hidden>→</span>
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex min-h-11 items-center rounded-full border border-accent/35 px-7 py-3 text-sm font-semibold text-accent transition-colors hover:bg-accent/10"
+              >
+                Write to me
+              </a>
+            </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+
+        <p className="chapter-index pointer-events-none absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 sm:block">
+          Scroll
+        </p>
+      </div>
     </section>
   );
 }

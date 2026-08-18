@@ -1,79 +1,29 @@
 "use client";
 
-import { motion } from "framer-motion";
 import CinematicMedia from "./CinematicMedia";
-
-const stills = [
-  { src: "/media/orbit-ai.jpg", alt: "Orbit AI life OS scene" },
-  { src: "/media/ecolock.jpg", alt: "Smart EcoLock corridor" },
-  { src: "/media/lockmate.jpg", alt: "LockMate bicycle at night" },
-  { src: "/media/masbate.jpg", alt: "Masbate coastline at dusk" },
-];
 
 export default function CinematicReel() {
   return (
     <section
       aria-label="Cinematic showreel"
-      className="relative h-[46vh] min-h-[320px] max-h-[560px] overflow-hidden"
+      className="scene relative min-h-[62vh] overflow-hidden"
     >
-      <CinematicMedia
-        image="/media/hero-studio.jpg"
-        video="/media/hero-studio.mp4"
-        alt="Cinematic Cebu workbench in the rain"
-        className="pointer-events-none absolute inset-0"
-        overlayClassName="from-[#060b14] via-[#060b14]/55 to-[#060b14]/70"
-      />
-      <div className="cinematic-rain pointer-events-none absolute inset-0 z-[1] opacity-40" />
-      <div className="absolute inset-x-0 bottom-0 h-1/2 z-[1] pointer-events-none perspective-grid opacity-30" />
+      <div className="layer depth-0">
+        <CinematicMedia
+          image="/media/hero-studio.jpg"
+          video="/media/hero-studio.mp4"
+          alt="Cinematic Cebu workbench in the rain"
+          className="pointer-events-none absolute inset-0"
+          overlayClassName="from-[oklch(0.15_0.026_240)] via-[oklch(0.15_0.026_240_/_0.5)] to-[oklch(0.15_0.026_240_/_0.62)]"
+        />
+      </div>
 
-      <div className="relative z-10 h-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col justify-center gap-8">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-xl"
-        >
-          <p className="text-[10px] font-mono uppercase tracking-[0.28em] text-accent/80 mb-3">
-            Showreel
-          </p>
-          <h2 className="text-3xl sm:text-5xl font-display font-bold text-white cinematic-title-shadow leading-[0.95]">
-            Built in Cebu.
-            <span className="block text-accent/90 mt-1">Shipped as systems.</span>
-          </h2>
-          <p className="mt-4 text-sm sm:text-base text-gray-400 max-w-md">
-            Hardware, software, and AI treated as one picture: locks, life OS,
-            fields, and coasts.
-          </p>
-        </motion.div>
-
-        <div
-          className="hidden md:flex gap-4 self-end w-full max-w-3xl"
-          style={{ perspective: 1200 }}
-        >
-          {stills.map((still, i) => (
-            <motion.div
-              key={still.src}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.35,
-                delay: 0.04 * i,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="relative h-28 flex-1 overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.45)]"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={still.src}
-                alt={still.alt}
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
-            </motion.div>
-          ))}
-        </div>
+      <div className="scene-content mx-auto flex min-h-[62vh] max-w-7xl flex-col justify-center px-6 py-20 lg:px-8">
+        <p className="chapter-index mb-4">03 / Reel</p>
+        <h2 className="max-w-xl font-display text-4xl font-extrabold leading-[0.94] text-[oklch(0.95_0.02_220)] sm:text-6xl">
+          Hardware, software,
+          <span className="mt-2 block text-accent">one continuous take.</span>
+        </h2>
       </div>
     </section>
   );

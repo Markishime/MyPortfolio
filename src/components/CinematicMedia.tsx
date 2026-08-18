@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface CinematicMediaProps {
@@ -12,7 +13,7 @@ interface CinematicMediaProps {
   objectPosition?: string;
   priority?: boolean;
   kenBurns?: boolean;
-  playing?: boolean;
+  sizes?: string;
 }
 
 export default function CinematicMedia({
@@ -24,12 +25,12 @@ export default function CinematicMedia({
   objectPosition = "50% 50%",
   priority = false,
   kenBurns = true,
-  playing,
+  sizes,
 }: CinematicMediaProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [active, setActive] = useState(priority || playing === true);
+  const [inView, setInView] = useState(priority);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -40,45 +41,45 @@ export default function CinematicMedia({
   }, []);
 
   useEffect(() => {
-    if (playing !== undefined) {
-      setActive(playing);
-      return;
-    }
-    if (priority) {
-      setActive(true);
-    }
-  }, [playing, priority]);
-
-  useEffect(() => {
-    if (playing !== undefined || priority || !video || reduceMotion) return;
     const node = rootRef.current;
     if (!node) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setActive(entry.isIntersecting),
-      { rootMargin: "200px 0px", threshold: 0.15 }
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "160px 0px", threshold: 0.12 }
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [priority, video, reduceMotion, playing]);
+  }, []);
+
+  const allowVideo = Boolean(video) && !reduceMotion;
 
   useEffect(() => {
     const el = videoRef.current;
-    if (!el || reduceMotion) return;
-    if (active) {
+    if (!el || !allowVideo) return;
+    if (inView) {
       el.play().catch(() => {});
     } else {
       el.pause();
     }
-  }, [active, reduceMotion]);
+  }, [inView, allowVideo]);
 
-  const canPlayVideo = Boolean(video) && !reduceMotion;
+  useEffect(() => {
+    const onVis = () => {
+      const el = videoRef.current;
+      if (!el || !allowVideo) return;
+      if (document.hidden) el.pause();
+      else if (inView) el.play().catch(() => {});
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [inView, allowVideo]);
 
   return (
     <div
       ref={rootRef}
-      className={cn("relative overflow-hidden bg-cyber-deeper", className)}
+      className={cn("relative overflow-hidden bg-[oklch(0.16_0.03_240)]", className)}
     >
-      {canPlayVideo ? (
+      {allowVideo ? (
         <video
           ref={videoRef}
           poster={image}
@@ -86,27 +87,26 @@ export default function CinematicMedia({
           muted
           loop
           playsInline
-          autoPlay={priority}
           preload={priority ? "auto" : "metadata"}
           aria-label={alt}
           className="absolute inset-0 h-full w-full object-cover"
           style={{ objectPosition }}
         />
       ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={image}
           alt={alt}
-          className={cn(
-            "absolute inset-0 h-full w-full object-cover",
-            kenBurns && !reduceMotion && "cinematic-kenburns"
-          )}
+          fill
+          priority={priority}
+          sizes={sizes ?? (priority ? "100vw" : "(max-width: 768px) 100vw, 58vw")}
+          quality={75}
+          className={cn("object-cover", kenBurns && !reduceMotion && "cinematic-kenburns")}
           style={{ objectPosition }}
         />
       )}
       <div
         className={cn(
-          "pointer-events-none absolute inset-0 bg-gradient-to-t from-[#060b14] via-[#060b14]/20 to-transparent",
+          "pointer-events-none absolute inset-0 bg-gradient-to-t from-[oklch(0.15_0.026_240)] via-[oklch(0.15_0.026_240_/_0.15)] to-transparent",
           overlayClassName
         )}
       />
