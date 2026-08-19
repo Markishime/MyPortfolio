@@ -57,7 +57,7 @@ export default function About() {
             className="bento-item-wide glass-card rounded-3xl p-8 flex flex-col sm:flex-row items-center gap-8"
           >
             <div className="relative shrink-0">
-              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-gradient-to-br from-accent/20 to-cyber/20 flex items-center justify-center overflow-hidden border border-accent/20 shadow-[0_0_28px_rgba(0,255,170,0.12)]">
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-gradient-to-br from-accent/20 to-cyber/20 flex items-center justify-center overflow-hidden border border-accent/20 shadow-[0_0_28px_rgb(var(--theme-accent-rgb)/0.18)]">
                 <img
                   src="/media/mark-cinematic.jpg"
                   alt="Mark Lloyd Cuizon"
@@ -76,11 +76,11 @@ export default function About() {
                 {siteConfig.name}
               </h3>
               <p className="text-gray-400 leading-relaxed font-mono text-sm">
-                An adaptable Computer Engineer with hands-on experience in web
-                development, mobile development, embedded systems, machine
-                learning, and AI. I build practical solutions that connect
-                hardware and software, from IoT security systems to AI-powered
-                platforms.
+                An adaptable Full Stack Developer and Computer Engineer with
+                hands-on experience in web development, mobile development,
+                embedded systems, machine learning, and AI. I build practical
+                solutions that connect hardware and software, from connected
+                devices to AI-powered platforms.
               </p>
             </div>
           </motion.div>
@@ -202,9 +202,9 @@ export default function About() {
             <p className="text-gray-400 leading-relaxed relative z-10">
               I bring strong technical ability, a dedicated work ethic, and
               effective communication skills. Focused on delivering measurable
-              impact in fast-moving, collaborative teams — whether it&apos;s shipping
-              AI platforms, building IoT prototypes, or crafting full-stack
-              applications.
+              impact in fast-moving, collaborative teams, whether shipping
+              AI platforms, building connected prototypes, or crafting full
+              stack applications.
             </p>
           </motion.div>
         </motion.div>

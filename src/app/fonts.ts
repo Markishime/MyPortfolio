@@ -4,18 +4,21 @@ export const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
   display: "swap",
+  weight: ["400", "500"],
 });
 
 export const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
   display: "swap",
+  weight: ["400", "600", "700"],
 });
 
 export const galada = Galada({
@@ -29,4 +32,5 @@ export const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
   display: "swap",
+  weight: ["500", "600", "700"],
 });

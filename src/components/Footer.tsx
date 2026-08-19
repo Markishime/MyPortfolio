@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/data";
 
 export default function Footer() {
   return (
-    <footer className="relative py-12 overflow-hidden">
+    <footer className="relative z-10 py-12 overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">

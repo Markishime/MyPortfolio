@@ -144,7 +144,7 @@ export default function Contact() {
             href={`mailto:${siteConfig.email}?subject=Let's%20Collaborate`}
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-cyber-dark font-semibold text-sm transition-shadow hover:shadow-[0_0_30px_rgba(0,255,170,0.3)]"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-cyber-dark font-semibold text-sm transition-shadow hover:shadow-[0_0_30px_rgb(var(--theme-accent-rgb)/0.35)]"
           >
             <svg
               className="w-4 h-4"

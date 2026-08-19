@@ -1,6 +1,8 @@
 export const siteConfig = {
   name: "Mark Lloyd Cuizon",
-  title: "Computer Engineer & AI Developer",
+  title: "Full Stack Developer & Computer Engineer",
+  primaryRole: "Full Stack Developer",
+  secondaryRole: "Computer Engineer",
   description:
     "Building the future with code, circuits, and intelligence.",
   email: "cmark7781@gmail.com",
@@ -14,11 +16,10 @@ export const siteConfig = {
     years: "2021 – 2025",
   },
   roles: [
+    "Full Stack Developer",
     "Computer Engineer",
-    "Full-Stack Developer",
     "AI Developer",
-    "IoT Engineer",
-    "ML Enthusiast",
+    "Embedded Systems",
   ],
   navLinks: [
     { label: "Home", href: "#home" },

@@ -136,7 +136,7 @@ export default function Skills() {
                   whileHover={{
                     scale: 1.08,
                     y: -3,
-                    boxShadow: "0 8px 20px rgba(0, 255, 170, 0.1)",
+                    boxShadow: "0 8px 20px rgb(var(--theme-accent-rgb) / 0.16)",
                   }}
                   className="px-4 py-2.5 rounded-2xl text-sm font-mono text-gray-300 glass border border-white/5 hover:border-accent/30 hover:text-accent transition-colors cursor-default"
                 >

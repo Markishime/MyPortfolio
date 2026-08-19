@@ -9,21 +9,10 @@ import {
   useTransform,
 } from "framer-motion";
 import { siteConfig } from "@/lib/data";
+import { THEMES, type ThemeId } from "@/lib/theme";
+import { useTheme } from "./ThemeProvider";
 
-const disciplines = [
-  {
-    id: "ai",
-    label: "AI Systems",
-    role: "AI Developer",
-    detail: "Gemini · TensorFlow",
-  },
-  {
-    id: "hardware",
-    label: "Connected Hardware",
-    role: "IoT Engineer",
-    detail: "ESP32 · Sensors",
-  },
-] as const;
+const disciplines = [THEMES.fullstack, THEMES.engineer] as const;
 
 const orbitNodes = [
   { label: "Python", className: "orbit-node-1" },
@@ -32,17 +21,17 @@ const orbitNodes = [
   { label: "ESP32", className: "orbit-node-4" },
   { label: "Firebase", className: "orbit-node-5" },
   { label: "React", className: "orbit-node-6" },
-  { label: "IoT", className: "orbit-node-7" },
+  { label: "Node", className: "orbit-node-7" },
   { label: "ML", className: "orbit-node-8" },
   { label: "C++", className: "orbit-node-9" },
 ];
 
 const motionFilms = {
-  ai: [
+  fullstack: [
     { title: "Orbit AI", video: "/media/orbit-ai.mp4", image: "/media/orbit-ai.jpg" },
     { title: "Kinestra", video: "/media/kinestra.mp4", image: "/media/kinestra.jpg" },
   ],
-  hardware: [
+  engineer: [
     { title: "Smart EcoLock", video: "/media/ecolock.mp4", image: "/media/ecolock.jpg" },
     { title: "LockMate", video: "/media/lockmate.mp4", image: "/media/lockmate.jpg" },
   ],
@@ -51,10 +40,14 @@ const motionFilms = {
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotionPref = useReducedMotion();
+  const [hydrated, setHydrated] = useState(false);
+  const [liteMedia, setLiteMedia] = useState(false);
+  const reduceMotion = hydrated ? Boolean(reduceMotionPref) : false;
+  const stillsOnly = reduceMotion || liteMedia;
+  const { identity, setIdentity } = useTheme();
   const mouseRef = useRef({ x: 0, y: 0, px: -1000, py: -1000 });
   const currentMouseRef = useRef({ x: 0, y: 0 });
-  const [discipline, setDiscipline] = useState<"ai" | "hardware">("ai");
   const [isSwitching, setIsSwitching] = useState(false);
   const [filmIndex, setFilmIndex] = useState(0);
   const { scrollYProgress } = useScroll({
@@ -67,6 +60,11 @@ export default function Hero() {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.2]);
 
   useEffect(() => {
+    setHydrated(true);
+    setLiteMedia(window.matchMedia("(max-width: 767px)").matches);
+  }, []);
+
+  useEffect(() => {
     if (reduceMotion) return;
     const timer = window.setInterval(() => {
       setFilmIndex((current) => (current + 1) % 2);
@@ -75,11 +73,13 @@ export default function Hero() {
   }, [reduceMotion]);
 
   useEffect(() => {
+    if (reduceMotion) return;
     const section = containerRef.current;
     if (!section) return;
 
     const nodes = Array.from(section.querySelectorAll<HTMLElement>(".orbit-node"));
     let frame = 0;
+    let inView = true;
 
     const onPointerMove = (event: PointerEvent) => {
       mouseRef.current = {
@@ -90,7 +90,11 @@ export default function Hero() {
       };
     };
 
-    const animate = () => {
+    const animate = (now: number) => {
+      if (!inView) {
+        frame = 0;
+        return;
+      }
       const current = currentMouseRef.current;
       const target = mouseRef.current;
       current.x += (target.x - current.x) * 0.05;
@@ -103,45 +107,51 @@ export default function Hero() {
         portraitRef.current.style.transform = `translate3d(${current.x * 22}px, ${current.y * 18}px, 0) rotateX(${-current.y * 7}deg) rotateY(${current.x * 9}deg)`;
       }
 
+      const t = now * 0.001;
       nodes.forEach((node, index) => {
-        const rect = node.getBoundingClientRect();
-        const dx = target.px - (rect.left + rect.width / 2);
-        const dy = target.py - (rect.top + rect.height / 2);
-        const distance = Math.max(Math.hypot(dx, dy), 1);
-        const force = distance < 220 ? (220 - distance) / 220 : 0;
-        const repelX = -(dx / distance) * force * 74;
-        const repelY = -(dy / distance) * force * 74;
-        const floatY = Math.sin(Date.now() * 0.001 + index * 0.8) * 10;
-        node.style.transform = `translate3d(${repelX}px, ${repelY + floatY}px, 0) rotate(${Math.sin(index + Date.now() * 0.0004) * 5}deg)`;
+        const floatY = Math.sin(t + index * 0.8) * 10;
+        const px = current.x * (10 + index * 2);
+        const py = current.y * (8 + index) + floatY;
+        node.style.transform = `translate3d(${px}px, ${py}px, 0) rotate(${Math.sin(index + t * 0.4) * 5}deg)`;
       });
 
       frame = requestAnimationFrame(animate);
     };
 
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView && !frame) frame = requestAnimationFrame(animate);
+      },
+      { threshold: 0.08 }
+    );
+    io.observe(section);
+
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     frame = requestAnimationFrame(animate);
     return () => {
+      io.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [reduceMotion]);
 
-  const selectDiscipline = (next: "ai" | "hardware") => {
-    if (next === discipline || isSwitching) return;
+  const selectIdentity = (next: ThemeId) => {
+    if (next === identity || isSwitching) return;
     setIsSwitching(true);
     setFilmIndex(0);
-    window.setTimeout(() => setDiscipline(next), 240);
-    window.setTimeout(() => setIsSwitching(false), 900);
+    setIdentity(next, { lock: true });
+    window.setTimeout(() => setIsSwitching(false), 520);
   };
 
-  const activeDiscipline = disciplines.find((item) => item.id === discipline)!;
-  const activeFilms = motionFilms[discipline];
+  const activeFilms = motionFilms[identity];
+  const portraitLabel = `${siteConfig.name}, ${siteConfig.primaryRole} and ${siteConfig.secondaryRole}`;
 
   return (
     <section
       ref={containerRef}
       id="home"
-      data-discipline={discipline}
+      data-identity={identity}
       className={`portfolio-hero ${isSwitching ? "is-switching" : ""}`}
     >
       <motion.div
@@ -149,7 +159,7 @@ export default function Hero() {
         style={{ y: reduceMotion ? 0 : mediaY, scale: reduceMotion ? 1 : mediaScale }}
         aria-hidden="true"
       >
-        {reduceMotion ? (
+        {stillsOnly ? (
           <img src="/media/hero-studio.jpg" alt="" />
         ) : (
           <video
@@ -159,6 +169,7 @@ export default function Hero() {
             autoPlay
             loop
             playsInline
+            preload="metadata"
           />
         )}
         <div className="hero-media-wash" />
@@ -188,7 +199,7 @@ export default function Hero() {
         <AnimatePresence mode="popLayout">
           {activeFilms.map((film, index) => (
             <motion.figure
-              key={`${discipline}-${film.title}-${filmIndex}`}
+              key={`${identity}-${film.title}-${filmIndex}`}
               className={`hero-film hero-film-${index + 1}`}
               initial={{ opacity: 0, scale: 0.72, rotate: index === 0 ? -14 : 12 }}
               animate={{
@@ -205,10 +216,18 @@ export default function Hero() {
                 y: { duration: 6 + index, repeat: Infinity, ease: "easeInOut" },
               }}
             >
-              {reduceMotion ? (
+              {stillsOnly || index !== filmIndex ? (
                 <img src={film.image} alt="" />
               ) : (
-                <video src={film.video} poster={film.image} muted autoPlay loop playsInline />
+                <video
+                  src={film.video}
+                  poster={film.image}
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
               )}
               <figcaption>{film.title}</figcaption>
             </motion.figure>
@@ -251,7 +270,9 @@ export default function Hero() {
           <div className="availability-pill">
             <span /> Cebu, Philippines · Available worldwide
           </div>
-          <p className="hero-overline">Computer engineer · AI developer</p>
+          <p className="hero-overline">
+            {siteConfig.primaryRole} · {siteConfig.secondaryRole}
+          </p>
           <h1 className="hero-title">
             <span>Mark</span>
             <strong>Lloyd Cuizon</strong>
@@ -280,27 +301,29 @@ export default function Hero() {
         >
           <div className="portrait-halo" />
           <div ref={portraitRef} className="portrait-shell">
-            {reduceMotion ? (
+            {stillsOnly ? (
               <img
                 src="/media/hero-portrait.jpg"
-                alt="Mark Lloyd Cuizon, Computer Engineer and AI Developer"
+                alt={portraitLabel}
               />
             ) : (
               <video
                 src="/media/hero-portrait.mp4"
                 poster="/media/hero-portrait.jpg"
-                aria-label="Mark Lloyd Cuizon, Computer Engineer and AI Developer"
+                aria-label={portraitLabel}
                 muted
                 autoPlay
                 loop
                 playsInline
+                preload="metadata"
               />
             )}
             <div className="portrait-sheen" />
           </div>
           <div className="portrait-caption">
-            <span>Selected discipline</span>
-            <strong>{activeDiscipline.role}</strong>
+            <span>Professional identity</span>
+            <strong>{siteConfig.primaryRole}</strong>
+            <em>{siteConfig.secondaryRole}</em>
           </div>
         </motion.div>
 
@@ -310,21 +333,21 @@ export default function Hero() {
           transition={{ duration: 0.9, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="hero-selector"
         >
-          <div className="discipline-cards" aria-label="Portfolio disciplines">
-            {disciplines.map((item, index) => (
+          <div className="discipline-cards" aria-label="Professional titles">
+            {disciplines.map((item) => (
               <button
                 key={item.id}
                 type="button"
-                onClick={() => selectDiscipline(item.id)}
-                className={discipline === item.id ? "active" : ""}
-                aria-pressed={discipline === item.id}
+                onClick={() => selectIdentity(item.id)}
+                className={identity === item.id ? "active" : ""}
+                aria-pressed={identity === item.id}
               >
-                <span className="discipline-number">0{index + 1}</span>
+                <span className="discipline-number">{item.rank === "Primary" ? "01" : "02"}</span>
                 <span className="discipline-symbol" aria-hidden="true">
-                  {item.id === "ai" ? "AI" : "IO"}
+                  {item.symbol}
                 </span>
                 <span className="discipline-copy">
-                  <strong>{item.label}</strong>
+                  <strong>{item.title}</strong>
                   <small>{item.detail}</small>
                 </span>
               </button>

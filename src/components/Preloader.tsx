@@ -8,10 +8,24 @@ export default function Preloader() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    if (sessionStorage.getItem("mlc-ready")) {
+      setIsLoading(false);
+      return;
+    }
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setCount(100);
+      sessionStorage.setItem("mlc-ready", "1");
+      const done = window.setTimeout(() => setIsLoading(false), 80);
+      return () => window.clearTimeout(done);
+    }
+
     const interval = setInterval(() => {
       setCount((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
+          sessionStorage.setItem("mlc-ready", "1");
           setTimeout(() => setIsLoading(false), 120);
           return 100;
         }
@@ -40,7 +54,7 @@ export default function Preloader() {
             <h1 className="text-4xl sm:text-5xl font-display font-bold gradient-text cinematic-title-glow mb-4">
               MLC
             </h1>
-            <div className="w-48 h-0.5 bg-white/5 rounded-full overflow-hidden mx-auto shadow-[0_0_20px_rgba(0,255,170,0.15)]">
+            <div className="w-48 h-0.5 bg-white/5 rounded-full overflow-hidden mx-auto shadow-[0_0_20px_rgb(var(--theme-accent-rgb)/0.22)]">
               <motion.div
                 className="h-full bg-gradient-to-r from-accent to-cyber rounded-full"
                 initial={{ width: 0 }}

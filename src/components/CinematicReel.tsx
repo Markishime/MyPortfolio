@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 const stills = [
   { src: "/media/orbit-ai.jpg", alt: "Orbit AI life OS scene", title: "Intelligence", detail: "AI systems that organize real life" },
   { src: "/media/ecolock.jpg", alt: "Smart EcoLock corridor", title: "Embedded", detail: "Hardware that senses and responds" },
-  { src: "/media/lockmate.jpg", alt: "LockMate bicycle at night", title: "Connected", detail: "IoT security beyond the screen" },
+  { src: "/media/lockmate.jpg", alt: "LockMate bicycle at night", title: "Connected", detail: "Security that lives beyond the screen" },
   { src: "/media/masbate.jpg", alt: "Masbate coastline at dusk", title: "Human", detail: "Technology grounded in place" },
 ];
 

@@ -248,7 +248,7 @@ export default function Projects() {
         <SectionHeading
           badge="Work"
           title="Featured Projects"
-          subtitle="From IoT systems to life OS and adaptive fitness platforms"
+          subtitle="From connected systems to life OS and adaptive fitness platforms"
         />
 
         <div className="mb-6 flex flex-wrap gap-2" role="toolbar" aria-label="Filter projects">

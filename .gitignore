@@ -1,5 +1,9 @@
 .qodo
 
 .vercel
+.next
+out
 node_modules
 .env*.local
+tsconfig.tsbuildinfo
+scripts/verify-out
