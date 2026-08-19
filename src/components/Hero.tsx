@@ -1,208 +1,349 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { CSSProperties, useEffect, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { siteConfig } from "@/lib/data";
-import ParticleField from "./ParticleField";
-import CinematicMedia from "./CinematicMedia";
+
+const disciplines = [
+  {
+    id: "ai",
+    label: "AI Systems",
+    role: "AI Developer",
+    detail: "Gemini · TensorFlow",
+  },
+  {
+    id: "hardware",
+    label: "Connected Hardware",
+    role: "IoT Engineer",
+    detail: "ESP32 · Sensors",
+  },
+] as const;
+
+const orbitNodes = [
+  { label: "Python", className: "orbit-node-1" },
+  { label: "Next.js", className: "orbit-node-2" },
+  { label: "Gemini", className: "orbit-node-3" },
+  { label: "ESP32", className: "orbit-node-4" },
+  { label: "Firebase", className: "orbit-node-5" },
+  { label: "React", className: "orbit-node-6" },
+  { label: "IoT", className: "orbit-node-7" },
+  { label: "ML", className: "orbit-node-8" },
+  { label: "C++", className: "orbit-node-9" },
+];
+
+const motionFilms = {
+  ai: [
+    { title: "Orbit AI", video: "/media/orbit-ai.mp4", image: "/media/orbit-ai.jpg" },
+    { title: "Kinestra", video: "/media/kinestra.mp4", image: "/media/kinestra.jpg" },
+  ],
+  hardware: [
+    { title: "Smart EcoLock", video: "/media/ecolock.mp4", image: "/media/ecolock.jpg" },
+    { title: "LockMate", video: "/media/lockmate.mp4", image: "/media/lockmate.jpg" },
+  ],
+} as const;
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
-  const [roleIndex, setRoleIndex] = useState(0);
+  const portraitRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const mouseRef = useRef({ x: 0, y: 0, px: -1000, py: -1000 });
+  const currentMouseRef = useRef({ x: 0, y: 0 });
+  const [discipline, setDiscipline] = useState<"ai" | "hardware">("ai");
+  const [isSwitching, setIsSwitching] = useState(false);
+  const [filmIndex, setFilmIndex] = useState(0);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
-
-  const y = useTransform(scrollYProgress, [0, 1], [0, 72]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.35]);
+  const mediaY = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const mediaScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 70]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.2]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setRoleIndex((prev) => (prev + 1) % siteConfig.roles.length);
-    }, 2500);
-    return () => clearInterval(interval);
+    if (reduceMotion) return;
+    const timer = window.setInterval(() => {
+      setFilmIndex((current) => (current + 1) % 2);
+    }, 5200);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    const section = containerRef.current;
+    if (!section) return;
+
+    const nodes = Array.from(section.querySelectorAll<HTMLElement>(".orbit-node"));
+    let frame = 0;
+
+    const onPointerMove = (event: PointerEvent) => {
+      mouseRef.current = {
+        x: event.clientX / window.innerWidth - 0.5,
+        y: event.clientY / window.innerHeight - 0.5,
+        px: event.clientX,
+        py: event.clientY,
+      };
+    };
+
+    const animate = () => {
+      const current = currentMouseRef.current;
+      const target = mouseRef.current;
+      current.x += (target.x - current.x) * 0.05;
+      current.y += (target.y - current.y) * 0.05;
+
+      section.style.setProperty("--pointer-x", `${current.x * 48}px`);
+      section.style.setProperty("--pointer-y", `${current.y * 48}px`);
+
+      if (portraitRef.current) {
+        portraitRef.current.style.transform = `translate3d(${current.x * 22}px, ${current.y * 18}px, 0) rotateX(${-current.y * 7}deg) rotateY(${current.x * 9}deg)`;
+      }
+
+      nodes.forEach((node, index) => {
+        const rect = node.getBoundingClientRect();
+        const dx = target.px - (rect.left + rect.width / 2);
+        const dy = target.py - (rect.top + rect.height / 2);
+        const distance = Math.max(Math.hypot(dx, dy), 1);
+        const force = distance < 220 ? (220 - distance) / 220 : 0;
+        const repelX = -(dx / distance) * force * 74;
+        const repelY = -(dy / distance) * force * 74;
+        const floatY = Math.sin(Date.now() * 0.001 + index * 0.8) * 10;
+        node.style.transform = `translate3d(${repelX}px, ${repelY + floatY}px, 0) rotate(${Math.sin(index + Date.now() * 0.0004) * 5}deg)`;
+      });
+
+      frame = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    frame = requestAnimationFrame(animate);
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      cancelAnimationFrame(frame);
+    };
   }, []);
+
+  const selectDiscipline = (next: "ai" | "hardware") => {
+    if (next === discipline || isSwitching) return;
+    setIsSwitching(true);
+    setFilmIndex(0);
+    window.setTimeout(() => setDiscipline(next), 240);
+    window.setTimeout(() => setIsSwitching(false), 900);
+  };
+
+  const activeDiscipline = disciplines.find((item) => item.id === discipline)!;
+  const activeFilms = motionFilms[discipline];
 
   return (
     <section
       ref={containerRef}
       id="home"
-      className="relative min-h-screen flex items-center justify-center lg:justify-start overflow-hidden"
+      data-discipline={discipline}
+      className={`portfolio-hero ${isSwitching ? "is-switching" : ""}`}
     >
-      <CinematicMedia
-        image="/media/hero-portrait.jpg"
-        video="/media/hero-portrait.mp4"
-        alt="Mark Lloyd Cuizon, cinematic studio portrait"
-        priority
-        objectPosition="78% 18%"
-        className="pointer-events-none absolute inset-0 z-0"
-        overlayClassName="from-[#060b14]/50 via-transparent to-transparent"
-      />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-[#060b14]/50 md:hidden" />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-[#060b14] via-[#060b14]/78 to-[#060b14]/15 md:via-[#060b14]/70 md:to-transparent" />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[#060b14] via-transparent to-[#060b14]/35" />
-      <div className="cinematic-vignette pointer-events-none absolute inset-0 z-[1]" />
-
-      {/* Cinematic 3D stage */}
-      <div className="pointer-events-none absolute inset-0 z-[1] opacity-25">
-        <ParticleField />
-      </div>
-
-      {/* Atmospheric light volumes */}
-      <div className="absolute inset-0 z-[1] pointer-events-none">
-        <div className="absolute top-[18%] left-[12%] w-[26rem] h-[26rem] bg-accent/10 rounded-full blur-[140px] animate-pulse-glow" />
-        <div className="absolute bottom-[10%] left-[20%] w-[20rem] h-[20rem] bg-cyber/8 rounded-full blur-[120px] animate-pulse-glow [animation-delay:1.2s]" />
-      </div>
-
-      {/* Perspective floor cue */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 z-[1] pointer-events-none perspective-grid opacity-20" />
-
-      {/* Content — camera dolly on scroll */}
       <motion.div
-        style={{
-          y,
-          opacity,
-        }}
-        className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 text-center lg:text-left"
+        className="hero-motion-backdrop"
+        style={{ y: reduceMotion ? 0 : mediaY, scale: reduceMotion ? 1 : mediaScale }}
+        aria-hidden="true"
       >
-        <div className="max-w-xl mx-auto lg:mx-0">
-        {/* Status Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20, z: -40 }}
-          animate={{ opacity: 1, y: 0, z: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 shadow-[0_0_30px_rgba(0,255,170,0.08)]"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-60" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
-          </span>
-          <span className="text-sm font-mono text-accent/80">
-            Available for opportunities
-          </span>
-        </motion.div>
-
-        {/* Main Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 48 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-display font-bold tracking-tight mb-4 leading-[0.95]">
-            <span className="block text-white cinematic-title-shadow">
-              Mark Lloyd
-            </span>
-            <span className="block gradient-text mt-2 cinematic-title-glow">
-              Cuizon
-            </span>
-          </h1>
-        </motion.div>
-
-        {/* Animated Role */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="h-10 mt-6 mb-8 overflow-hidden"
-        >
-          <motion.div
-            key={roleIndex}
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl sm:text-2xl font-mono text-gray-400"
-          >
-            {`{ ${siteConfig.roles[roleIndex]} }`}
-          </motion.div>
-        </motion.div>
-
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="text-lg text-gray-400 max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed"
-        >
-          Building the future with{" "}
-          <span className="text-accent">code</span>,{" "}
-          <span className="text-cyber">circuits</span>, and{" "}
-          <span className="text-violet-400">intelligence</span>.
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.1 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
-        >
-          <motion.a
-            href="#projects"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="group relative px-8 py-4 rounded-full bg-accent text-cyber-dark font-semibold text-sm overflow-hidden transition-shadow hover:shadow-[0_0_28px_rgba(0,255,170,0.28)]"
-          >
-            <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-            <span className="relative z-10 flex items-center gap-2">
-              Explore My Work
-              <svg
-                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </span>
-          </motion.a>
-
-          <motion.a
-            href="#contact"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-8 py-4 rounded-full border border-accent/30 text-accent text-sm font-semibold hover:bg-accent/10 transition-all hover:border-accent/50 hover:shadow-[0_0_28px_rgba(0,255,170,0.15)] backdrop-blur-sm"
-          >
-            Get in Touch
-          </motion.a>
-        </motion.div>
-        </div>
+        {reduceMotion ? (
+          <img src="/media/hero-studio.jpg" alt="" />
+        ) : (
+          <video
+            src="/media/hero-studio.mp4"
+            poster="/media/hero-studio.jpg"
+            muted
+            autoPlay
+            loop
+            playsInline
+          />
+        )}
+        <div className="hero-media-wash" />
       </motion.div>
 
-      {/* Scroll Indicator */}
+      <div className="neural-field" aria-hidden="true">
+        {Array.from({ length: 7 }).map((_, index) => (
+          <motion.span
+            key={index}
+            style={{ "--trace-index": index } as CSSProperties}
+            animate={reduceMotion ? undefined : {
+              opacity: [0.12, 0.55, 0.12],
+              scaleX: [0.72, 1.06, 0.72],
+              x: [0, index % 2 === 0 ? 34 : -34, 0],
+            }}
+            transition={{
+              duration: 5 + index * 0.45,
+              delay: index * 0.22,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="hero-film-layer" aria-hidden="true">
+        <AnimatePresence mode="popLayout">
+          {activeFilms.map((film, index) => (
+            <motion.figure
+              key={`${discipline}-${film.title}-${filmIndex}`}
+              className={`hero-film hero-film-${index + 1}`}
+              initial={{ opacity: 0, scale: 0.72, rotate: index === 0 ? -14 : 12 }}
+              animate={{
+                opacity: index === filmIndex ? 0.78 : 0.32,
+                scale: index === filmIndex ? 1 : 0.84,
+                rotate: index === 0 ? -7 : 8,
+                y: index === filmIndex ? [0, -12, 0] : [0, 8, 0],
+              }}
+              exit={{ opacity: 0, scale: 0.65 }}
+              transition={{
+                opacity: { duration: 0.8 },
+                scale: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+                rotate: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+                y: { duration: 6 + index, repeat: Infinity, ease: "easeInOut" },
+              }}
+            >
+              {reduceMotion ? (
+                <img src={film.image} alt="" />
+              ) : (
+                <video src={film.video} poster={film.image} muted autoPlay loop playsInline />
+              )}
+              <figcaption>{film.title}</figcaption>
+            </motion.figure>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      <div className="hero-bubbles" aria-hidden="true">
+        {Array.from({ length: 16 }).map((_, index) => (
+          <span
+            key={index}
+            style={{
+              "--bubble-left": `${(index * 37) % 100}%`,
+              "--bubble-size": `${8 + (index % 5) * 7}px`,
+              "--bubble-delay": `${-(index % 8) * 1.3}s`,
+              "--bubble-duration": `${7 + (index % 6)}s`,
+            } as CSSProperties}
+          />
+        ))}
+      </div>
+
+      <div className="hero-orbit-field" aria-hidden="true">
+        {orbitNodes.map((node) => (
+          <div key={node.label} className={`orbit-node ${node.className}`}>
+            <span>{node.label}</span>
+          </div>
+        ))}
+      </div>
+
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        className="hero-layout"
+        style={{ y: reduceMotion ? 0 : contentY, opacity: contentOpacity }}
       >
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-2"
+          initial={{ opacity: 0, x: -32 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="hero-copy"
         >
-          <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">
-            Scroll
-          </span>
-          <div className="w-5 h-8 rounded-full border border-gray-600/80 flex justify-center pt-1.5 shadow-[0_0_20px_rgba(0,255,170,0.1)]">
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-1 h-2 rounded-full bg-accent"
-            />
+          <div className="availability-pill">
+            <span /> Cebu, Philippines · Available worldwide
+          </div>
+          <p className="hero-overline">Computer engineer · AI developer</p>
+          <h1 className="hero-title">
+            <span>Mark</span>
+            <strong>Lloyd Cuizon</strong>
+          </h1>
+          <p className="hero-manifesto">{siteConfig.description}</p>
+          <div className="hero-actions">
+            <a href="#projects" className="hero-primary-action magnetic-target">
+              Explore my work <span aria-hidden="true">↗</span>
+            </a>
+            <a href="#contact" className="hero-text-action">Start a conversation</a>
+          </div>
+          <div className="hero-credential">
+            <span className="credential-mark">CE</span>
+            <span>
+              <small>{siteConfig.education.degree}</small>
+              {siteConfig.education.school}
+            </span>
           </div>
         </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.86, rotate: 6 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={{ duration: 1.2, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="hero-portrait-stage"
+        >
+          <div className="portrait-halo" />
+          <div ref={portraitRef} className="portrait-shell">
+            {reduceMotion ? (
+              <img
+                src="/media/hero-portrait.jpg"
+                alt="Mark Lloyd Cuizon, Computer Engineer and AI Developer"
+              />
+            ) : (
+              <video
+                src="/media/hero-portrait.mp4"
+                poster="/media/hero-portrait.jpg"
+                aria-label="Mark Lloyd Cuizon, Computer Engineer and AI Developer"
+                muted
+                autoPlay
+                loop
+                playsInline
+              />
+            )}
+            <div className="portrait-sheen" />
+          </div>
+          <div className="portrait-caption">
+            <span>Selected discipline</span>
+            <strong>{activeDiscipline.role}</strong>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 32 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="hero-selector"
+        >
+          <div className="discipline-cards" aria-label="Portfolio disciplines">
+            {disciplines.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => selectDiscipline(item.id)}
+                className={discipline === item.id ? "active" : ""}
+                aria-pressed={discipline === item.id}
+              >
+                <span className="discipline-number">0{index + 1}</span>
+                <span className="discipline-symbol" aria-hidden="true">
+                  {item.id === "ai" ? "AI" : "IO"}
+                </span>
+                <span className="discipline-copy">
+                  <strong>{item.label}</strong>
+                  <small>{item.detail}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="selector-arrows" aria-hidden="true">
+            <span>01</span><span>02</span>
+          </div>
+          <h2 className="hero-side-title">
+            <span>Ideas into</span>
+            working systems.
+          </h2>
+        </motion.div>
       </motion.div>
+
+      <a href="#about" className="hero-scroll-cue">
+        <span>Scroll to discover</span>
+        <i aria-hidden="true" />
+      </a>
     </section>
   );
 }

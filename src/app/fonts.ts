@@ -1,4 +1,4 @@
-import { Inter, JetBrains_Mono, Outfit } from "next/font/google";
+import { Galada, Inter, JetBrains_Mono, Manrope, Outfit } from "next/font/google";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -15,5 +15,18 @@ export const jetbrainsMono = JetBrains_Mono({
 export const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
+  display: "swap",
+});
+
+export const galada = Galada({
+  subsets: ["latin"],
+  variable: "--font-galada",
+  weight: "400",
+  display: "swap",
+});
+
+export const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
   display: "swap",
 });

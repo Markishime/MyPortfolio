@@ -43,28 +43,28 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
-          "fixed top-0 w-full z-50 transition-all duration-500",
+          "portfolio-nav fixed top-0 w-full z-50 transition-all duration-500",
           isScrolled
-            ? "glass-strong py-3"
+            ? "is-scrolled py-3"
             : "bg-transparent py-5"
         )}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
+        <div className="portfolio-nav-inner mx-auto px-6 lg:px-8 flex justify-between items-center">
           {/* Logo */}
           <motion.a
             href="#home"
-            className="relative group"
+            className="portfolio-logo relative group"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="text-2xl font-display font-bold tracking-tight">
-              <span className="gradient-text">MLC</span>
+            <span className="portfolio-logo-mark" aria-hidden="true">+</span>
+            <span className="portfolio-logo-name">
+              Mark Cuizon
             </span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-cyber group-hover:w-full transition-all duration-300" />
           </motion.a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="portfolio-nav-links hidden md:flex items-center gap-1">
             {siteConfig.navLinks.map((link) => (
               <motion.a
                 key={link.href}
@@ -72,8 +72,8 @@ export default function Navbar() {
                 className={cn(
                   "relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300",
                   activeSection === link.href.slice(1)
-                    ? "text-accent"
-                    : "text-gray-400 hover:text-white"
+                    ? "active"
+                    : "text-white/70 hover:text-white"
                 )}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -82,7 +82,7 @@ export default function Navbar() {
                 {activeSection === link.href.slice(1) && (
                   <motion.div
                     layoutId="activeNav"
-                    className="absolute inset-0 rounded-full bg-accent/10 border border-accent/20"
+                    className="portfolio-active-pill absolute inset-0 rounded-full"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
@@ -90,23 +90,27 @@ export default function Navbar() {
             ))}
           </div>
 
+          <a href="#contact" className="portfolio-contact magnetic-target hidden md:inline-flex">
+            Contact me <span aria-hidden="true">↗</span>
+          </a>
+
           {/* Mobile Toggle */}
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="md:hidden relative w-8 h-8 flex flex-col items-center justify-center gap-1.5"
+            className="portfolio-menu-toggle md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5"
             aria-label="Toggle menu"
           >
             <motion.span
               animate={isMobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-              className="w-6 h-0.5 bg-accent block origin-center"
+              className="w-5 h-px bg-white block origin-center"
             />
             <motion.span
               animate={isMobileOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 }}
-              className="w-6 h-0.5 bg-accent block"
+              className="w-5 h-px bg-white block"
             />
             <motion.span
               animate={isMobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-              className="w-6 h-0.5 bg-accent block origin-center"
+              className="w-5 h-px bg-white block origin-center"
             />
           </button>
         </div>
@@ -119,7 +123,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="md:hidden glass-strong mx-4 mt-2 rounded-2xl overflow-hidden"
+              className="portfolio-mobile-menu md:hidden mx-4 mt-2 rounded-2xl overflow-hidden"
             >
               <div className="p-4 flex flex-col gap-1">
                 {siteConfig.navLinks.map((link, i) => (

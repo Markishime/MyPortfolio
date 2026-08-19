@@ -13,6 +13,7 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 import Preloader from "@/components/Preloader";
+import ScrollCinema from "@/components/ScrollCinema";
 
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
   ssr: false,
@@ -24,6 +25,7 @@ export default function Home() {
       <Preloader />
       <CustomCursor />
       <SmoothScroll>
+        <ScrollCinema />
         <Navbar />
         <main>
           <Hero />

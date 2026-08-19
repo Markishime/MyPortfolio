@@ -1,20 +1,108 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CinematicMedia from "./CinematicMedia";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const stills = [
-  { src: "/media/orbit-ai.jpg", alt: "Orbit AI life OS scene" },
-  { src: "/media/ecolock.jpg", alt: "Smart EcoLock corridor" },
-  { src: "/media/lockmate.jpg", alt: "LockMate bicycle at night" },
-  { src: "/media/masbate.jpg", alt: "Masbate coastline at dusk" },
+  { src: "/media/orbit-ai.jpg", alt: "Orbit AI life OS scene", title: "Intelligence", detail: "AI systems that organize real life" },
+  { src: "/media/ecolock.jpg", alt: "Smart EcoLock corridor", title: "Embedded", detail: "Hardware that senses and responds" },
+  { src: "/media/lockmate.jpg", alt: "LockMate bicycle at night", title: "Connected", detail: "IoT security beyond the screen" },
+  { src: "/media/masbate.jpg", alt: "Masbate coastline at dusk", title: "Human", detail: "Technology grounded in place" },
 ];
 
 export default function CinematicReel() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track) return;
+
+    const media = gsap.matchMedia();
+    const context = gsap.context(() => {
+      media.add(
+        "(min-width: 901px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          const panels = gsap.utils.toArray<HTMLElement>(".reel-panel");
+          const distance = () => Math.max(track.scrollWidth - window.innerWidth, 0);
+
+          // One pinned camera move carries the viewer through the complete project reel.
+          const horizontal = gsap.to(track, {
+            x: () => -distance(),
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: () => `+=${distance() * 1.12}`,
+              pin: true,
+              scrub: 1.05,
+              invalidateOnRefresh: true,
+              anticipatePin: 1,
+            },
+          });
+
+          // Each panel assembles in depth as the horizontal camera approaches it.
+          panels.forEach((panel, index) => {
+            const mediaElement = panel.querySelector<HTMLElement>(".reel-panel-media");
+            gsap.fromTo(
+              panel,
+              { rotateY: index === 0 ? 0 : 24, rotateX: 7, z: -180, opacity: index === 0 ? 1 : 0.42 },
+              {
+                rotateY: -8,
+                rotateX: 0,
+                z: 40,
+                opacity: 1,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: panel,
+                  containerAnimation: horizontal,
+                  start: "left 92%",
+                  end: "right 34%",
+                  scrub: 0.8,
+                },
+              }
+            );
+            if (mediaElement) {
+              gsap.fromTo(
+                mediaElement,
+                { scale: 1.18, xPercent: -5 },
+                {
+                  scale: 1,
+                  xPercent: 5,
+                  ease: "none",
+                  scrollTrigger: {
+                    trigger: panel,
+                    containerAnimation: horizontal,
+                    start: "left right",
+                    end: "right left",
+                    scrub: true,
+                  },
+                }
+              );
+            }
+          });
+        }
+      );
+    }, section);
+
+    return () => {
+      context.revert();
+      media.revert();
+    };
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
+      id="showreel"
       aria-label="Cinematic showreel"
-      className="relative h-[46vh] min-h-[320px] max-h-[560px] overflow-hidden"
+      className="cinematic-reel relative overflow-hidden"
     >
       <CinematicMedia
         image="/media/hero-studio.jpg"
@@ -26,54 +114,40 @@ export default function CinematicReel() {
       <div className="cinematic-rain pointer-events-none absolute inset-0 z-[1] opacity-40" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 z-[1] pointer-events-none perspective-grid opacity-30" />
 
-      <div className="relative z-10 h-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col justify-center gap-8">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-xl"
-        >
-          <p className="text-[10px] font-mono uppercase tracking-[0.28em] text-accent/80 mb-3">
-            Showreel
-          </p>
-          <h2 className="text-3xl sm:text-5xl font-display font-bold text-white cinematic-title-shadow leading-[0.95]">
-            Built in Cebu.
-            <span className="block text-accent/90 mt-1">Shipped as systems.</span>
-          </h2>
-          <p className="mt-4 text-sm sm:text-base text-gray-400 max-w-md">
-            Hardware, software, and AI treated as one picture: locks, life OS,
-            fields, and coasts.
-          </p>
-        </motion.div>
-
-        <div
-          className="hidden md:flex gap-4 self-end w-full max-w-3xl"
-          style={{ perspective: 1200 }}
-        >
-          {stills.map((still, i) => (
-            <motion.div
-              key={still.src}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.35,
-                delay: 0.04 * i,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="relative h-28 flex-1 overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.45)]"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={still.src}
-                alt={still.alt}
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
-            </motion.div>
-          ))}
+      <div ref={trackRef} className="reel-track relative z-10">
+        <div className="reel-intro reel-panel">
+          <motion.div
+            initial={{ opacity: 0, y: 34, z: -80 }}
+            whileInView={{ opacity: 1, y: 0, z: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-xl"
+          >
+            <p className="reel-kicker">Showreel · Scroll to travel</p>
+            <h2 className="reel-title">
+              Built in Cebu.
+              <span>Shipped as systems.</span>
+            </h2>
+            <p className="reel-description">
+              Hardware, software, and AI treated as one picture: locks, life OS,
+              fields, and coasts.
+            </p>
+          </motion.div>
         </div>
+
+        {stills.map((still, index) => (
+          <article key={still.src} className="reel-panel reel-project-panel">
+            <div className="reel-panel-index">0{index + 1}</div>
+            <div className="reel-panel-media-wrap">
+              <img src={still.src} alt={still.alt} className="reel-panel-media" />
+              <div className="reel-panel-refraction" />
+            </div>
+            <div className="reel-panel-copy">
+              <h3>{still.title}</h3>
+              <p>{still.detail}</p>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );
