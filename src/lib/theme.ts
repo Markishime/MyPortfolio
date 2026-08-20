@@ -42,7 +42,7 @@ export const THEMES: Record<ThemeId, ThemePalette> = {
     id: "engineer",
     title: "Computer Engineer",
     rank: "Secondary",
-    detail: "Embedded · Systems · C++",
+    detail: "Embedded · IoT · ESP32",
     symbol: "CE",
     accent: [169, 216, 232],
     cool: [255, 107, 85],

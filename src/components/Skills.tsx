@@ -1,28 +1,30 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
+import { easeOut, fadeUp, inView } from "@/lib/motion";
 import SectionHeading from "./SectionHeading";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+const chipVariants = {
+  hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.35, ease: easeOut },
   },
 };
 
 export default function Skills() {
+  const reduce = useReducedMotion();
+  const cardReveal = reduce
+    ? {}
+    : {
+        initial: fadeUp.hidden,
+        whileInView: fadeUp.visible,
+        viewport: inView,
+      };
+  const chipViewport = { once: true, amount: 0.2 };
+
   return (
     <section id="skills" className="relative py-32 overflow-hidden section-cinematic">
       <div className="absolute inset-0 dot-grid opacity-20" />
@@ -43,10 +45,7 @@ export default function Skills() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Programming Languages with Bars */}
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            {...cardReveal}
             className="glass-card rounded-3xl p-8"
           >
             <div className="flex items-center gap-3 mb-6">
@@ -72,7 +71,13 @@ export default function Skills() {
 
             <div className="space-y-5">
               {siteConfig.skills.languages.map((lang) => (
-                <motion.div key={lang.name} variants={itemVariants}>
+                <motion.div
+                  key={lang.name}
+                  initial={reduce ? false : { opacity: 0, y: 10 }}
+                  whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+                  viewport={inView}
+                  transition={{ duration: 0.4, ease: easeOut }}
+                >
                   <div className="flex justify-between mb-2">
                     <span className="text-sm font-mono text-gray-300">
                       {lang.name}
@@ -101,10 +106,7 @@ export default function Skills() {
 
           {/* Frameworks */}
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            {...cardReveal}
             className="glass-card rounded-3xl p-8"
           >
             <div className="flex items-center gap-3 mb-6">
@@ -128,11 +130,20 @@ export default function Skills() {
               </h3>
             </div>
 
-            <motion.div className="flex flex-wrap gap-3">
-              {siteConfig.skills.frameworks.map((fw, i) => (
+            <motion.div
+              className="flex flex-wrap gap-3"
+              initial={reduce ? false : "hidden"}
+              whileInView={reduce ? undefined : "visible"}
+              viewport={chipViewport}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.04 } },
+              }}
+            >
+              {siteConfig.skills.frameworks.map((fw) => (
                 <motion.span
                   key={fw}
-                  variants={itemVariants}
+                  variants={chipVariants}
                   whileHover={{
                     scale: 1.08,
                     y: -3,
@@ -148,10 +159,7 @@ export default function Skills() {
 
           {/* Tools & Platforms */}
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            {...cardReveal}
             className="glass-card rounded-3xl p-8"
           >
             <div className="flex items-center gap-3 mb-6">
@@ -175,11 +183,20 @@ export default function Skills() {
               </h3>
             </div>
 
-            <motion.div className="flex flex-wrap gap-3">
+            <motion.div
+              className="flex flex-wrap gap-3"
+              initial={reduce ? false : "hidden"}
+              whileInView={reduce ? undefined : "visible"}
+              viewport={chipViewport}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.04 } },
+              }}
+            >
               {siteConfig.skills.tools.map((tool) => (
                 <motion.span
                   key={tool}
-                  variants={itemVariants}
+                  variants={chipVariants}
                   whileHover={{
                     scale: 1.08,
                     y: -3,
@@ -195,10 +212,7 @@ export default function Skills() {
 
           {/* Hardware */}
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            {...cardReveal}
             className="glass-card rounded-3xl p-8"
           >
             <div className="flex items-center gap-3 mb-6">
@@ -222,11 +236,20 @@ export default function Skills() {
               </h3>
             </div>
 
-            <motion.div className="grid grid-cols-2 gap-3">
+            <motion.div
+              className="grid grid-cols-2 gap-3"
+              initial={reduce ? false : "hidden"}
+              whileInView={reduce ? undefined : "visible"}
+              viewport={chipViewport}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.04 } },
+              }}
+            >
               {siteConfig.skills.hardware.map((hw) => (
                 <motion.div
                   key={hw}
-                  variants={itemVariants}
+                  variants={chipVariants}
                   whileHover={{ scale: 1.03, x: 4 }}
                   className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-mono text-gray-300 bg-white/[0.02] border border-white/5 hover:border-amber-400/20 hover:text-amber-300 transition-all cursor-default"
                 >

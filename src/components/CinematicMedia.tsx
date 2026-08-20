@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { readPerfTier } from "@/lib/perf";
 
 interface CinematicMediaProps {
   image: string;
@@ -29,11 +30,19 @@ export default function CinematicMedia({
   const videoRef = useRef<HTMLVideoElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [allowFx, setAllowFx] = useState(false);
+  const [allowKenBurns, setAllowKenBurns] = useState(false);
   const [active, setActive] = useState(priority || playing === true);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduceMotion(media.matches);
+    const sync = () => {
+      const reduced = media.matches;
+      const tier = readPerfTier();
+      setReduceMotion(reduced);
+      setAllowFx(!reduced && tier === "high");
+      setAllowKenBurns(!reduced && tier === "high");
+    };
     sync();
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
@@ -71,7 +80,8 @@ export default function CinematicMedia({
     }
   }, [active, reduceMotion]);
 
-  const canPlayVideo = Boolean(video) && !reduceMotion;
+  const canPlayVideo =
+    Boolean(video) && !reduceMotion && (allowFx || playing === true || priority);
 
   return (
     <div
@@ -87,7 +97,7 @@ export default function CinematicMedia({
           loop
           playsInline
           autoPlay={priority}
-          preload={priority ? "auto" : "metadata"}
+          preload={priority ? "metadata" : "none"}
           aria-label={alt}
           className="absolute inset-0 h-full w-full object-cover"
           style={{ objectPosition }}
@@ -99,12 +109,12 @@ export default function CinematicMedia({
           alt={alt}
           className={cn(
             "absolute inset-0 h-full w-full object-cover",
-            kenBurns && !reduceMotion && "cinematic-kenburns"
+            kenBurns && allowKenBurns && "cinematic-kenburns"
           )}
           style={{ objectPosition }}
         />
       )}
-      {!canPlayVideo && !reduceMotion && (
+      {!canPlayVideo && allowFx && (
         <div className="cinematic-still-light" aria-hidden="true" />
       )}
       <div

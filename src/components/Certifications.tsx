@@ -1,28 +1,20 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
+import { easeOut, fadeUp, inView } from "@/lib/motion";
 import SectionHeading from "./SectionHeading";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, scale: 0.8, y: 20 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
 export default function Certifications() {
+  const reduce = useReducedMotion();
+  const cardReveal = reduce
+    ? {}
+    : {
+        initial: fadeUp.hidden,
+        whileInView: fadeUp.visible,
+        viewport: inView,
+      };
+
   return (
     <section id="certifications" className="relative py-32 overflow-hidden">
       <div className="absolute inset-0 dot-grid opacity-20" />
@@ -36,18 +28,13 @@ export default function Certifications() {
         />
 
         {/* Hackathons */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12"
-        >
-          {siteConfig.hackathons.map((hack) => (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
+          {siteConfig.hackathons.map((hack, i) => (
             <motion.div
               key={hack.name}
-              variants={itemVariants}
-              whileHover={{ y: -5, scale: 1.02 }}
+              {...cardReveal}
+              transition={reduce ? undefined : { duration: 0.5, delay: i * 0.06, ease: easeOut }}
+              whileHover={reduce ? undefined : { y: -5 }}
               className="glass-card rounded-3xl p-6 text-center relative overflow-hidden group"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -74,21 +61,16 @@ export default function Certifications() {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Certificates Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {siteConfig.certifications.map((cert, i) => (
             <motion.div
               key={cert}
-              variants={itemVariants}
-              whileHover={{ x: 6, scale: 1.01 }}
+              {...cardReveal}
+              transition={reduce ? undefined : { duration: 0.45, delay: (i % 3) * 0.05, ease: easeOut }}
+              whileHover={reduce ? undefined : { y: -4 }}
               className="group flex items-start gap-3 p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-accent/20 hover:bg-accent/[0.03] transition-all duration-300 cursor-default"
             >
               <div className="mt-0.5 w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
@@ -113,7 +95,7 @@ export default function Certifications() {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

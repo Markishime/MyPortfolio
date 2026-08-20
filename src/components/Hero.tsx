@@ -9,6 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { siteConfig } from "@/lib/data";
+import { readPerfTier } from "@/lib/perf";
 import { THEMES, type ThemeId } from "@/lib/theme";
 import { useTheme } from "./ThemeProvider";
 
@@ -23,7 +24,7 @@ const orbitNodes = [
   { label: "React", className: "orbit-node-6" },
   { label: "Node", className: "orbit-node-7" },
   { label: "ML", className: "orbit-node-8" },
-  { label: "C++", className: "orbit-node-9" },
+  { label: "SQL", className: "orbit-node-9" },
 ];
 
 const motionFilms = {
@@ -46,7 +47,7 @@ export default function Hero() {
   const portraitRef = useRef<HTMLDivElement>(null);
   const reduceMotionPref = useReducedMotion();
   const [hydrated, setHydrated] = useState(false);
-  const [liteMedia, setLiteMedia] = useState(false);
+  const [liteMedia, setLiteMedia] = useState(true);
   const reduceMotion = hydrated ? Boolean(reduceMotionPref) : false;
   const stillsOnly = reduceMotion || liteMedia;
   const { identity, setIdentity } = useTheme();
@@ -65,19 +66,40 @@ export default function Hero() {
 
   useEffect(() => {
     setHydrated(true);
-    setLiteMedia(window.matchMedia("(max-width: 767px)").matches);
+    setLiteMedia(
+      window.matchMedia("(max-width: 900px)").matches ||
+        window.matchMedia("(pointer: coarse)").matches ||
+        readPerfTier() !== "high"
+    );
   }, []);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion || liteMedia) return;
     const timer = window.setInterval(() => {
       setFilmIndex((current) => (current + 1) % 2);
     }, 5200);
     return () => window.clearInterval(timer);
-  }, [reduceMotion]);
+  }, [reduceMotion, liteMedia]);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    const section = containerRef.current;
+    if (!section) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        section.classList.toggle("is-away", !entry.isIntersecting);
+        section.querySelectorAll("video").forEach((video) => {
+          if (entry.isIntersecting) video.play().catch(() => {});
+          else video.pause();
+        });
+      },
+      { threshold: 0.08 }
+    );
+    io.observe(section);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion || liteMedia) return;
     const section = containerRef.current;
     if (!section) return;
 
@@ -138,7 +160,7 @@ export default function Hero() {
       window.removeEventListener("pointermove", onPointerMove);
       cancelAnimationFrame(frame);
     };
-  }, [reduceMotion]);
+  }, [reduceMotion, liteMedia]);
 
   const selectIdentity = (next: ThemeId) => {
     if (next === identity || isSwitching) return;
@@ -160,11 +182,18 @@ export default function Hero() {
     >
       <motion.div
         className="hero-motion-backdrop"
-        style={{ y: reduceMotion ? 0 : mediaY, scale: reduceMotion ? 1 : mediaScale }}
+        style={{
+          y: reduceMotion || liteMedia ? 0 : mediaY,
+          scale: reduceMotion || liteMedia ? 1 : mediaScale,
+        }}
         aria-hidden="true"
       >
         {stillsOnly ? (
-          <img src="/media/hero-studio.jpg" alt="" />
+          <img
+            src="/media/hero-studio.jpg"
+            alt=""
+            className={reduceMotion ? undefined : "cinematic-kenburns"}
+          />
         ) : (
           <video
             src="/media/hero-studio.mp4"
@@ -179,12 +208,13 @@ export default function Hero() {
         <div className="hero-media-wash" />
       </motion.div>
 
+      {!liteMedia && !reduceMotion && (
       <div className="neural-field" aria-hidden="true">
         {Array.from({ length: 7 }).map((_, index) => (
           <motion.span
             key={index}
             style={{ "--trace-index": index } as CSSProperties}
-            animate={reduceMotion ? undefined : {
+            animate={{
               opacity: [0.12, 0.55, 0.12],
               scaleX: [0.72, 1.06, 0.72],
               x: [0, index % 2 === 0 ? 34 : -34, 0],
@@ -198,7 +228,9 @@ export default function Hero() {
           />
         ))}
       </div>
+      )}
 
+      {!liteMedia && !reduceMotion && (
       <div className="hero-film-layer" aria-hidden="true">
         <AnimatePresence mode="popLayout">
           {activeFilms.map((film, index) => (
@@ -238,20 +270,23 @@ export default function Hero() {
           ))}
         </AnimatePresence>
       </div>
+      )}
 
-      <div className="hero-bubbles" aria-hidden="true">
-        {Array.from({ length: 16 }).map((_, index) => (
-          <span
-            key={index}
-            style={{
-              "--bubble-left": `${(index * 37) % 100}%`,
-              "--bubble-size": `${8 + (index % 5) * 7}px`,
-              "--bubble-delay": `${-(index % 8) * 1.3}s`,
-              "--bubble-duration": `${7 + (index % 6)}s`,
-            } as CSSProperties}
-          />
-        ))}
-      </div>
+      {!reduceMotion && (
+        <div className="hero-bubbles" aria-hidden="true">
+          {Array.from({ length: liteMedia ? 5 : 8 }).map((_, index) => (
+            <span
+              key={index}
+              style={{
+                "--bubble-left": `${(index * 37) % 100}%`,
+                "--bubble-size": `${8 + (index % 5) * 7}px`,
+                "--bubble-delay": `${-(index % 8) * 1.3}s`,
+                "--bubble-duration": `${8 + (index % 5)}s`,
+              } as CSSProperties}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="hero-orbit-field" aria-hidden="true">
         {orbitNodes.map((node) => (
@@ -263,7 +298,10 @@ export default function Hero() {
 
       <motion.div
         className="hero-layout"
-        style={{ y: reduceMotion ? 0 : contentY, opacity: contentOpacity }}
+        style={{
+          y: reduceMotion || liteMedia ? 0 : contentY,
+          opacity: reduceMotion || liteMedia ? 1 : contentOpacity,
+        }}
       >
         <motion.div
           initial={{ opacity: 0, x: -32 }}
@@ -338,13 +376,18 @@ export default function Hero() {
           className="hero-selector"
         >
           <div className="discipline-cards" aria-label="Professional titles">
-            {disciplines.map((item) => (
-              <button
+            {disciplines.map((item, index) => (
+              <motion.button
                 key={item.id}
                 type="button"
                 onClick={() => selectIdentity(item.id)}
                 className={identity === item.id ? "active" : ""}
                 aria-pressed={identity === item.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.5 + index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <span className="discipline-number">
                   {item.rank === "Primary" ? "01" : item.rank === "Secondary" ? "02" : "03"}
@@ -356,7 +399,7 @@ export default function Hero() {
                   <strong>{item.title}</strong>
                   <small>{item.detail}</small>
                 </span>
-              </button>
+              </motion.button>
             ))}
           </div>
           <div className="selector-arrows" aria-hidden="true">

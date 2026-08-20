@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { cinematicRuntime } from "@/components/scene/runtime";
+import { applyPerfDataset } from "@/lib/perf";
 import {
   THEMES,
   type RGB,
@@ -115,19 +116,12 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    applyPerfDataset();
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let raf = 0;
     let running = false;
-    let lastY = window.scrollY;
+    let scrollQueued = false;
     const displayed: LivePalette = { ...toLive("fullstack") };
-
-    const readScroll = () => {
-      const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-      cinematicRuntime.scroll = window.scrollY / max;
-      const pulse = Math.min(Math.abs(window.scrollY - lastY) / 28, 1);
-      lastY = window.scrollY;
-      cinematicRuntime.energy += (pulse - cinematicRuntime.energy) * 0.12;
-    };
 
     const tick = () => {
       const target = toLive(identityRef.current);
@@ -137,9 +131,8 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
       displayed.mid = lerpRgb(displayed.mid, target.mid, 0.22);
       displayed.outer = lerpRgb(displayed.outer, target.outer, 0.22);
       displayed.onAccent = lerpRgb(displayed.onAccent, target.onAccent, 0.22);
-      cinematicRuntime.energy *= 0.9;
-      publishRgb(displayed, cinematicRuntime.energy, identityRef.current);
-      if (settled(displayed, target) && cinematicRuntime.energy < 0.02) {
+      publishRgb(displayed, 0, identityRef.current);
+      if (settled(displayed, target)) {
         running = false;
         publishRgb(target, 0, identityRef.current);
         return;
@@ -155,8 +148,16 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     kickRef.current = kick;
 
     const onScroll = () => {
-      readScroll();
-      if (cinematicRuntime.energy > 0.02) kick();
+      if (scrollQueued) return;
+      scrollQueued = true;
+      requestAnimationFrame(() => {
+        scrollQueued = false;
+        const max = Math.max(
+          document.documentElement.scrollHeight - window.innerHeight,
+          1
+        );
+        cinematicRuntime.scroll = window.scrollY / max;
+      });
     };
 
     document.documentElement.dataset.identity = identityRef.current;

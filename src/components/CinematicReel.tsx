@@ -41,51 +41,29 @@ export default function CinematicReel() {
               start: "top top",
               end: () => `+=${distance() * 1.12}`,
               pin: true,
-              scrub: 1.05,
+              scrub: true,
               invalidateOnRefresh: true,
               anticipatePin: 1,
             },
           });
 
           // Each panel assembles in depth as the horizontal camera approaches it.
-          panels.forEach((panel, index) => {
-            const mediaElement = panel.querySelector<HTMLElement>(".reel-panel-media");
+          panels.forEach((panel) => {
             gsap.fromTo(
               panel,
-              { rotateY: index === 0 ? 0 : 24, rotateX: 7, z: -180, opacity: index === 0 ? 1 : 0.42 },
+              { opacity: 0.55 },
               {
-                rotateY: -8,
-                rotateX: 0,
-                z: 40,
                 opacity: 1,
                 ease: "none",
                 scrollTrigger: {
                   trigger: panel,
                   containerAnimation: horizontal,
                   start: "left 92%",
-                  end: "right 34%",
-                  scrub: 0.8,
+                  end: "left 48%",
+                  scrub: true,
                 },
               }
             );
-            if (mediaElement) {
-              gsap.fromTo(
-                mediaElement,
-                { scale: 1.18, xPercent: -5 },
-                {
-                  scale: 1,
-                  xPercent: 5,
-                  ease: "none",
-                  scrollTrigger: {
-                    trigger: panel,
-                    containerAnimation: horizontal,
-                    start: "left right",
-                    end: "right left",
-                    scrub: true,
-                  },
-                }
-              );
-            }
           });
         }
       );
@@ -106,8 +84,8 @@ export default function CinematicReel() {
     >
       <CinematicMedia
         image="/media/hero-studio.jpg"
-        video="/media/hero-studio.mp4"
         alt="Cinematic Cebu workbench in the rain"
+        kenBurns={false}
         className="pointer-events-none absolute inset-0"
         overlayClassName="from-[#060b14] via-[#060b14]/55 to-[#060b14]/70"
       />
@@ -136,7 +114,14 @@ export default function CinematicReel() {
         </div>
 
         {stills.map((still, index) => (
-          <article key={still.src} className="reel-panel reel-project-panel">
+          <motion.article
+            key={still.src}
+            className="reel-panel reel-project-panel"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.55, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+          >
             <div className="reel-panel-index">0{index + 1}</div>
             <div className="reel-panel-media-wrap">
               <img src={still.src} alt={still.alt} className="reel-panel-media" />
@@ -146,7 +131,7 @@ export default function CinematicReel() {
               <h3>{still.title}</h3>
               <p>{still.detail}</p>
             </div>
-          </article>
+          </motion.article>
         ))}
       </div>
     </section>

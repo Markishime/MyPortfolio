@@ -3,30 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { canUseWebGLLayer } from "@/lib/perf";
 import { cinematicRuntime } from "./runtime";
 import CinematicScene from "./CinematicScene";
-
-function canUseWebGL() {
-  if (typeof window === "undefined") return false;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-  if (window.matchMedia("(max-width: 767px)").matches) return false;
-  const nav = navigator as Navigator & {
-    deviceMemory?: number;
-    connection?: { saveData?: boolean; effectiveType?: string };
-  };
-  if (nav.connection?.saveData) return false;
-  if (nav.connection?.effectiveType === "2g" || nav.connection?.effectiveType === "slow-2g") {
-    return false;
-  }
-  try {
-    const canvas = document.createElement("canvas");
-    const ok = Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
-    canvas.remove();
-    return ok;
-  } catch {
-    return false;
-  }
-}
 
 function detectQuality(): "high" | "low" {
   const nav = navigator as Navigator & { deviceMemory?: number };
@@ -70,7 +49,7 @@ export default function CinematicCanvas() {
     let idleId = 0;
     let timeoutId = 0;
     const start = () => {
-      if (!canUseWebGL()) {
+      if (!canUseWebGLLayer()) {
         document.documentElement.dataset.webgl = "off";
         return;
       }
@@ -119,10 +98,10 @@ export default function CinematicCanvas() {
     <div className="cinematic-webgl" aria-hidden="true">
       <Canvas
         frameloop={loop}
-        dpr={high ? [1, 1.5] : [1, 1.15]}
+        dpr={[1, high ? 1.25 : 1]}
         gl={{
           alpha: true,
-          antialias: high,
+          antialias: false,
           powerPreference: "high-performance",
           stencil: false,
           depth: true,
@@ -135,7 +114,7 @@ export default function CinematicCanvas() {
           gl.outputColorSpace = THREE.SRGBColorSpace;
         }}
       >
-        <DprGuard cap={high ? 1.5 : 1.15} />
+        <DprGuard cap={high ? 1.25 : 1} />
         <CinematicScene />
       </Canvas>
     </div>

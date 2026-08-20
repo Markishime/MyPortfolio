@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -11,26 +11,31 @@ export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+    const nodes = siteConfig.navLinks
+      .map((link) => document.getElementById(link.href.slice(1)))
+      .filter((node): node is HTMLElement => Boolean(node));
 
-      const sections = document.querySelectorAll("section[id]");
-      const scrollY = window.scrollY + 120;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target.id) setActiveSection(visible.target.id);
+      },
+      { rootMargin: "-42% 0px -48% 0px", threshold: [0, 0.2, 0.5, 1] }
+    );
+    nodes.forEach((node) => observer.observe(node));
 
-      sections.forEach((section) => {
-        const el = section as HTMLElement;
-        const top = el.offsetTop;
-        const height = el.offsetHeight;
-        const id = el.getAttribute("id") || "";
-
-        if (scrollY >= top && scrollY < top + height) {
-          setActiveSection(id);
-        }
-      });
+    const onScroll = () => {
+      const scrolled = window.scrollY > 50;
+      setIsScrolled((prev) => (prev === scrolled ? prev : scrolled));
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   return (
@@ -154,20 +159,27 @@ export default function Navbar() {
 }
 
 function ProgressBar() {
-  const [progress, setProgress] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+    const bar = barRef.current;
+    if (!bar) return;
+    let queued = false;
+    const update = () => {
+      queued = false;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? window.scrollY / max : 0;
+      bar.style.transform = `scaleX(${progress})`;
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  return (
-    <div className="progress-bar" style={{ width: `${progress}%` }} />
-  );
+  return <div ref={barRef} className="progress-bar" />;
 }

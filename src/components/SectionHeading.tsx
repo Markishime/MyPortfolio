@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { easeOut, inView } from "@/lib/motion";
 
 interface SectionHeadingProps {
   badge?: string;
@@ -16,12 +17,14 @@ export default function SectionHeading({
   subtitle,
   className,
 }: SectionHeadingProps) {
+  const reduce = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      initial={reduce ? false : { opacity: 0, y: 22 }}
+      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+      viewport={inView}
+      transition={{ duration: 0.55, ease: easeOut }}
       className={cn("text-center mb-16", className)}
     >
       {badge && (

@@ -9,12 +9,15 @@ export default function Footer() {
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <motion.div
+          className="flex flex-col md:flex-row items-center justify-between gap-6"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
           {/* Logo */}
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="flex items-center gap-3"
           >
             <span className="text-xl font-display font-bold gradient-text">
@@ -72,14 +75,20 @@ export default function Footer() {
               </svg>
             </a>
           </div>
-        </div>
+        </motion.div>
 
         {/* Bottom text */}
-        <div className="mt-8 pt-6 border-t border-white/5 text-center">
+        <motion.div
+          className="mt-8 pt-6 border-t border-white/5 text-center"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.45, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+        >
           <p className="text-xs font-mono text-gray-600">
             Designed & Built by {siteConfig.name} — Built for the Future
           </p>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
+import { easeOut, fadeUp, inView } from "@/lib/motion";
 import SectionHeading from "./SectionHeading";
 
 const socialLinks = [
@@ -52,6 +53,15 @@ const socialLinks = [
 ];
 
 export default function Contact() {
+  const reduce = useReducedMotion();
+  const cardReveal = reduce
+    ? {}
+    : {
+        initial: fadeUp.hidden,
+        whileInView: fadeUp.visible,
+        viewport: inView,
+      };
+
   return (
     <section id="contact" className="relative py-32 overflow-hidden section-cinematic">
       <div className="absolute inset-0">
@@ -77,28 +87,16 @@ export default function Contact() {
         />
 
         {/* Contact Cards */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ staggerChildren: 0.1 }}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
           {socialLinks.map((link, i) => (
             <motion.a
               key={link.label}
               href={link.href}
               target={link.href.startsWith("http") ? "_blank" : undefined}
               rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.6,
-                delay: i * 0.1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              whileHover={{ y: -4, scale: 1.02 }}
+              {...cardReveal}
+              transition={reduce ? undefined : { duration: 0.5, delay: i * 0.07, ease: easeOut }}
+              whileHover={reduce ? undefined : { y: -4 }}
               className="group glass-card rounded-3xl p-6 flex items-center gap-4"
             >
               <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent/20 transition-colors shrink-0">
@@ -127,14 +125,12 @@ export default function Contact() {
               </svg>
             </motion.a>
           ))}
-        </motion.div>
+        </div>
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          {...cardReveal}
+          transition={reduce ? undefined : { duration: 0.5, delay: 0.12, ease: easeOut }}
           className="text-center"
         >
           <p className="text-gray-500 text-sm font-mono mb-6">

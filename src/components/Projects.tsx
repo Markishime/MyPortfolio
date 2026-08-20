@@ -5,6 +5,7 @@ import { siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import SectionHeading from "./SectionHeading";
 import CinematicMedia from "./CinematicMedia";
+import Reveal from "./Reveal";
 
 type Project = (typeof siteConfig.projects)[number];
 type Lane = "all" | "ai" | "embedded" | "web";
@@ -321,9 +322,10 @@ export default function Projects() {
               const wide = featured || i === 0 || i === 5;
 
               return (
-                <div
+                <Reveal
                   key={project.title}
                   className={wide ? "md:col-span-2 lg:col-span-2" : ""}
+                  delay={Math.min(i, 3) * 0.06}
                 >
                   <ProjectCard
                     project={project}
@@ -342,7 +344,7 @@ export default function Projects() {
                     }
                     onTech={toggleTech}
                   />
-                </div>
+                </Reveal>
               );
             })}
           </div>

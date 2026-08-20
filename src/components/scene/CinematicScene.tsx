@@ -144,7 +144,7 @@ function HeroForms() {
         <meshBasicMaterial ref={wireMat} color="#a9d8e8" wireframe transparent opacity={0.42} depthWrite={false} />
       </mesh>
       <mesh ref={ringA} rotation={[1.18, 0.25, 0.3]}>
-        <torusGeometry args={[1.85, 0.008, 8, 96]} />
+        <torusGeometry args={[1.85, 0.008, 6, 48]} />
         <meshBasicMaterial ref={ringMat} color="#a9d8e8" transparent opacity={0.32} depthWrite={false} />
       </mesh>
     </group>
@@ -216,7 +216,7 @@ function useHeroClusterMounted() {
 
 export default function CinematicScene() {
   const heroMounted = useHeroClusterMounted();
-  const count = cinematicRuntime.quality === "high" ? 36 : 16;
+  const count = cinematicRuntime.quality === "high" ? 22 : 10;
 
   return (
     <>
