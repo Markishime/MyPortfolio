@@ -104,6 +104,9 @@ export default function CinematicMedia({
           style={{ objectPosition }}
         />
       )}
+      {!canPlayVideo && !reduceMotion && (
+        <div className="cinematic-still-light" aria-hidden="true" />
+      )}
       <div
         className={cn(
           "pointer-events-none absolute inset-0 bg-gradient-to-t from-[#060b14] via-[#060b14]/20 to-transparent",

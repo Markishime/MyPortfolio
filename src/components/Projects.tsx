@@ -80,7 +80,7 @@ function ProjectCard({
             image={project.image}
             video={project.video}
             alt={`${project.title} preview`}
-            kenBurns={false}
+            kenBurns={!project.video}
             playing={previewing || open}
             className={wide ? "h-48 sm:h-56" : "h-40 sm:h-48"}
             overlayClassName="from-[#071018] via-[#071018]/25 to-transparent"

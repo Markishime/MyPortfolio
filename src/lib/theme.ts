@@ -1,19 +1,19 @@
 /**
  * Hero-driven theme tokens.
  *
- * The active identity (Full Stack Developer | Computer Engineer) owns a
+ * The active identity (Full Stack Developer | Computer Engineer | AI Developer) owns a
  * complementary palette. ThemeProvider writes these channels onto <html> as
  * CSS custom properties; every section, control, and the Three.js layer
  * reads the same variables. No component should hard-code an accent hex.
  */
 
-export type ThemeId = "fullstack" | "engineer";
+export type ThemeId = "fullstack" | "engineer" | "ai";
 export type RGB = readonly [number, number, number];
 
 export type ThemePalette = {
   id: ThemeId;
   title: string;
-  rank: "Primary" | "Secondary";
+  rank: "Primary" | "Secondary" | "Tertiary";
   detail: string;
   symbol: string;
   accent: RGB;
@@ -51,9 +51,22 @@ export const THEMES: Record<ThemeId, ThemePalette> = {
     outer: [18, 20, 28],
     onAccent: [16, 17, 22],
   },
+  ai: {
+    id: "ai",
+    title: "AI Developer",
+    rank: "Tertiary",
+    detail: "Agents · Gemini · Python",
+    symbol: "AI",
+    accent: [191, 255, 92],
+    cool: [177, 126, 255],
+    inner: [80, 111, 45],
+    mid: [34, 42, 31],
+    outer: [14, 17, 18],
+    onAccent: [18, 22, 18],
+  },
 };
 
-export const THEME_IDS: ThemeId[] = ["fullstack", "engineer"];
+export const THEME_IDS: ThemeId[] = ["fullstack", "engineer", "ai"];
 export const THEME_TRANSITION_MS = 480;
 
 export function lerp(a: number, b: number, t: number) {
@@ -111,6 +124,7 @@ export function writeThemeRgb(
   root.style.setProperty("--theme-glow", `rgb(${channel(accent)} / ${0.18 + energy * 0.22})`);
 }
 
-export function otherTheme(id: ThemeId): ThemeId {
-  return id === "fullstack" ? "engineer" : "fullstack";
+export function nextTheme(id: ThemeId): ThemeId {
+  const current = THEME_IDS.indexOf(id);
+  return THEME_IDS[(current + 1) % THEME_IDS.length];
 }

@@ -193,7 +193,11 @@ export default function ScrollCinema() {
       );
 
       media.add("(prefers-reduced-motion: no-preference)", () => {
-        const velocityTo = gsap.quickTo(scene, "scale", {
+        const velocityXTo = gsap.quickTo(scene, "scaleX", {
+          duration: 0.5,
+          ease: "power3.out",
+        });
+        const velocityYTo = gsap.quickTo(scene, "scaleY", {
           duration: 0.5,
           ease: "power3.out",
         });
@@ -215,7 +219,9 @@ export default function ScrollCinema() {
               "--scroll-energy",
               normalized.toFixed(3)
             );
-            velocityTo(1 + normalized * 0.035);
+            const velocityScale = 1 + normalized * 0.035;
+            velocityXTo(velocityScale);
+            velocityYTo(velocityScale);
             lightTo(0.72 + normalized * 0.28);
           },
         });

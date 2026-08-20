@@ -12,7 +12,7 @@ import { siteConfig } from "@/lib/data";
 import { THEMES, type ThemeId } from "@/lib/theme";
 import { useTheme } from "./ThemeProvider";
 
-const disciplines = [THEMES.fullstack, THEMES.engineer] as const;
+const disciplines = [THEMES.fullstack, THEMES.engineer, THEMES.ai] as const;
 
 const orbitNodes = [
   { label: "Python", className: "orbit-node-1" },
@@ -34,6 +34,10 @@ const motionFilms = {
   engineer: [
     { title: "Smart EcoLock", video: "/media/ecolock.mp4", image: "/media/ecolock.jpg" },
     { title: "LockMate", video: "/media/lockmate.mp4", image: "/media/lockmate.jpg" },
+  ],
+  ai: [
+    { title: "Orbit AI", video: "/media/orbit-ai.mp4", image: "/media/orbit-ai.jpg" },
+    { title: "Kinestra AI", video: "/media/kinestra.mp4", image: "/media/kinestra.jpg" },
   ],
 } as const;
 
@@ -342,7 +346,9 @@ export default function Hero() {
                 className={identity === item.id ? "active" : ""}
                 aria-pressed={identity === item.id}
               >
-                <span className="discipline-number">{item.rank === "Primary" ? "01" : "02"}</span>
+                <span className="discipline-number">
+                  {item.rank === "Primary" ? "01" : item.rank === "Secondary" ? "02" : "03"}
+                </span>
                 <span className="discipline-symbol" aria-hidden="true">
                   {item.symbol}
                 </span>
@@ -354,7 +360,7 @@ export default function Hero() {
             ))}
           </div>
           <div className="selector-arrows" aria-hidden="true">
-            <span>01</span><span>02</span>
+            <span>01</span><span>02</span><span>03</span>
           </div>
           <h2 className="hero-side-title">
             <span>Ideas into</span>

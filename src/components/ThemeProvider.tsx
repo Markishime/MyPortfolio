@@ -16,7 +16,7 @@ import {
   type RGB,
   type ThemeId,
   lerpRgb,
-  otherTheme,
+  nextTheme,
   writeThemeColors,
   writeThemeRgb,
 } from "@/lib/theme";
@@ -174,7 +174,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     if (!reduceMotion.matches) {
       cycleTimer = window.setInterval(() => {
         if (lockedRef.current) return;
-        const next = otherTheme(identityRef.current);
+        const next = nextTheme(identityRef.current);
         identityRef.current = next;
         setIdentityState(next);
         document.documentElement.dataset.identity = next;

@@ -603,6 +603,11 @@ main { position: relative; z-index: 2; }
 }
 .discipline-cards button:hover { transform: translateX(-8px); background: rgba(244,241,234,0.085); }
 .discipline-cards button.active { border-color: var(--hero-accent); color: oklch(98% 0.01 165); }
+.discipline-cards button.active .discipline-symbol {
+  color: var(--theme-on-accent);
+  background: var(--hero-accent);
+  box-shadow: 0 0 28px color-mix(in oklch, var(--hero-accent) 34%, transparent);
+}
 .discipline-number { align-self: flex-start; font-family: var(--font-nav); font-size: 0.58rem; opacity: 0.6; }
 .discipline-symbol { display: grid; place-items: center; width: 3.4rem; height: 3.4rem; border-radius: 0.25rem; background: color-mix(in oklch, var(--hero-accent) 15%, transparent); font-family: var(--font-nav); font-size: 0.8rem; font-weight: 800; }
 .discipline-copy { display: flex; flex-direction: column; gap: 0.25rem; margin-top: auto; text-align: left; font-family: var(--font-nav); }
@@ -638,6 +643,32 @@ main { position: relative; z-index: 2; }
 .hero-bubbles { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
 .hero-bubbles span { position: absolute; left: var(--bubble-left); bottom: -3rem; width: var(--bubble-size); aspect-ratio: 1; border: 1px solid rgba(245,255,252,0.22); border-radius: 50%; box-shadow: inset 2px 2px 5px rgba(255,255,255,0.17); opacity: 0; animation: hero-bubble-rise var(--bubble-duration) linear var(--bubble-delay) infinite; }
 @keyframes hero-bubble-rise { 0% { transform: translate3d(0,0,0); opacity: 0; } 12%, 85% { opacity: 0.35; } 100% { transform: translate3d(2rem,-110vh,0) rotate(360deg); opacity: 0; } }
+
+.cinematic-kenburns {
+  animation: cinematic-kenburns 14s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate;
+  will-change: transform;
+}
+
+.cinematic-still-light {
+  position: absolute;
+  inset: -35%;
+  pointer-events: none;
+  opacity: 0.32;
+  background: linear-gradient(112deg, transparent 38%, rgb(var(--theme-accent-rgb) / 0.2) 48%, transparent 58%);
+  mix-blend-mode: screen;
+  animation: cinematic-still-light 8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes cinematic-kenburns {
+  from { transform: scale(1.02) translate3d(-0.6%, 0.4%, 0); }
+  to { transform: scale(1.12) translate3d(1.2%, -1%, 0); }
+}
+
+@keyframes cinematic-still-light {
+  0%, 18% { transform: translate3d(-42%, 0, 0); opacity: 0; }
+  35%, 62% { opacity: 0.32; }
+  82%, 100% { transform: translate3d(42%, 0, 0); opacity: 0; }
+}
 
 .hero-scroll-cue { position: absolute; z-index: 35; left: 50%; bottom: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.45rem; transform: translateX(-50%); color: rgba(245,255,252,0.48); font-family: var(--font-nav); font-size: 0.56rem; }
 .hero-scroll-cue i { display: block; width: 1px; height: 1.6rem; background: rgba(245,255,252,0.38); animation: scroll-line 1.8s ease-in-out infinite; }

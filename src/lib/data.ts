@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Mark Lloyd Cuizon",
-  title: "Full Stack Developer & Computer Engineer",
+  title: "Full Stack Developer, Computer Engineer & AI Developer",
   primaryRole: "Full Stack Developer",
   secondaryRole: "Computer Engineer",
   description:
@@ -168,7 +168,8 @@ export const siteConfig = {
     ],
     frameworks: [
       "Next.js",
-      "React.js",
+      "React",
+      "Tailwind CSS",
       "Node.js",
       "Flutter",
       "Flask",
@@ -177,9 +178,11 @@ export const siteConfig = {
       "TensorFlow",
     ],
     tools: [
+      "REST APIs",
       "Firebase",
       "Supabase",
       "PostgreSQL",
+      "Prisma",
       "Vercel",
       "FlutterFlow",
       "Flowise",
