@@ -5,15 +5,44 @@ import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CinematicMedia from "./CinematicMedia";
+import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const stills = [
-  { src: "/media/orbit-ai.jpg", alt: "Orbit AI life OS scene", title: "Intelligence", detail: "AI systems that organize real life" },
-  { src: "/media/ecolock.jpg", alt: "Smart EcoLock corridor", title: "Embedded", detail: "Hardware that senses and responds" },
-  { src: "/media/lockmate.jpg", alt: "LockMate bicycle at night", title: "Connected", detail: "Security that lives beyond the screen" },
-  { src: "/media/masbate.jpg", alt: "Masbate coastline at dusk", title: "Human", detail: "Technology grounded in place" },
-];
+const systems = [
+  {
+    src: "/media/ecolock.jpg",
+    objectPosition: "18% 50%",
+    alt: "Smart EcoLock on a classroom door",
+    title: "Locks",
+    work: "EcoLock",
+    detail: "Hardware that senses a room and answers a door.",
+  },
+  {
+    src: "/media/orbit-ai.jpg",
+    objectPosition: "50% 55%",
+    alt: "Orbit AI life OS floating over a Cebu desk",
+    title: "Life OS",
+    work: "Orbit AI",
+    detail: "Software that plans the day instead of listing it.",
+  },
+  {
+    src: "/media/cropdrive.jpg",
+    objectPosition: "50% 62%",
+    alt: "CropDrive agronomy across oil palm fields",
+    title: "Fields",
+    work: "CropDrive",
+    detail: "AI that reads soil and writes fertilizer.",
+  },
+  {
+    src: "/media/masbate.jpg",
+    objectPosition: "78% 48%",
+    alt: "MasbateToday coastal story from Cawayan",
+    title: "Coasts",
+    work: "MasbateToday",
+    detail: "A province held together by news, weather, and travel.",
+  },
+] as const;
 
 export default function CinematicReel() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -32,7 +61,6 @@ export default function CinematicReel() {
           const panels = gsap.utils.toArray<HTMLElement>(".reel-panel");
           const distance = () => Math.max(track.scrollWidth - window.innerWidth, 0);
 
-          // One pinned camera move carries the viewer through the complete project reel.
           const horizontal = gsap.to(track, {
             x: () => -distance(),
             ease: "none",
@@ -47,7 +75,31 @@ export default function CinematicReel() {
             },
           });
 
-          // Each panel assembles in depth as the horizontal camera approaches it.
+          gsap.to(".reel-intro-copy", {
+            opacity: 0.16,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".reel-intro",
+              containerAnimation: horizontal,
+              start: "left left",
+              end: "left -35%",
+              scrub: true,
+            },
+          });
+
+          gsap.to(".reel-picture-wrap", {
+            opacity: 0,
+            y: 24,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".reel-intro",
+              containerAnimation: horizontal,
+              start: "left left",
+              end: "left -28%",
+              scrub: true,
+            },
+          });
+
           panels.forEach((panel) => {
             gsap.fromTo(
               panel,
@@ -60,6 +112,25 @@ export default function CinematicReel() {
                   containerAnimation: horizontal,
                   start: "left 92%",
                   end: "left 48%",
+                  scrub: true,
+                },
+              }
+            );
+
+            const still = panel.querySelector<HTMLElement>(".reel-panel-media");
+            if (!still) return;
+            gsap.fromTo(
+              still,
+              { scale: 1.1, xPercent: -3 },
+              {
+                scale: 1,
+                xPercent: 0,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: panel,
+                  containerAnimation: horizontal,
+                  start: "left 88%",
+                  end: "left 28%",
                   scrub: true,
                 },
               }
@@ -79,44 +150,75 @@ export default function CinematicReel() {
     <section
       ref={sectionRef}
       id="showreel"
-      aria-label="Cinematic showreel"
+      aria-label="Systems built in Cebu"
       className="cinematic-reel relative overflow-hidden"
     >
       <CinematicMedia
-        image="/media/hero-studio.jpg"
-        alt="Cinematic Cebu workbench in the rain"
+        image="/media/cebu-night.jpg"
+        alt="Cebu at night from a wet hillside"
         kenBurns={false}
+        objectPosition="46% 62%"
         className="pointer-events-none absolute inset-0"
-        overlayClassName="from-[#060b14] via-[#060b14]/55 to-[#060b14]/70"
+        overlayClassName="bg-gradient-to-r from-[#101116] via-[#101116]/82 to-[#101116]/58"
       />
       <div className="cinematic-rain pointer-events-none absolute inset-0 z-[1] opacity-40" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 z-[1] pointer-events-none perspective-grid opacity-30" />
 
       <div ref={trackRef} className="reel-track relative z-10">
         <div className="reel-intro reel-panel">
-          <motion.div
-            initial={{ opacity: 0, y: 34, z: -80 }}
-            whileInView={{ opacity: 1, y: 0, z: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-xl"
-          >
-            <p className="reel-kicker">Showreel · Scroll to travel</p>
-            <h2 className="reel-title">
-              Built in Cebu.
-              <span>Shipped as systems.</span>
-            </h2>
-            <p className="reel-description">
-              Hardware, software, and AI treated as one picture: locks, life OS,
-              fields, and coasts.
-            </p>
-          </motion.div>
+          <div className="reel-intro-inner">
+            <motion.div
+              className="reel-intro-copy"
+              initial={{ opacity: 0, y: 34 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h2 className="reel-title">
+                Built in Cebu.
+                <span>Shipped as systems.</span>
+              </h2>
+              <p className="reel-description">
+                Hardware, software, and AI treated as one picture:{" "}
+                <span className="reel-term">locks</span>,{" "}
+                <span className="reel-term">life&nbsp;OS</span>,{" "}
+                <span className="reel-term">fields</span>, and{" "}
+                <span className="reel-term">coasts</span>.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="reel-picture-wrap"
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="reel-picture" aria-hidden="true">
+                {systems.map((system) => (
+                  <div key={system.title} className="reel-frame">
+                    <img
+                      src={system.src}
+                      alt=""
+                      className="reel-frame-media"
+                      style={{ objectPosition: system.objectPosition }}
+                    />
+                    <span className="reel-frame-label">{system.title}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="reel-origin">Minglanilla, Cebu</p>
+            </motion.div>
+          </div>
         </div>
 
-        {stills.map((still, index) => (
+        {systems.map((system, index) => (
           <motion.article
-            key={still.src}
-            className="reel-panel reel-project-panel"
+            key={system.title}
+            className={cn(
+              "reel-panel reel-project-panel",
+              index % 2 === 1 && "is-flipped"
+            )}
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
@@ -124,12 +226,18 @@ export default function CinematicReel() {
           >
             <div className="reel-panel-index">0{index + 1}</div>
             <div className="reel-panel-media-wrap">
-              <img src={still.src} alt={still.alt} className="reel-panel-media" />
+              <img
+                src={system.src}
+                alt={system.alt}
+                className="reel-panel-media"
+                style={{ objectPosition: system.objectPosition }}
+              />
               <div className="reel-panel-refraction" />
             </div>
             <div className="reel-panel-copy">
-              <h3>{still.title}</h3>
-              <p>{still.detail}</p>
+              <p className="reel-panel-work">{system.work}</p>
+              <h3>{system.title}</h3>
+              <p>{system.detail}</p>
             </div>
           </motion.article>
         ))}
