@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
-import { easeOut, fadeUp, inView } from "@/lib/motion";
+import { easeOut, fadeUp, inView, staggerCards } from "@/lib/motion";
 import SectionHeading from "./SectionHeading";
 
 const chipVariants = {
@@ -16,13 +16,7 @@ const chipVariants = {
 
 export default function Skills() {
   const reduce = useReducedMotion();
-  const cardReveal = reduce
-    ? {}
-    : {
-        initial: fadeUp.hidden,
-        whileInView: fadeUp.visible,
-        viewport: inView,
-      };
+  const cardReveal = reduce ? {} : { variants: fadeUp };
   const chipViewport = { once: true, amount: 0.2 };
 
   return (
@@ -42,7 +36,13 @@ export default function Skills() {
           subtitle="The tools and technologies I use to bring ideas to life"
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <motion.div
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+          initial={reduce ? false : "hidden"}
+          whileInView={reduce ? undefined : "visible"}
+          viewport={inView}
+          variants={staggerCards}
+        >
           {/* Programming Languages with Bars */}
           <motion.div
             {...cardReveal}
@@ -259,7 +259,7 @@ export default function Skills() {
               ))}
             </motion.div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

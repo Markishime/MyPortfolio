@@ -1,10 +1,11 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CinematicMedia from "./CinematicMedia";
+import { easeOutExpo } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -161,6 +162,20 @@ function glueLast(line: string) {
   return `${parts.slice(0, -1).join(" ")}\u00a0${parts[parts.length - 1]}`;
 }
 
+function useStackedReel() {
+  const [stacked, setStacked] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 900px)");
+    const sync = () => setStacked(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  return stacked;
+}
+
 export default function CinematicReel() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -193,59 +208,58 @@ export default function CinematicReel() {
             },
           });
 
-          bleeds.forEach((panel) => {
-            const copy = panel.querySelector<HTMLElement>(".reel-intro-copy");
-            const plate = panel.querySelector<HTMLElement>(".reel-feature-media");
-
-            if (copy) {
-              gsap.to(copy, {
-                opacity: 0.16,
-                ease: "none",
+          const holdCopy = (copy: HTMLElement | null, panel: HTMLElement) => {
+            if (!copy) return;
+            gsap
+              .timeline({
                 scrollTrigger: {
                   trigger: panel,
                   containerAnimation: horizontal,
-                  start: "left left",
-                  end: "left -40%",
+                  start: "left 84%",
+                  end: "left -32%",
                   scrub: true,
                 },
-              });
-            }
-
-            if (plate) {
-              gsap.fromTo(
-                plate,
-                { scale: 1.08 },
+              })
+              .fromTo(
+                copy,
+                { opacity: 0, y: 42 },
                 {
-                  scale: 1,
+                  opacity: 1,
+                  y: 0,
                   ease: "none",
-                  scrollTrigger: {
-                    trigger: panel,
-                    containerAnimation: horizontal,
-                    start: "left 96%",
-                    end: "left 20%",
-                    scrub: true,
-                  },
+                  duration: 0.2,
+                  immediateRender: false,
                 }
-              );
-            }
-          });
+              )
+              .to(copy, { opacity: 1, y: 0, duration: 0.6 })
+              .to(copy, { opacity: 0, y: -18, ease: "none", duration: 0.2 });
+          };
 
-          stills.forEach((panel) => {
+          bleeds.forEach((panel) => {
+            holdCopy(panel.querySelector<HTMLElement>(".reel-intro-copy"), panel);
+
+            const plate = panel.querySelector<HTMLElement>(".reel-feature-media");
+            if (!plate) return;
             gsap.fromTo(
-              panel,
-              { opacity: 0.55 },
+              plate,
+              { scale: 1.08 },
               {
-                opacity: 1,
+                scale: 1,
                 ease: "none",
+                immediateRender: false,
                 scrollTrigger: {
                   trigger: panel,
                   containerAnimation: horizontal,
-                  start: "left 92%",
-                  end: "left 48%",
+                  start: "left 96%",
+                  end: "left 18%",
                   scrub: true,
                 },
               }
             );
+          });
+
+          stills.forEach((panel) => {
+            holdCopy(panel.querySelector<HTMLElement>(".reel-panel-copy"), panel);
 
             const still = panel.querySelector<HTMLElement>(".reel-panel-media");
             if (!still) return;
@@ -256,11 +270,12 @@ export default function CinematicReel() {
                 scale: 1,
                 xPercent: 0,
                 ease: "none",
+                immediateRender: false,
                 scrollTrigger: {
                   trigger: panel,
                   containerAnimation: horizontal,
                   start: "left 88%",
-                  end: "left 28%",
+                  end: "left 24%",
                   scrub: true,
                 },
               }
@@ -297,6 +312,10 @@ export default function CinematicReel() {
 }
 
 function BleedPanel({ work, index }: { work: BleedWork; index: number }) {
+  const stacked = useStackedReel();
+  const reduce = useReducedMotion();
+  const animateIn = stacked && !reduce;
+
   return (
     <div
       className={cn(
@@ -321,10 +340,10 @@ function BleedPanel({ work, index }: { work: BleedWork; index: number }) {
       <div className="reel-intro-inner">
         <motion.div
           className="reel-intro-copy"
-          initial={{ opacity: 0, y: 34 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          initial={animateIn ? { opacity: 0, y: 36 } : false}
+          whileInView={animateIn ? { opacity: 1, y: 0 } : undefined}
+          viewport={animateIn ? { once: true, amount: 0.4 } : undefined}
+          transition={{ duration: 0.7, ease: easeOutExpo }}
         >
           <p className="reel-panel-work">{work.kicker}</p>
           <h2 className="reel-title">
@@ -349,19 +368,29 @@ function BleedPanel({ work, index }: { work: BleedWork; index: number }) {
 }
 
 function StillPanel({ work, index }: { work: StillWork; index: number }) {
+  const stacked = useStackedReel();
+  const reduce = useReducedMotion();
+  const animateIn = stacked && !reduce;
+
   return (
     <motion.article
       className={cn(
         "reel-panel reel-project-panel",
         index % 2 === 1 && "is-flipped"
       )}
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.35 }}
-      transition={{ duration: 0.55, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+      initial={animateIn ? { opacity: 0, y: 32 } : false}
+      whileInView={animateIn ? { opacity: 1, y: 0 } : undefined}
+      viewport={animateIn ? { once: true, amount: 0.35 } : undefined}
+      transition={{ duration: 0.6, ease: easeOutExpo }}
     >
       <div className="reel-panel-index">{indexLabel(index)}</div>
-      <div className="reel-panel-media-wrap">
+      <motion.div
+        className="reel-panel-media-wrap"
+        initial={animateIn ? { opacity: 0, scale: 1.04 } : false}
+        whileInView={animateIn ? { opacity: 1, scale: 1 } : undefined}
+        viewport={animateIn ? { once: true, amount: 0.4 } : undefined}
+        transition={{ duration: 0.7, ease: easeOutExpo }}
+      >
         <img
           src={work.src}
           alt={work.alt}
@@ -369,8 +398,14 @@ function StillPanel({ work, index }: { work: StillWork; index: number }) {
           style={{ objectPosition: work.objectPosition }}
         />
         <div className="reel-panel-refraction" />
-      </div>
-      <div className="reel-panel-copy">
+      </motion.div>
+      <motion.div
+        className="reel-panel-copy"
+        initial={animateIn ? { opacity: 0, y: 24 } : false}
+        whileInView={animateIn ? { opacity: 1, y: 0 } : undefined}
+        viewport={animateIn ? { once: true, amount: 0.4 } : undefined}
+        transition={{ duration: 0.65, delay: 0.08, ease: easeOutExpo }}
+      >
         <p className="reel-panel-work">{work.kicker}</p>
         <h3>{work.title}</h3>
         <p>{work.detail}</p>
@@ -384,7 +419,7 @@ function StillPanel({ work, index }: { work: StillWork; index: number }) {
             {work.hrefLabel}
           </a>
         ) : null}
-      </div>
+      </motion.div>
     </motion.article>
   );
 }

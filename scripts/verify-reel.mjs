@@ -57,6 +57,24 @@ async function snapshot(name, size) {
   const missing = required.filter((label) => !new RegExp(label, "i").test(bodyText));
   const liveHref = await page.locator("#showreel a[href]").count();
   const aria = await page.locator("#showreel").getAttribute("aria-label");
+  const copyOpacity = await page
+    .locator("#showreel .reel-intro-copy")
+    .first()
+    .evaluate((el) => Number(getComputedStyle(el).opacity));
+  const titleVisible = await page
+    .locator("#showreel .reel-title")
+    .first()
+    .evaluate((el) => {
+      const style = getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      return (
+        Number(style.opacity) > 0.8 &&
+        rect.width > 40 &&
+        rect.height > 20 &&
+        rect.bottom > 80 &&
+        rect.top < window.innerHeight - 40
+      );
+    });
 
   await page.screenshot({ path: path.join(outDir, `${name}-reel-intro.png`) });
 
@@ -85,6 +103,8 @@ async function snapshot(name, size) {
     hasPictureLine,
     missing,
     liveHref,
+    copyOpacity,
+    titleVisible,
     aria,
     projectsVisible,
     errors,
@@ -105,6 +125,8 @@ const failed = results.filter(
     row.hasPictureLine ||
     row.missing.length ||
     row.liveHref < 6 ||
+    row.copyOpacity < 0.85 ||
+    !row.titleVisible ||
     row.errors.length
 );
 process.exit(failed.length ? 1 : 0);

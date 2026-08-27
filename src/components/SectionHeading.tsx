@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { easeOut, inView } from "@/lib/motion";
+import { fadeUp, inView, staggerFast } from "@/lib/motion";
 
 interface SectionHeadingProps {
   badge?: string;
@@ -21,25 +21,34 @@ export default function SectionHeading({
 
   return (
     <motion.div
-      initial={reduce ? false : { opacity: 0, y: 22 }}
-      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+      initial={reduce ? false : "hidden"}
+      whileInView={reduce ? undefined : "visible"}
       viewport={inView}
-      transition={{ duration: 0.55, ease: easeOut }}
+      variants={staggerFast}
       className={cn("text-center mb-16", className)}
     >
       {badge && (
-        <span className="section-kicker inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs mb-4">
+        <motion.span
+          variants={reduce ? undefined : fadeUp}
+          className="section-kicker inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs mb-4"
+        >
           <span className="w-1.5 h-1.5 rounded-full" />
           {badge}
-        </span>
+        </motion.span>
       )}
-      <h2 className="section-display-title text-5xl sm:text-6xl lg:text-7xl">
+      <motion.h2
+        variants={reduce ? undefined : fadeUp}
+        className="section-display-title text-5xl sm:text-6xl lg:text-7xl"
+      >
         <span>{title}</span>
-      </h2>
+      </motion.h2>
       {subtitle && (
-        <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
+        <motion.p
+          variants={reduce ? undefined : fadeUp}
+          className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto"
+        >
           {subtitle}
-        </p>
+        </motion.p>
       )}
     </motion.div>
   );

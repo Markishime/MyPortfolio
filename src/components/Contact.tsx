@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
-import { easeOut, fadeUp, inView } from "@/lib/motion";
+import { easeOut, fadeUp, inView, staggerCards } from "@/lib/motion";
 import SectionHeading from "./SectionHeading";
 
 const socialLinks = [
@@ -57,9 +57,10 @@ export default function Contact() {
   const cardReveal = reduce
     ? {}
     : {
-        initial: fadeUp.hidden,
-        whileInView: fadeUp.visible,
+        initial: "hidden" as const,
+        whileInView: "visible" as const,
         viewport: inView,
+        variants: fadeUp,
       };
 
   return (
@@ -86,16 +87,20 @@ export default function Contact() {
           subtitle="Ready to collaborate on cutting-edge tech projects?"
         />
 
-        {/* Contact Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
-          {socialLinks.map((link, i) => (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12"
+          initial={reduce ? false : "hidden"}
+          whileInView={reduce ? undefined : "visible"}
+          viewport={inView}
+          variants={staggerCards}
+        >
+          {socialLinks.map((link) => (
             <motion.a
               key={link.label}
               href={link.href}
               target={link.href.startsWith("http") ? "_blank" : undefined}
               rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              {...cardReveal}
-              transition={reduce ? undefined : { duration: 0.5, delay: i * 0.07, ease: easeOut }}
+              variants={reduce ? undefined : fadeUp}
               whileHover={reduce ? undefined : { y: -4 }}
               className="group glass-card rounded-3xl p-6 flex items-center gap-4"
             >
@@ -125,7 +130,7 @@ export default function Contact() {
               </svg>
             </motion.a>
           ))}
-        </div>
+        </motion.div>
 
         {/* CTA */}
         <motion.div

@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
-import { easeOut, fadeUp, inView } from "@/lib/motion";
+import { fadeUp, inView, staggerCards } from "@/lib/motion";
 import SectionHeading from "./SectionHeading";
 
 const stats = [
@@ -14,14 +14,15 @@ const stats = [
 
 export default function About() {
   const reduce = useReducedMotion();
-  const reveal = reduce
+  const list = reduce
     ? {}
     : {
-        initial: fadeUp.hidden,
-        whileInView: fadeUp.visible,
+        initial: "hidden" as const,
+        whileInView: "visible" as const,
         viewport: inView,
-        transition: { duration: 0.5, ease: easeOut },
+        variants: staggerCards,
       };
+  const card = reduce ? {} : { variants: fadeUp };
 
   return (
     <section id="about" className="relative py-32 overflow-hidden section-cinematic">
@@ -37,11 +38,9 @@ export default function About() {
           subtitle="Bridging hardware and software with practical, impactful solutions"
         />
 
-        {/* Bento Grid Layout */}
-        <div className="bento-grid">
-          {/* Profile Card - Large */}
+        <motion.div className="bento-grid" {...list}>
           <motion.div
-            {...reveal}
+            {...card}
             className="bento-item-wide glass-card rounded-3xl p-8 flex flex-col sm:flex-row items-center gap-8"
           >
             <div className="relative shrink-0">
@@ -75,7 +74,7 @@ export default function About() {
 
           {/* Education Card */}
           <motion.div
-            {...reveal}
+            {...card}
             className="glass-card rounded-3xl p-6 flex flex-col justify-between"
           >
             <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center mb-4">
@@ -109,7 +108,7 @@ export default function About() {
 
           {/* Location Card */}
           <motion.div
-            {...reveal}
+            {...card}
             className="glass-card rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden"
           >
             <img
@@ -151,11 +150,10 @@ export default function About() {
           </motion.div>
 
           {/* Stats Row */}
-          {stats.map((stat, i) => (
+          {stats.map((stat) => (
             <motion.div
               key={stat.label}
-              {...reveal}
-              transition={reduce ? undefined : { duration: 0.5, delay: i * 0.06, ease: easeOut }}
+              {...card}
               className="glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center"
             >
               <span className="text-3xl sm:text-4xl font-display font-bold gradient-text mb-1">
@@ -169,7 +167,7 @@ export default function About() {
 
           {/* Philosophy Card - Wide */}
           <motion.div
-            {...reveal}
+            {...card}
             className="bento-item-wide glass-card rounded-3xl p-8 relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-accent/10 to-transparent rounded-bl-full" />
@@ -196,7 +194,7 @@ export default function About() {
               stack applications.
             </p>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

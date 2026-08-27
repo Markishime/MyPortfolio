@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
+import { easeOutExpo, inViewCard } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import SectionHeading from "./SectionHeading";
 import CinematicMedia from "./CinematicMedia";
-import Reveal from "./Reveal";
 
 type Project = (typeof siteConfig.projects)[number];
 type Lane = "all" | "ai" | "embedded" | "web";
@@ -47,6 +48,7 @@ function ProjectCard({
   open,
   previewing,
   activeTech,
+  delay,
   onToggle,
   onPreview,
   onTech,
@@ -57,16 +59,25 @@ function ProjectCard({
   open: boolean;
   previewing: boolean;
   activeTech: string | null;
+  delay: number;
   onToggle: () => void;
   onPreview: (next: boolean) => void;
   onTech: (tech: string) => void;
 }) {
+  const reduce = useReducedMotion();
+
   return (
-    <article
+    <motion.article
+      initial={reduce ? false : { opacity: 0, y: 32, scale: 0.97 }}
+      whileInView={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
+      viewport={inViewCard}
+      transition={{ duration: 0.6, delay, ease: easeOutExpo }}
+      whileHover={reduce ? undefined : { y: -8 }}
       className={cn(
         "group relative h-full overflow-hidden rounded-3xl glass-card cinematic-card",
         featured && "cinematic-card-featured",
-        open && "ring-1 ring-accent/35"
+        open && "ring-1 ring-accent/35",
+        wide && "md:col-span-2 lg:col-span-2"
       )}
       onMouseEnter={() => onPreview(true)}
       onMouseLeave={() => onPreview(false)}
@@ -207,7 +218,7 @@ function ProjectCard({
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
@@ -322,29 +333,25 @@ export default function Projects() {
               const wide = featured || i === 0 || i === 5;
 
               return (
-                <Reveal
+                <ProjectCard
                   key={project.title}
-                  className={wide ? "md:col-span-2 lg:col-span-2" : ""}
-                  delay={Math.min(i, 3) * 0.06}
-                >
-                  <ProjectCard
-                    project={project}
-                    wide={wide}
-                    featured={featured}
-                    open={openTitle === project.title}
-                    previewing={previewTitle === project.title}
-                    activeTech={tech}
-                    onToggle={() =>
-                      setOpenTitle((current) =>
-                        current === project.title ? null : project.title
-                      )
-                    }
-                    onPreview={(next) =>
-                      setPreviewTitle(next ? project.title : null)
-                    }
-                    onTech={toggleTech}
-                  />
-                </Reveal>
+                  project={project}
+                  wide={wide}
+                  featured={featured}
+                  open={openTitle === project.title}
+                  previewing={previewTitle === project.title}
+                  activeTech={tech}
+                  delay={Math.min(i, 3) * 0.07}
+                  onToggle={() =>
+                    setOpenTitle((current) =>
+                      current === project.title ? null : project.title
+                    )
+                  }
+                  onPreview={(next) =>
+                    setPreviewTitle(next ? project.title : null)
+                  }
+                  onTech={toggleTech}
+                />
               );
             })}
           </div>

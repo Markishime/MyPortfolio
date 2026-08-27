@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 
 export default function Footer() {
+  const reduce = useReducedMotion();
+
   return (
     <footer className="relative z-10 py-12 overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
@@ -11,8 +13,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           className="flex flex-col md:flex-row items-center justify-between gap-6"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >

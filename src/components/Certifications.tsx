@@ -2,18 +2,11 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
-import { easeOut, fadeUp, inView } from "@/lib/motion";
+import { fadeUp, inView, staggerCards, staggerFast } from "@/lib/motion";
 import SectionHeading from "./SectionHeading";
 
 export default function Certifications() {
   const reduce = useReducedMotion();
-  const cardReveal = reduce
-    ? {}
-    : {
-        initial: fadeUp.hidden,
-        whileInView: fadeUp.visible,
-        viewport: inView,
-      };
 
   return (
     <section id="certifications" className="relative py-32 overflow-hidden">
@@ -27,13 +20,17 @@ export default function Certifications() {
           subtitle="Continuous learning and competitive problem-solving"
         />
 
-        {/* Hackathons */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
-          {siteConfig.hackathons.map((hack, i) => (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12"
+          initial={reduce ? false : "hidden"}
+          whileInView={reduce ? undefined : "visible"}
+          viewport={inView}
+          variants={staggerCards}
+        >
+          {siteConfig.hackathons.map((hack) => (
             <motion.div
               key={hack.name}
-              {...cardReveal}
-              transition={reduce ? undefined : { duration: 0.5, delay: i * 0.06, ease: easeOut }}
+              variants={reduce ? undefined : fadeUp}
               whileHover={reduce ? undefined : { y: -5 }}
               className="glass-card rounded-3xl p-6 text-center relative overflow-hidden group"
             >
@@ -61,15 +58,19 @@ export default function Certifications() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Certificates Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {siteConfig.certifications.map((cert, i) => (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          initial={reduce ? false : "hidden"}
+          whileInView={reduce ? undefined : "visible"}
+          viewport={inView}
+          variants={staggerFast}
+        >
+          {siteConfig.certifications.map((cert) => (
             <motion.div
               key={cert}
-              {...cardReveal}
-              transition={reduce ? undefined : { duration: 0.45, delay: (i % 3) * 0.05, ease: easeOut }}
+              variants={reduce ? undefined : fadeUp}
               whileHover={reduce ? undefined : { y: -4 }}
               className="group flex items-start gap-3 p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-accent/20 hover:bg-accent/[0.03] transition-all duration-300 cursor-default"
             >
@@ -95,7 +96,7 @@ export default function Certifications() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
