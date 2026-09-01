@@ -16,7 +16,7 @@ const stats = [
 ];
 
 const copyLines = [
-  "An adaptable Full Stack Developer and Computer Engineer with hands-on experience in web development, mobile development, embedded systems, machine learning, and AI. I build practical solutions that connect hardware and software, from connected devices to platforms people actually use.",
+  "An adaptable Full Stack Developer, AI Developer and Computer Engineer with hands-on experience in web development, mobile development, embedded systems, machine learning, and AI. I build practical solutions that connect hardware and software, from connected devices to platforms people actually use.",
   "Strong technical ability, a dedicated work ethic, and clear communication — focused on measurable impact in fast-moving teams.",
 ];
 

@@ -58,13 +58,12 @@ export default function Navbar() {
           <motion.a
             href="#home"
             className="portfolio-logo relative group"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            aria-label="Mark Cuizon, home"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <span className="portfolio-logo-mark" aria-hidden="true">+</span>
-            <span className="portfolio-logo-name">
-              Mark Cuizon
-            </span>
+            <span className="portfolio-logo-mark" aria-hidden="true">M</span>
+            <span className="portfolio-logo-name">Mark Cuizon</span>
           </motion.a>
 
           {/* Desktop Nav */}
