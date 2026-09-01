@@ -8,9 +8,10 @@ export default function Footer() {
 
   return (
     <footer className="relative z-10 py-12 overflow-hidden">
+      <div className="absolute inset-x-4 top-4 bottom-4 rounded-[2rem] glass-panel pointer-events-none" />
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           className="flex flex-col md:flex-row items-center justify-between gap-6"
           initial={reduce ? false : { opacity: 0, y: 16 }}

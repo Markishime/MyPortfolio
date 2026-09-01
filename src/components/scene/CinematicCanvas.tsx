@@ -26,7 +26,9 @@ function DprGuard({ cap }: { cap: number }) {
     const fps = acc.current.n / acc.current.t;
     acc.current.t = 0;
     acc.current.n = 0;
-    const next = fps < 48 ? 1 : fps < 56 ? Math.min(1.25, cap) : cap;
+    const highHz = fps > 85;
+    const floor = highHz ? 96 : 48;
+    const next = fps < floor ? 1 : cap;
     if (next !== acc.current.dpr) {
       acc.current.dpr = next;
       setDpr(next);
@@ -37,8 +39,8 @@ function DprGuard({ cap }: { cap: number }) {
 }
 
 /**
- * Deferred WebGL layer. Drei is intentionally unused so the client bundle
- * does not pull troika/hls/bvh helpers. Theme colors come from cinematicRuntime.
+ * Single shared WebGL layer. Kept cheap: no shadows, no antialias, adaptive DPR.
+ * Frameloop stays vsync-locked so 120Hz displays can hold 120fps.
  */
 export default function CinematicCanvas() {
   const [enabled, setEnabled] = useState(false);
@@ -76,18 +78,14 @@ export default function CinematicCanvas() {
   useEffect(() => {
     if (!enabled) return;
     const sync = () => {
-      const should = cinematicRuntime.scroll < 0.2 && !document.hidden;
+      const should = !document.hidden;
       if (should !== loopRef.current) {
         loopRef.current = should;
         setLoop(should ? "always" : "never");
       }
     };
-    window.addEventListener("scroll", sync, { passive: true });
     document.addEventListener("visibilitychange", sync);
-    return () => {
-      window.removeEventListener("scroll", sync);
-      document.removeEventListener("visibilitychange", sync);
-    };
+    return () => document.removeEventListener("visibilitychange", sync);
   }, [enabled]);
 
   if (!enabled) return null;
@@ -109,8 +107,7 @@ export default function CinematicCanvas() {
         camera={{ position: [0.55, 0.12, 6.2], fov: 40, near: 0.2, far: 60 }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
-          gl.toneMapping = THREE.ACESFilmicToneMapping;
-          gl.toneMappingExposure = 1.05;
+          gl.toneMapping = THREE.NoToneMapping;
           gl.outputColorSpace = THREE.SRGBColorSpace;
         }}
       >

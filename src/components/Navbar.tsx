@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -44,9 +45,7 @@ export default function Navbar() {
       <ProgressBar />
 
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        initial={false}
         className={cn(
           "portfolio-nav fixed top-0 w-full z-50 transition-all duration-500",
           isScrolled
@@ -69,7 +68,7 @@ export default function Navbar() {
           </motion.a>
 
           {/* Desktop Nav */}
-          <div className="portfolio-nav-links hidden md:flex items-center gap-1">
+          <div className="portfolio-nav-links hidden lg:flex items-center gap-1">
             {siteConfig.navLinks.map((link) => (
               <motion.a
                 key={link.href}
@@ -78,7 +77,7 @@ export default function Navbar() {
                   "relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300",
                   activeSection === link.href.slice(1)
                     ? "active"
-                    : "text-white/70 hover:text-white"
+                    : "hover:text-foreground"
                 )}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -95,28 +94,18 @@ export default function Navbar() {
             ))}
           </div>
 
-          <a href="#contact" className="portfolio-contact magnetic-target hidden md:inline-flex">
-            Contact me <span aria-hidden="true">↗</span>
+          <a href="#contact" className="portfolio-contact magnetic-target hidden xl:inline-flex">
+            Contact me <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
           </a>
 
           {/* Mobile Toggle */}
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="portfolio-menu-toggle md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5"
-            aria-label="Toggle menu"
+            className="portfolio-menu-toggle lg:hidden relative w-10 h-10 grid place-items-center"
+            aria-label={isMobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileOpen}
           >
-            <motion.span
-              animate={isMobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-              className="w-5 h-px bg-white block origin-center"
-            />
-            <motion.span
-              animate={isMobileOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 }}
-              className="w-5 h-px bg-white block"
-            />
-            <motion.span
-              animate={isMobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-              className="w-5 h-px bg-white block origin-center"
-            />
+            {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
 
@@ -128,7 +117,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="portfolio-mobile-menu md:hidden mx-4 mt-2 rounded-2xl overflow-hidden"
+              className="portfolio-mobile-menu lg:hidden mx-4 mt-2 rounded-2xl overflow-hidden"
             >
               <div className="p-4 flex flex-col gap-1">
                 {siteConfig.navLinks.map((link, i) => (
@@ -143,7 +132,7 @@ export default function Navbar() {
                       "px-4 py-3 rounded-xl text-sm font-medium transition-all",
                       activeSection === link.href.slice(1)
                         ? "text-accent bg-accent/10"
-                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                        : "text-foreground/60 hover:text-foreground hover:bg-white/50"
                     )}
                   >
                     {link.label}

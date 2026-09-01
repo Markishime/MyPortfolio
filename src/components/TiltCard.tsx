@@ -56,8 +56,13 @@ export default function TiltCard({
   );
 
   const onMove = (e: MouseEvent) => {
-    // Keep the card still once the pointer is over a CTA so the hit target does not slide away.
-    if (isInteractiveTarget(e.target)) return;
+    // Flatten the card over CTAs so hover motion cannot steal the click target.
+    if (isInteractiveTarget(e.target)) {
+      mx.set(0);
+      my.set(0);
+      scaleTarget.set(1);
+      return;
+    }
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -65,6 +70,7 @@ export default function TiltCard({
     const py = (e.clientY - rect.top) / rect.height - 0.5;
     mx.set(px);
     my.set(py);
+    scaleTarget.set(hoverScale);
   };
 
   const onEnter = () => {

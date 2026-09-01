@@ -3,8 +3,8 @@ export const easeOutExpo = [0.16, 1, 0.3, 1] as const;
 
 export const inView = {
   once: true,
-  amount: 0.18,
-  margin: "-8% 0px -6% 0px",
+  amount: 0.16,
+  margin: "-6% 0px -4% 0px",
 } as const;
 
 export const inViewCard = {

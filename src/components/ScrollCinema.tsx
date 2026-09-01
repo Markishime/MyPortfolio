@@ -7,11 +7,6 @@ import { applyPerfDataset } from "@/lib/perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CINEMA = {
-  scrub: true as const,
-  particleCount: 8,
-};
-
 export default function ScrollCinema() {
   const sceneRef = useRef<HTMLDivElement>(null);
 
@@ -22,66 +17,26 @@ export default function ScrollCinema() {
 
     const media = gsap.matchMedia();
     const context = gsap.context(() => {
-      media.add(
-        "(min-width: 901px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
-        () => {
-          if (tier !== "high") return;
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(".core-chip", {
+          y: 16,
+          opacity: 0,
+          stagger: 0.04,
+          duration: 0.45,
+          ease: "power2.out",
+          scrollTrigger: { trigger: "#skills", start: "top 78%" },
+        });
 
-          const sections = gsap.utils.toArray<HTMLElement>(
-            "main > section:not(#home):not(.cinematic-reel)"
-          );
-
-          sections.forEach((section) => {
-            section.classList.add("cinema-section");
-            const content = section.querySelector<HTMLElement>(
-              ":scope > div:last-child"
-            );
-            if (!content) return;
-
-            gsap.fromTo(
-              content,
-              { y: 48, opacity: 0.72 },
-              {
-                y: 0,
-                opacity: 1,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: section,
-                  start: "top 92%",
-                  end: "top 42%",
-                  scrub: CINEMA.scrub,
-                },
-              }
-            );
-          });
-
-          const contact = document.querySelector<HTMLElement>("#contact");
-          const contactCards = contact?.querySelectorAll<HTMLElement>(".glass-card");
-          if (contact && contactCards?.length) {
-            gsap.from(contactCards, {
-              y: 36,
-              opacity: 0,
-              stagger: 0.06,
-              ease: "none",
-              scrollTrigger: {
-                trigger: contact,
-                start: "top 82%",
-                end: "top 48%",
-                scrub: CINEMA.scrub,
-              },
-            });
-          }
-
+        if (tier === "high") {
           gsap.to(".cinema-ring", {
-            rotateZ: 160,
+            rotateZ: 140,
             ease: "none",
             scrollTrigger: { start: 0, end: "max", scrub: true },
           });
-
-          return () =>
-            sections.forEach((section) => section.classList.remove("cinema-section"));
         }
-      );
+
+        return undefined;
+      });
 
       return undefined;
     });
@@ -93,8 +48,6 @@ export default function ScrollCinema() {
     };
   }, []);
 
-  const particleCount = CINEMA.particleCount;
-
   return (
     <div ref={sceneRef} className="scroll-cinema" aria-hidden="true">
       <div className="cinema-fog cinema-fog-a" />
@@ -103,16 +56,18 @@ export default function ScrollCinema() {
       <div className="cinema-ring cinema-ring-b" />
       <div className="cinema-ring cinema-ring-c" />
       <div className="cinema-particles">
-        {Array.from({ length: particleCount }).map((_, index) => (
+        {Array.from({ length: 6 }).map((_, index) => (
           <span
             key={index}
             className="cinema-particle"
-            style={{
-              "--particle-x": `${(index * 47) % 100}%`,
-              "--particle-y": `${(index * 31) % 100}%`,
-              "--particle-size": `${2 + (index % 3)}px`,
-              "--particle-delay": `${-(index % 6) * 1.4}s`,
-            } as CSSProperties}
+            style={
+              {
+                "--particle-x": `${(index * 47) % 100}%`,
+                "--particle-y": `${(index * 31) % 100}%`,
+                "--particle-size": `${2 + (index % 3)}px`,
+                "--particle-delay": `${-(index % 6) * 1.4}s`,
+              } as CSSProperties
+            }
           />
         ))}
       </div>

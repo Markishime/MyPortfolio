@@ -25,7 +25,7 @@ export default function SectionHeading({
       whileInView={reduce ? undefined : "visible"}
       viewport={inView}
       variants={staggerFast}
-      className={cn("text-center mb-16", className)}
+      className={cn("text-center mb-10 lg:mb-12", className)}
     >
       {badge && (
         <motion.span
@@ -38,14 +38,14 @@ export default function SectionHeading({
       )}
       <motion.h2
         variants={reduce ? undefined : fadeUp}
-        className="section-display-title text-5xl sm:text-6xl lg:text-7xl"
+        className="section-display-title"
       >
         <span>{title}</span>
       </motion.h2>
       {subtitle && (
         <motion.p
           variants={reduce ? undefined : fadeUp}
-          className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto"
+          className="section-subtitle"
         >
           {subtitle}
         </motion.p>

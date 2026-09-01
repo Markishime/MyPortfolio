@@ -7,7 +7,7 @@ import { cinematicRuntime } from "./runtime";
 
 const accent = new THREE.Color();
 const cool = new THREE.Color();
-const fogTarget = new THREE.Color("#101116");
+const fogTarget = new THREE.Color("#f4efe6");
 const dummy = new THREE.Object3D();
 
 function syncColors() {
@@ -34,11 +34,11 @@ function CameraRig() {
     const s = cinematicRuntime.scroll;
     const mx = cinematicRuntime.mouseX;
     const my = cinematicRuntime.mouseY;
-    const k = 1 - Math.exp(-delta * 2.2);
-    camera.position.x += (1.15 + mx * 0.45 + s * 0.2 - camera.position.x) * k;
-    camera.position.y += (0.18 - my * 0.28 - s * 0.6 - camera.position.y) * k;
-    camera.position.z += (6.8 + s * 3.2 - camera.position.z) * k;
-    camera.lookAt(0.8 + mx * 0.4, my * 0.2 - s * 0.4, 0);
+    const k = 1 - Math.exp(-delta * 2.4);
+    camera.position.x += (1.05 + mx * 0.35 + s * 0.15 - camera.position.x) * k;
+    camera.position.y += (0.16 - my * 0.22 - s * 0.45 - camera.position.y) * k;
+    camera.position.z += (6.6 + s * 2.4 - camera.position.z) * k;
+    camera.lookAt(0.7 + mx * 0.3, my * 0.16 - s * 0.3, 0);
   });
 
   return null;
@@ -48,7 +48,7 @@ function Atmosphere() {
   const key = useRef<THREE.PointLight>(null);
   const fill = useRef<THREE.PointLight>(null);
   const { scene } = useThree();
-  const fog = useMemo(() => new THREE.FogExp2("#101116", 0.055), []);
+  const fog = useMemo(() => new THREE.FogExp2("#f4efe6", 0.024), []);
 
   useEffect(() => {
     scene.fog = fog;
@@ -59,24 +59,24 @@ function Atmosphere() {
 
   useFrame(() => {
     syncColors();
-    const fade = 0.45 + heroFade(cinematicRuntime.scroll) * 0.55;
+    const fade = 0.4 + heroFade(cinematicRuntime.scroll) * 0.5;
     if (key.current) {
-      key.current.color.lerp(accent, 0.12);
-      key.current.intensity = (8 + cinematicRuntime.energy * 6) * fade;
+      key.current.color.lerp(accent, 0.1);
+      key.current.intensity = (6.5 + cinematicRuntime.energy * 4) * fade;
     }
     if (fill.current) {
-      fill.current.color.lerp(cool, 0.12);
-      fill.current.intensity = 4 * fade;
+      fill.current.color.lerp(cool, 0.1);
+      fill.current.intensity = 3.2 * fade;
     }
-    fogTarget.set("#101116").lerp(accent, 0.06);
+    fogTarget.set("#f4efe6").lerp(accent, 0.04);
     fog.color.lerp(fogTarget, 0.08);
-    fog.density = 0.05 + cinematicRuntime.scroll * 0.04;
+    fog.density = 0.016 + cinematicRuntime.scroll * 0.016;
   });
 
   return (
     <>
-      <hemisphereLight args={["#c9d4de", "#141216", 0.28]} />
-      <ambientLight intensity={0.12} />
+      <hemisphereLight args={["#fff8ef", "#d9d0c2", 0.7]} />
+      <ambientLight intensity={0.5} />
       <pointLight ref={key} position={[2.8, 1.4, 2.4]} distance={16} decay={2} />
       <pointLight ref={fill} position={[-3.4, -0.6, 1.2]} distance={14} decay={2} />
     </>
@@ -151,6 +151,55 @@ function HeroForms() {
   );
 }
 
+function ScrollLattice({ count }: { count: number }) {
+  const mesh = useRef<THREE.InstancedMesh>(null);
+  const material = useRef<THREE.MeshBasicMaterial>(null);
+  const seeds = useMemo(
+    () =>
+      Array.from({ length: count }, (_, i) => ({
+        x: ((i * 53) % 100) / 10 - 5,
+        y: ((i * 29) % 100) / 16 - 2.2,
+        z: -2.4 - ((i * 17) % 12) * 0.32,
+        s: 0.035 + (i % 4) * 0.01,
+        p: i * 0.41,
+      })),
+    [count]
+  );
+
+  useFrame((state) => {
+    const inst = mesh.current;
+    if (!inst) return;
+    syncColors();
+    const t = state.clock.elapsedTime;
+    const s = cinematicRuntime.scroll;
+    const fade = 0.22 + Math.min(s * 1.4, 0.55);
+    for (let i = 0; i < seeds.length; i += 1) {
+      const seed = seeds[i];
+      dummy.position.set(
+        seed.x + Math.sin(t * 0.16 + seed.p) * 0.18 + cinematicRuntime.mouseX * 0.16,
+        seed.y + Math.cos(t * 0.12 + seed.p) * 0.14 - s * 2.1,
+        seed.z
+      );
+      dummy.rotation.set(t * 0.1 + seed.p, t * 0.08, s * 0.6);
+      dummy.scale.setScalar(seed.s);
+      dummy.updateMatrix();
+      inst.setMatrixAt(i, dummy.matrix);
+    }
+    inst.instanceMatrix.needsUpdate = true;
+    if (material.current) {
+      material.current.color.lerp(cool, 0.08);
+      material.current.opacity = fade;
+    }
+  });
+
+  return (
+    <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshBasicMaterial ref={material} color="#c9b8a4" transparent opacity={0.22} depthWrite={false} />
+    </instancedMesh>
+  );
+}
+
 function Dust({ count }: { count: number }) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const material = useRef<THREE.MeshBasicMaterial>(null);
@@ -171,7 +220,7 @@ function Dust({ count }: { count: number }) {
     if (!inst) return;
     syncColors();
     const t = state.clock.elapsedTime;
-    const fade = 0.35 + heroFade(cinematicRuntime.scroll) * 0.65;
+    const fade = 0.28 + heroFade(cinematicRuntime.scroll) * 0.5;
     for (let i = 0; i < seeds.length; i += 1) {
       const seed = seeds[i];
       dummy.position.set(
@@ -187,14 +236,14 @@ function Dust({ count }: { count: number }) {
     inst.instanceMatrix.needsUpdate = true;
     if (material.current) {
       material.current.color.lerp(accent, 0.1);
-      material.current.opacity = 0.28 * fade;
+      material.current.opacity = 0.24 * fade;
     }
   });
 
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
       <octahedronGeometry args={[1, 0]} />
-      <meshBasicMaterial ref={material} color="#ff6b55" transparent opacity={0.28} depthWrite={false} />
+      <meshBasicMaterial ref={material} color="#ff6b55" transparent opacity={0.24} depthWrite={false} />
     </instancedMesh>
   );
 }
@@ -204,7 +253,7 @@ function useHeroClusterMounted() {
 
   useEffect(() => {
     const onScroll = () => {
-      const should = cinematicRuntime.scroll < 0.16;
+      const should = cinematicRuntime.scroll < 0.18;
       setMounted((prev) => (prev === should ? prev : should));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -216,14 +265,17 @@ function useHeroClusterMounted() {
 
 export default function CinematicScene() {
   const heroMounted = useHeroClusterMounted();
-  const count = cinematicRuntime.quality === "high" ? 22 : 10;
+  const high = cinematicRuntime.quality === "high";
+  const dust = high ? 16 : 8;
+  const lattice = high ? 14 : 8;
 
   return (
     <>
       <CameraRig />
       <Atmosphere />
-      {heroMounted && cinematicRuntime.quality === "high" ? <HeroForms /> : null}
-      <Dust count={count} />
+      {heroMounted && high ? <HeroForms /> : null}
+      <Dust count={dust} />
+      <ScrollLattice count={lattice} />
     </>
   );
 }

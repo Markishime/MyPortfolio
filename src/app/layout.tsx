@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" data-identity="fullstack" data-perf="medium">
+    <html lang="en" data-identity="fullstack" data-perf="medium">
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} ${outfit.variable} ${galada.variable} ${manrope.variable} font-sans antialiased noise-overlay`}
       >

@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useState, useEffect, useRef } from "react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { useMemo, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import { easeOutExpo, inViewCard } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import SectionHeading from "./SectionHeading";
 import CinematicMedia from "./CinematicMedia";
-
+import TiltCard from "./TiltCard";
+import DepthCarousel from "./react-bits/DepthCarousel";
 
 type Project = (typeof siteConfig.projects)[number];
 type Lane = "all" | "ai" | "embedded" | "web";
@@ -42,206 +43,8 @@ function matchesProject(project: Project, lane: Lane, tech: string | null) {
   return (project.lanes as readonly string[]).includes(lane);
 }
 
-function FeaturedCarousel({ projects }: { projects: Project[] }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const autoplayRef = useRef<NodeJS.Timeout>();
-  const reduce = useReducedMotion();
-
-  const nextProject = () => {
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % projects.length);
-  };
-
-  const prevProject = () => {
-    setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
-  };
-
-  const goToProject = (index: number) => {
-    setDirection(index > currentIndex ? 1 : -1);
-    setCurrentIndex(index);
-  };
-
-  useEffect(() => {
-    if (!reduce) {
-      autoplayRef.current = setInterval(nextProject, 5000);
-      return () => {
-        if (autoplayRef.current) clearInterval(autoplayRef.current);
-      };
-    }
-  }, [reduce, currentIndex]);
-
-  const handleInteraction = (action: () => void) => {
-    if (autoplayRef.current) clearInterval(autoplayRef.current);
-    action();
-    if (!reduce) {
-      autoplayRef.current = setInterval(nextProject, 5000);
-    }
-  };
-
-  const currentProject = projects[currentIndex];
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0,
-      scale: 0.95,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0,
-      scale: 0.95,
-    }),
-  };
-
-  return (
-    <div className="relative mb-16 overflow-hidden rounded-3xl glass-card cinematic-card-featured">
-      <div className="relative h-[500px] md:h-[600px]">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.3 },
-              scale: { duration: 0.3 },
-            }}
-            className="absolute inset-0"
-          >
-            <CinematicMedia
-              image={currentProject.image}
-              video={currentProject.video}
-              alt={`${currentProject.title} preview`}
-              kenBurns={!currentProject.video}
-              playing={true}
-              className="h-full w-full"
-              overlayClassName="from-[#071018]/90 via-[#071018]/40 to-transparent"
-            />
-            
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="absolute bottom-0 left-0 right-0 p-8 md:p-12"
-            >
-              <motion.span
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="mb-3 inline-block rounded-full border border-accent/30 bg-accent/15 px-4 py-2 font-mono text-xs uppercase tracking-wider text-accent"
-              >
-                Featured
-              </motion.span>
-              
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-                className="mb-4 font-display text-4xl md:text-6xl font-bold text-white"
-              >
-                {currentProject.title}
-              </motion.h2>
-              
-              <motion.p
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
-                className="mb-6 max-w-2xl text-lg text-gray-300"
-              >
-                {currentProject.description}
-              </motion.p>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-wrap gap-3"
-              >
-                {currentProject.live && (
-                  <a
-                    href={currentProject.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/20 px-6 py-3 font-mono text-sm text-accent backdrop-blur-md transition-all hover:border-accent/60 hover:bg-accent/30"
-                  >
-                    <span className="h-2 w-2 rounded-full bg-accent" />
-                    View Live
-                  </a>
-                )}
-                {currentProject.github && (
-                  <a
-                    href={currentProject.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 font-mono text-sm text-gray-300 backdrop-blur-md transition-all hover:border-accent/40 hover:text-accent"
-                  >
-                    <GitHubIcon className="h-4 w-4" />
-                    GitHub
-                  </a>
-                )}
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Navigation Controls */}
-      <div className="absolute top-1/2 left-4 right-4 z-20 flex -translate-y-1/2 items-center justify-between pointer-events-none">
-        <button
-          onClick={() => handleInteraction(prevProject)}
-          className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-[#071018]/80 text-white backdrop-blur-md transition-all hover:border-accent/50 hover:bg-accent/20"
-          aria-label="Previous project"
-        >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <button
-          onClick={() => handleInteraction(nextProject)}
-          className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-[#071018]/80 text-white backdrop-blur-md transition-all hover:border-accent/50 hover:bg-accent/20"
-          aria-label="Next project"
-        >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Pagination Dots */}
-      <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2">
-        {projects.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleInteraction(() => goToProject(index))}
-            className={cn(
-              "h-2 rounded-full transition-all",
-              index === currentIndex
-                ? "w-8 bg-accent"
-                : "w-2 bg-white/40 hover:bg-white/60"
-            )}
-            aria-label={`Go to project ${index + 1}`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function ProjectCard({
   project,
-  wide,
   featured,
   open,
   previewing,
@@ -252,7 +55,6 @@ function ProjectCard({
   onTech,
 }: {
   project: Project;
-  wide: boolean;
   featured: boolean;
   open: boolean;
   previewing: boolean;
@@ -264,73 +66,23 @@ function ProjectCard({
 }) {
   const reduce = useReducedMotion();
 
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: 50,
-      scale: 0.95,
-      rotateX: 10,
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      scale: 1,
-      rotateX: 0,
-      transition: {
-        duration: 0.6,
-        delay,
-        ease: easeOutExpo,
-      }
-    },
-  };
-
-  const hoverVariants = {
-    hover: {
-      y: -12,
-      scale: 1.02,
-      transition: {
-        duration: 0.3,
-        ease: "easeOut",
-      }
-    }
-  };
-
   return (
     <motion.article
-      initial={reduce ? false : "hidden"}
-      whileInView={reduce ? undefined : "visible"}
-      whileHover={reduce ? undefined : "hover"}
-      variants={reduce ? undefined : { ...cardVariants, ...hoverVariants }}
+      initial={reduce ? false : { opacity: 0, y: 40, rotateX: 12 }}
+      whileInView={reduce ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
       viewport={inViewCard}
-      className={cn(
-        "group relative h-full overflow-hidden rounded-3xl glass-card cinematic-card",
-        featured && "cinematic-card-featured",
-        open && "ring-1 ring-accent/35",
-        wide && "md:col-span-2 lg:col-span-2"
-      )}
-      onMouseEnter={() => onPreview(true)}
-      onMouseLeave={() => onPreview(false)}
-      style={{ transformStyle: "preserve-3d" }}
+      transition={{ duration: 0.6, delay, ease: easeOutExpo }}
+      className="project-card-shell h-full"
     >
-      <motion.div
-        className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-20 group-focus-within:opacity-20`}
-        animate={{
-          opacity: [0, 0.15, 0],
-          scale: [1, 1.05, 1],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "easeInOut",
-        }}
-      />
-
-      <div className="relative flex h-full flex-col">
-        <motion.div 
-          className="relative"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.3 }}
+      <TiltCard className="h-full" intensity={reduce ? 0 : 7} hoverScale={1.02}>
+        <div
+          className={cn(
+            "group relative flex h-full flex-col overflow-hidden rounded-3xl glass-card cinematic-card",
+            featured && "cinematic-card-featured",
+            open && "ring-1 ring-accent/35"
+          )}
+          onMouseEnter={() => onPreview(true)}
+          onMouseLeave={() => onPreview(false)}
         >
           <CinematicMedia
             image={project.image}
@@ -338,144 +90,104 @@ function ProjectCard({
             alt={`${project.title} preview`}
             kenBurns={!project.video}
             playing={previewing || open}
-            className={wide ? "h-48 sm:h-56" : "h-40 sm:h-48"}
+            className="h-44 sm:h-52"
             overlayClassName="from-[#071018] via-[#071018]/25 to-transparent"
           />
-
-          {project.video && (
+          <div className="relative flex flex-1 flex-col p-6 sm:p-8 pb-20 sm:pb-24">
+            <div className="mb-4 flex items-start justify-between">
+              <span className="text-3xl">{project.icon}</span>
+              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-accent/80">
+                {project.tag}
+              </span>
+            </div>
+            <h3 className="mb-3 font-display text-xl font-bold text-foreground group-hover:text-accent sm:text-2xl">
+              {project.title}
+            </h3>
+            <p className={cn("mb-4 text-sm leading-relaxed text-foreground/70", !open && "line-clamp-3")}>
+              {project.description}
+            </p>
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggle();
-              }}
-              className="absolute bottom-3 left-3 z-20 rounded-full border border-white/15 bg-[#071018]/80 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-gray-200 backdrop-blur-md transition-colors hover:border-accent/40 hover:text-accent"
-              aria-pressed={previewing || open}
+              onClick={onToggle}
+              aria-expanded={open}
+              className="mb-5 self-start font-mono text-[11px] uppercase tracking-wider text-accent/80 hover:text-accent"
             >
-              {previewing || open ? "Previewing" : "Preview"}
+              {open ? "Show less" : "Read more"}
             </button>
-          )}
-
-          <div className="absolute top-3 right-3 z-20 flex gap-2">
-            {featured && (
-              <span className="rounded-full border border-accent/25 bg-accent/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-accent">
-                Featured
-              </span>
-            )}
-            {project.github && (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Open ${project.title} on GitHub`}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-[#071018]/75 text-gray-200 backdrop-blur-md transition-colors hover:border-accent/50 hover:text-accent"
-              >
-                <GitHubIcon className="h-4 w-4" />
-              </a>
-            )}
-            {project.live && (
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Open ${project.title} live site`}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/30 bg-accent/15 text-accent backdrop-blur-md transition-colors hover:border-accent/60 hover:bg-accent/25"
-              >
-                <LiveIcon className="h-3.5 w-3.5" />
-              </a>
-            )}
-          </div>
-        </motion.div>
-
-        <div className="relative flex flex-1 flex-col p-6 sm:p-8">
-          <div className="mb-4 flex items-start justify-between">
-            <span className="text-3xl">{project.icon}</span>
-            <span className="rounded-full border border-accent/10 bg-accent/5 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-accent/70">
-              {project.tag}
-            </span>
-          </div>
-
-          <h3 className="mb-3 font-display text-xl font-bold text-white transition-colors duration-200 group-hover:text-accent sm:text-2xl">
-            {project.title}
-          </h3>
-
-          <p
-            className={cn(
-              "mb-4 text-sm leading-relaxed text-gray-400",
-              !open && "line-clamp-3"
-            )}
-          >
-            {project.description}
-          </p>
-
-          <button
-            type="button"
-            onClick={onToggle}
-            aria-expanded={open}
-            className="mb-5 self-start font-mono text-[11px] uppercase tracking-wider text-accent/80 transition-colors hover:text-accent"
-          >
-            {open ? "Show less" : "Read more"}
-          </button>
-
-          <div className="mb-6 flex flex-wrap gap-2">
-            {project.stack.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => onTech(item)}
-                aria-pressed={activeTech === item}
-                className={cn(
-                  "rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition-colors",
-                  activeTech === item
-                    ? "border-accent/50 bg-accent/15 text-accent"
-                    : "border-white/10 bg-white/[0.03] text-gray-400 hover:border-accent/30 hover:text-accent"
-                )}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative z-10 mt-auto flex flex-wrap gap-2">
-            {project.github && (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-gray-700/50 px-4 py-2 font-mono text-xs text-gray-300 transition-colors hover:border-accent/30 hover:bg-accent/5 hover:text-accent"
-              >
-                <GitHubIcon className="h-4 w-4 shrink-0" />
-                GitHub
-              </a>
-            )}
-            {project.live && (
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-accent/25 bg-accent/10 px-4 py-2 font-mono text-xs text-accent transition-colors hover:border-accent/45 hover:bg-accent/15"
-              >
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                Live
-              </a>
-            )}
+            <div className="mb-6 flex flex-wrap gap-2">
+              {project.stack.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => onTech(item)}
+                  aria-pressed={activeTech === item}
+                  className={cn(
+                    "rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider",
+                    activeTech === item
+                      ? "border-accent/50 bg-accent/15 text-accent"
+                      : "border-foreground/10 bg-white/40 text-foreground/55 hover:border-accent/30 hover:text-accent"
+                  )}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+      </TiltCard>
+      <div className="project-card-actions">
+        {project.github && (
+          <a
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-cta"
+          >
+            <GitHubIcon className="h-4 w-4 shrink-0" />
+            GitHub
+          </a>
+        )}
+        {project.live && (
+          <a
+            href={project.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-cta project-cta-live"
+          >
+            <LiveIcon className="h-3.5 w-3.5" />
+            Live
+          </a>
+        )}
       </div>
     </motion.article>
   );
 }
 
 export default function Projects() {
+  const reduce = useReducedMotion();
   const [lane, setLane] = useState<Lane>("all");
   const [tech, setTech] = useState<string | null>(null);
   const [openTitle, setOpenTitle] = useState<string | null>(null);
   const [previewTitle, setPreviewTitle] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const visible = useMemo(
     () => siteConfig.projects.filter((project) => matchesProject(project, lane, tech)),
     [lane, tech]
   );
+
+  const carouselItems = useMemo(
+    () =>
+      visible.map((project) => ({
+        image: project.image,
+        alt: project.title,
+        title: project.title,
+        tag: project.tag,
+      })),
+    [visible]
+  );
+
+  const activeProject = visible[Math.min(activeIndex, Math.max(visible.length - 1, 0))];
 
   const techOptions = useMemo(() => {
     const counts = new Map<string, number>();
@@ -494,30 +206,109 @@ export default function Projects() {
     setTech((current) => (current === value ? null : value));
   };
 
-  const featuredProjects = useMemo(
-    () => siteConfig.projects.filter((project) => 
-      project.title === "Orbit AI" || project.title === "Kinestra"
-    ),
-    []
-  );
-
   return (
-    <section id="projects" className="relative overflow-hidden py-32">
+    <section id="projects" className="relative overflow-hidden py-24 lg:py-28">
       <div className="perspective-grid absolute inset-0 opacity-20" />
       <div className="cinematic-depth-fog pointer-events-none absolute inset-0" />
       <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative mx-auto max-w-6xl px-6 lg:px-8 glass-panel rounded-[2rem] p-6 sm:p-8">
         <SectionHeading
           badge="Work"
           title="Featured Projects"
           subtitle="From connected systems to life OS and adaptive fitness platforms"
         />
 
-        {/* Featured Carousel */}
-        <FeaturedCarousel projects={featuredProjects} />
+        <motion.div
+          className="projects-depth-stage glass-panel"
+          initial={reduce ? false : { opacity: 0, y: 28 }}
+          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+          viewport={inViewCard}
+          transition={{ duration: 0.6, ease: easeOutExpo }}
+        >
+          {carouselItems.length > 0 && (
+            <DepthCarousel
+              key={`${lane}-${tech ?? "all"}`}
+              items={carouselItems}
+              cardWidth={320}
+              cardHeight={420}
+              radius={22}
+              depth={240}
+              spread={96}
+              tilt={24}
+              autoplay={!reduce}
+              autoplayDelay={3800}
+              onChange={(index) => setActiveIndex(index)}
+            />
+          )}
+        </motion.div>
 
-        <div className="mb-6 flex flex-wrap gap-2" role="toolbar" aria-label="Filter projects">
+        {activeProject && (
+          <motion.div
+            className="project-feature-panel glass-panel mb-12 overflow-hidden rounded-3xl"
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+            viewport={inViewCard}
+            transition={{ duration: 0.5, ease: easeOutExpo }}
+          >
+            <CinematicMedia
+              image={activeProject.image}
+              video={activeProject.video}
+              alt={`${activeProject.title} featured preview`}
+              playing={!reduce}
+              className="project-feature-media"
+              overlayClassName="project-feature-overlay"
+            />
+            <div className="project-feature-copy">
+              <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-accent/80">
+                Selected project · {activeProject.tag}
+              </p>
+              <h3 className="mb-3 font-display text-3xl text-foreground sm:text-4xl">{activeProject.title}</h3>
+              <p className="mb-5 text-sm leading-relaxed text-foreground/70 sm:text-base">
+                {activeProject.description}
+              </p>
+              <div className="relative z-10 mb-6 flex flex-wrap gap-2">
+                {activeProject.stack.map((item) => (
+                  <span key={item} className="project-feature-chip">{item}</span>
+                ))}
+              </div>
+              <div className="relative z-10 flex flex-wrap gap-3">
+                {activeProject.live && (
+                  <a
+                    href={activeProject.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-cta project-cta-live"
+                  >
+                    <LiveIcon className="h-3.5 w-3.5" />
+                    Live
+                  </a>
+                )}
+                {activeProject.github && (
+                  <a
+                    href={activeProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-cta"
+                  >
+                    <GitHubIcon className="h-4 w-4" />
+                    GitHub
+                  </a>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        <motion.div
+          className="mb-6 flex flex-wrap gap-2"
+          role="toolbar"
+          aria-label="Filter projects"
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+          viewport={inViewCard}
+          transition={{ duration: 0.45, ease: easeOutExpo }}
+        >
           {LANES.map((item) => {
             const count =
               item.id === "all"
@@ -525,18 +316,20 @@ export default function Projects() {
                 : siteConfig.projects.filter((project) =>
                     (project.lanes as readonly string[]).includes(item.id)
                   ).length;
-
             return (
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setLane(item.id)}
+                onClick={() => {
+                  setLane(item.id);
+                  setActiveIndex(0);
+                }}
                 aria-pressed={lane === item.id}
                 className={cn(
-                  "min-h-11 rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-colors",
+                  "min-h-11 rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider backdrop-blur-xl",
                   lane === item.id
                     ? "border-accent/40 bg-accent/15 text-accent"
-                    : "border-white/10 text-gray-400 hover:border-accent/25 hover:text-accent"
+                    : "border-foreground/10 bg-white/50 text-foreground/55 hover:border-accent/25 hover:text-accent"
                 )}
               >
                 {item.label}
@@ -544,9 +337,17 @@ export default function Projects() {
               </button>
             );
           })}
-        </div>
+        </motion.div>
 
-        <div className="mb-12 flex flex-wrap gap-2" role="toolbar" aria-label="Filter by stack">
+        <motion.div
+          className="mb-12 flex flex-wrap gap-2"
+          role="toolbar"
+          aria-label="Filter by stack"
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+          viewport={inViewCard}
+          transition={{ duration: 0.45, delay: 0.05, ease: easeOutExpo }}
+        >
           {techOptions.map(([item, count]) => (
             <button
               key={item}
@@ -554,60 +355,40 @@ export default function Projects() {
               onClick={() => toggleTech(item)}
               aria-pressed={tech === item}
               className={cn(
-                "rounded-full border px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider transition-colors",
+                "rounded-full border px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider backdrop-blur-xl",
                 tech === item
                   ? "border-accent/40 bg-accent/10 text-accent"
-                  : "border-white/10 text-gray-500 hover:border-accent/25 hover:text-accent"
+                  : "border-foreground/10 bg-white/50 text-foreground/50 hover:border-accent/25 hover:text-accent"
               )}
             >
               {item}
               <span className="ml-1.5 opacity-60">{count}</span>
             </button>
           ))}
-          {tech && (
-            <button
-              type="button"
-              onClick={() => setTech(null)}
-              className="rounded-full px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-gray-500 underline-offset-4 hover:text-accent hover:underline"
-            >
-              Clear stack
-            </button>
-          )}
-        </div>
+        </motion.div>
 
         {visible.length === 0 ? (
-          <p className="rounded-2xl border border-white/10 px-6 py-10 text-sm text-gray-400">
+          <p className="rounded-2xl border border-foreground/10 bg-white/50 px-6 py-10 text-sm text-foreground/55">
             No projects match that mix. Clear the stack filter or pick another lane.
           </p>
         ) : (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {visible.map((project, i) => {
-              const featured =
-                project.title === "Orbit AI" || project.title === "Kinestra";
-              const wide = featured || i === 0 || i === 5;
-
-              return (
-                <ProjectCard
-                  key={project.title}
-                  project={project}
-                  wide={wide}
-                  featured={featured}
-                  open={openTitle === project.title}
-                  previewing={previewTitle === project.title}
-                  activeTech={tech}
-                  delay={Math.min(i, 3) * 0.07}
-                  onToggle={() =>
-                    setOpenTitle((current) =>
-                      current === project.title ? null : project.title
-                    )
-                  }
-                  onPreview={(next) =>
-                    setPreviewTitle(next ? project.title : null)
-                  }
-                  onTech={toggleTech}
-                />
-              );
-            })}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 glass-stage">
+            {visible.map((project, i) => (
+              <ProjectCard
+                key={project.title}
+                project={project}
+                featured={project.title === "Orbit AI" || project.title === "Kinestra"}
+                open={openTitle === project.title}
+                previewing={previewTitle === project.title}
+                activeTech={tech}
+                delay={Math.min(i, 3) * 0.07}
+                onToggle={() =>
+                  setOpenTitle((current) => (current === project.title ? null : project.title))
+                }
+                onPreview={(next) => setPreviewTitle(next ? project.title : null)}
+                onTech={toggleTech}
+              />
+            ))}
           </div>
         )}
       </div>
