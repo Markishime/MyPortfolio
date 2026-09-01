@@ -23,7 +23,7 @@ const ScrollCinema = dynamic(() => import("@/components/ScrollCinema"), {
 });
 
 const About = dynamic(() => import("@/components/About"));
-const CinematicReel = dynamic(() => import("@/components/CinematicReel"));
+// const CinematicReel = dynamic(() => import("@/components/CinematicReel"));
 const Projects = dynamic(() => import("@/components/Projects"));
 const Skills = dynamic(() => import("@/components/Skills"));
 const Certifications = dynamic(() => import("@/components/Certifications"));
@@ -41,7 +41,6 @@ export default function Home() {
         <main>
           <Hero />
           <About />
-          <CinematicReel />
           <Projects />
           <Skills />
           <Certifications />

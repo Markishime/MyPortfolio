@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useMemo, useState, useEffect, useRef } from "react";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import { easeOutExpo, inViewCard } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import SectionHeading from "./SectionHeading";
 import CinematicMedia from "./CinematicMedia";
+
 
 type Project = (typeof siteConfig.projects)[number];
 type Lane = "all" | "ai" | "embedded" | "web";
@@ -41,6 +42,203 @@ function matchesProject(project: Project, lane: Lane, tech: string | null) {
   return (project.lanes as readonly string[]).includes(lane);
 }
 
+function FeaturedCarousel({ projects }: { projects: Project[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const autoplayRef = useRef<NodeJS.Timeout>();
+  const reduce = useReducedMotion();
+
+  const nextProject = () => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % projects.length);
+  };
+
+  const prevProject = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
+  };
+
+  const goToProject = (index: number) => {
+    setDirection(index > currentIndex ? 1 : -1);
+    setCurrentIndex(index);
+  };
+
+  useEffect(() => {
+    if (!reduce) {
+      autoplayRef.current = setInterval(nextProject, 5000);
+      return () => {
+        if (autoplayRef.current) clearInterval(autoplayRef.current);
+      };
+    }
+  }, [reduce, currentIndex]);
+
+  const handleInteraction = (action: () => void) => {
+    if (autoplayRef.current) clearInterval(autoplayRef.current);
+    action();
+    if (!reduce) {
+      autoplayRef.current = setInterval(nextProject, 5000);
+    }
+  };
+
+  const currentProject = projects[currentIndex];
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 0.95,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 0.95,
+    }),
+  };
+
+  return (
+    <div className="relative mb-16 overflow-hidden rounded-3xl glass-card cinematic-card-featured">
+      <div className="relative h-[500px] md:h-[600px]">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
+          <motion.div
+            key={currentIndex}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.3 },
+              scale: { duration: 0.3 },
+            }}
+            className="absolute inset-0"
+          >
+            <CinematicMedia
+              image={currentProject.image}
+              video={currentProject.video}
+              alt={`${currentProject.title} preview`}
+              kenBurns={!currentProject.video}
+              playing={true}
+              className="h-full w-full"
+              overlayClassName="from-[#071018]/90 via-[#071018]/40 to-transparent"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="absolute bottom-0 left-0 right-0 p-8 md:p-12"
+            >
+              <motion.span
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mb-3 inline-block rounded-full border border-accent/30 bg-accent/15 px-4 py-2 font-mono text-xs uppercase tracking-wider text-accent"
+              >
+                Featured
+              </motion.span>
+              
+              <motion.h2
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mb-4 font-display text-4xl md:text-6xl font-bold text-white"
+              >
+                {currentProject.title}
+              </motion.h2>
+              
+              <motion.p
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+                className="mb-6 max-w-2xl text-lg text-gray-300"
+              >
+                {currentProject.description}
+              </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="flex flex-wrap gap-3"
+              >
+                {currentProject.live && (
+                  <a
+                    href={currentProject.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/20 px-6 py-3 font-mono text-sm text-accent backdrop-blur-md transition-all hover:border-accent/60 hover:bg-accent/30"
+                  >
+                    <span className="h-2 w-2 rounded-full bg-accent" />
+                    View Live
+                  </a>
+                )}
+                {currentProject.github && (
+                  <a
+                    href={currentProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 font-mono text-sm text-gray-300 backdrop-blur-md transition-all hover:border-accent/40 hover:text-accent"
+                  >
+                    <GitHubIcon className="h-4 w-4" />
+                    GitHub
+                  </a>
+                )}
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="absolute top-1/2 left-4 right-4 z-20 flex -translate-y-1/2 items-center justify-between pointer-events-none">
+        <button
+          onClick={() => handleInteraction(prevProject)}
+          className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-[#071018]/80 text-white backdrop-blur-md transition-all hover:border-accent/50 hover:bg-accent/20"
+          aria-label="Previous project"
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={() => handleInteraction(nextProject)}
+          className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-[#071018]/80 text-white backdrop-blur-md transition-all hover:border-accent/50 hover:bg-accent/20"
+          aria-label="Next project"
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Pagination Dots */}
+      <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+        {projects.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handleInteraction(() => goToProject(index))}
+            className={cn(
+              "h-2 rounded-full transition-all",
+              index === currentIndex
+                ? "w-8 bg-accent"
+                : "w-2 bg-white/40 hover:bg-white/60"
+            )}
+            aria-label={`Go to project ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ProjectCard({
   project,
   wide,
@@ -66,13 +264,44 @@ function ProjectCard({
 }) {
   const reduce = useReducedMotion();
 
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      scale: 0.95,
+      rotateX: 10,
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      scale: 1,
+      rotateX: 0,
+      transition: {
+        duration: 0.6,
+        delay,
+        ease: easeOutExpo,
+      }
+    },
+  };
+
+  const hoverVariants = {
+    hover: {
+      y: -12,
+      scale: 1.02,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      }
+    }
+  };
+
   return (
     <motion.article
-      initial={reduce ? false : { opacity: 0, y: 32, scale: 0.97 }}
-      whileInView={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
+      initial={reduce ? false : "hidden"}
+      whileInView={reduce ? undefined : "visible"}
+      whileHover={reduce ? undefined : "hover"}
+      variants={reduce ? undefined : { ...cardVariants, ...hoverVariants }}
       viewport={inViewCard}
-      transition={{ duration: 0.6, delay, ease: easeOutExpo }}
-      whileHover={reduce ? undefined : { y: -8 }}
       className={cn(
         "group relative h-full overflow-hidden rounded-3xl glass-card cinematic-card",
         featured && "cinematic-card-featured",
@@ -81,13 +310,28 @@ function ProjectCard({
       )}
       onMouseEnter={() => onPreview(true)}
       onMouseLeave={() => onPreview(false)}
+      style={{ transformStyle: "preserve-3d" }}
     >
-      <div
+      <motion.div
         className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-20 group-focus-within:opacity-20`}
+        animate={{
+          opacity: [0, 0.15, 0],
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut",
+        }}
       />
 
       <div className="relative flex h-full flex-col">
-        <div className="relative">
+        <motion.div 
+          className="relative"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.3 }}
+        >
           <CinematicMedia
             image={project.image}
             video={project.video}
@@ -141,7 +385,7 @@ function ProjectCard({
               </a>
             )}
           </div>
-        </div>
+        </motion.div>
 
         <div className="relative flex flex-1 flex-col p-6 sm:p-8">
           <div className="mb-4 flex items-start justify-between">
@@ -250,6 +494,13 @@ export default function Projects() {
     setTech((current) => (current === value ? null : value));
   };
 
+  const featuredProjects = useMemo(
+    () => siteConfig.projects.filter((project) => 
+      project.title === "Orbit AI" || project.title === "Kinestra"
+    ),
+    []
+  );
+
   return (
     <section id="projects" className="relative overflow-hidden py-32">
       <div className="perspective-grid absolute inset-0 opacity-20" />
@@ -262,6 +513,9 @@ export default function Projects() {
           title="Featured Projects"
           subtitle="From connected systems to life OS and adaptive fitness platforms"
         />
+
+        {/* Featured Carousel */}
+        <FeaturedCarousel projects={featuredProjects} />
 
         <div className="mb-6 flex flex-wrap gap-2" role="toolbar" aria-label="Filter projects">
           {LANES.map((item) => {
