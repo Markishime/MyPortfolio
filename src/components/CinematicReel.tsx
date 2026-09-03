@@ -192,6 +192,7 @@ export default function CinematicReel() {
         () => {
           const stills = gsap.utils.toArray<HTMLElement>(".reel-project-panel");
           const bleeds = gsap.utils.toArray<HTMLElement>(".reel-feature");
+          const intro = gsap.utils.toArray<HTMLElement>(".reel-intro-panel");
           const distance = () => Math.max(track.scrollWidth - window.innerWidth, 0);
 
           const horizontal = gsap.to(track, {
@@ -234,6 +235,10 @@ export default function CinematicReel() {
               .to(copy, { opacity: 1, y: 0, duration: 0.6 })
               .to(copy, { opacity: 0, y: -18, ease: "none", duration: 0.2 });
           };
+
+          intro.forEach((panel) => {
+            holdCopy(panel.querySelector<HTMLElement>(".reel-intro-copy"), panel);
+          });
 
           bleeds.forEach((panel) => {
             holdCopy(panel.querySelector<HTMLElement>(".reel-intro-copy"), panel);
@@ -299,6 +304,7 @@ export default function CinematicReel() {
       className="cinematic-reel relative overflow-hidden"
     >
       <div ref={trackRef} className="reel-track relative z-10">
+        <IntroPanel />
         {works.map((work, index) =>
           work.kind === "bleed" ? (
             <BleedPanel key={work.title} work={work} index={index} />
@@ -308,6 +314,33 @@ export default function CinematicReel() {
         )}
       </div>
     </section>
+  );
+}
+
+function IntroPanel() {
+  const stacked = useStackedReel();
+  const reduce = useReducedMotion();
+  const animateIn = stacked && !reduce;
+
+  return (
+    <div className="reel-project-panel reel-intro-panel">
+      <motion.div
+        className="reel-panel-copy reel-intro-copy"
+        initial={animateIn ? { opacity: 0, y: 24 } : false}
+        whileInView={animateIn ? { opacity: 1, y: 0 } : undefined}
+        viewport={animateIn ? { once: true, amount: 0.4 } : undefined}
+        transition={{ duration: 0.7, ease: easeOutExpo }}
+      >
+        <p className="reel-panel-work">Selected work</p>
+        <h3>
+          From<span>Cebu</span>
+        </h3>
+        <p className="reel-intro-blurb">
+          Connected systems, AI platforms, and embedded prototypes — built,
+          shipped, and proven from Cebu, Philippines.
+        </p>
+      </motion.div>
+    </div>
   );
 }
 
