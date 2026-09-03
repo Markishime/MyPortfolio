@@ -36,7 +36,7 @@
 .item span {
   font-family: var(--font-nav), sans-serif;
   font-size: 11px;
-  color: #c45a40;
+  color: var(--section-accent, #c45a40);
   padding-top: 2px;
 }
 

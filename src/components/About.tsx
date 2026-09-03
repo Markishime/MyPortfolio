@@ -38,7 +38,8 @@ export default function About() {
       };
 
   return (
-    <section id="about" className="relative py-24 lg:py-28 overflow-hidden section-cinematic">
+    <section id="about" className="relative py-24 lg:py-28 overflow-hidden section-cinematic tone-coral">
+      <div className="absolute inset-0 section-tint pointer-events-none" />
       <div className="max-w-6xl mx-auto px-6 lg:px-8 relative glass-panel rounded-[2rem] p-6 sm:p-8">
         <SectionHeading
           badge="About"

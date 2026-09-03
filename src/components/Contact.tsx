@@ -43,8 +43,9 @@ export default function Contact() {
   const reduce = useReducedMotion();
 
   return (
-    <section id="contact" className="relative py-24 lg:py-28 overflow-hidden section-cinematic">
+    <section id="contact" className="relative py-24 lg:py-28 overflow-hidden section-cinematic tone-rose">
       <div className="absolute inset-0 cinematic-depth-fog pointer-events-none" />
+      <div className="absolute inset-0 section-tint pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 lg:px-8 relative glass-panel rounded-[2rem] p-6 sm:p-10">
         <SectionHeading

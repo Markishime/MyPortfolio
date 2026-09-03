@@ -998,15 +998,18 @@ main { position: relative; z-index: 2; }
 .portfolio-mobile-menu { border: 1px solid rgba(27,25,21,0.1); background: rgba(255,250,244,0.94); backdrop-filter: blur(24px); }
 
 .section-kicker {
-  border: 1px solid rgba(245, 255, 252, 0.16);
-  background: rgba(255, 255, 255, 0.055);
-  color: rgba(239, 255, 249, 0.72);
+  border: 1px solid color-mix(in oklab, var(--section-accent) 32%, transparent);
+  background: color-mix(in oklab, var(--section-accent) 9%, white);
+  color: var(--section-accent);
   font-family: var(--font-nav);
-  letter-spacing: 0;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   backdrop-filter: blur(16px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
-.section-kicker > span { background: var(--theme-accent); }
+.section-kicker > span { background: var(--section-accent); }
 
 .section-display-title {
   color: var(--ink);
@@ -1025,6 +1028,24 @@ main { position: relative; z-index: 2; }
   font-size: 1.05rem;
   line-height: 1.65;
 }
+
+/* ===== Per-section color themes ===== */
+.tone-coral   { --section-accent: #b24a32; --section-accent-rgb: 178 74 50; --section-tint: radial-gradient(ellipse 70% 60% at 18% 0%, rgba(178, 74, 50, 0.10), transparent 60%); }
+.tone-indigo  { --section-accent: #4f46e5; --section-accent-rgb: 79 70 229;  --section-tint: radial-gradient(ellipse 70% 60% at 78% 0%, rgba(79, 70, 229, 0.10), transparent 60%); }
+.tone-teal    { --section-accent: #0e7490; --section-accent-rgb: 14 116 144;  --section-tint: radial-gradient(ellipse 70% 60% at 22% 100%, rgba(14, 116, 144, 0.10), transparent 60%); }
+.tone-emerald { --section-accent: #047857; --section-accent-rgb: 4 120 87;   --section-tint: radial-gradient(ellipse 70% 60% at 80% 100%, rgba(4, 120, 87, 0.10), transparent 60%); }
+.tone-rose    { --section-accent: #e11d48; --section-accent-rgb: 225 29 72;  --section-tint: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(225, 29, 72, 0.10), transparent 60%); }
+
+.section-tint {
+  background: var(--section-tint, transparent);
+  z-index: 0;
+}
+
+.tone-coral .card-spotlight { --spotlight-color: rgba(178, 74, 50, 0.16); }
+.tone-indigo .card-spotlight { --spotlight-color: rgba(79, 70, 229, 0.16); }
+.tone-teal .card-spotlight { --spotlight-color: rgba(14, 116, 144, 0.16); }
+.tone-emerald .card-spotlight { --spotlight-color: rgba(4, 120, 87, 0.16); }
+.tone-rose .card-spotlight { --spotlight-color: rgba(225, 29, 72, 0.16); }
 
 .glass-card {
   background:
@@ -2356,7 +2377,7 @@ html[data-perf="medium"] .portrait-shell {
 
 .kicker {
   margin: 0 0 0.45rem;
-  color: #b24a32;
+  color: var(--section-accent, #b24a32);
   font-family: var(--font-nav);
   font-size: 0.72rem;
   font-weight: 700;

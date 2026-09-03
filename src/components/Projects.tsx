@@ -207,10 +207,11 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="relative overflow-hidden py-24 lg:py-28">
+    <section id="projects" className="relative overflow-hidden py-24 lg:py-28 tone-indigo">
       <div className="perspective-grid absolute inset-0 opacity-20" />
       <div className="cinematic-depth-fog pointer-events-none absolute inset-0" />
       <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
+      <div className="absolute inset-0 section-tint pointer-events-none" />
 
       <div className="relative mx-auto max-w-6xl px-6 lg:px-8 glass-panel rounded-[2rem] p-6 sm:p-8">
         <SectionHeading
