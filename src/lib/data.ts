@@ -156,6 +156,20 @@ export const siteConfig = {
       image: "/media/masbate.jpg",
       video: null,
     },
+    {
+      title: "Soda+",
+      description:
+        "An immersive single-page marketing landing page for a fictional premium zero-sugar sparkling beverage brand. Features interactive 3D product models via model-viewer, GSAP-powered scroll animations, parallax motion, a 3D review card carousel, flavor switching with full-body choreography, glassmorphism UI, and a rich visual narrative spanning ingredients, taste, sustainability, nutrition, and customer reviews.",
+      tag: "Web Development",
+      lanes: ["web"],
+      stack: ["HTML5", "CSS3", "JavaScript", "GSAP", "3D Web"],
+      github: "https://github.com/Markishime/Soda",
+      live: "https://soda-plus.vercel.app/",
+      gradient: "from-pink-500/25 to-rose-500/20",
+      icon: "🥤",
+      image: "/media/soda-plus.svg",
+      video: null,
+    },
   ],
   skills: {
     languages: [
