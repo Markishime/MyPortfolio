@@ -17,10 +17,10 @@ const plates = [
     from: { x: -80, y: -40, rotate: -8, z: -120 },
   },
   {
-    src: "/media/orbit-ai.jpg",
-    kicker: "Life OS",
-    label: "Orbit AI",
-    href: "https://gen-lang-client-0890430729.web.app/",
+    src: "/media/soda-plus.jpg",
+    kicker: "Web Experience",
+    label: "Soda+",
+    href: "https://soda-plus.vercel.app/",
     className: "origin-plate-b",
     from: { x: 90, y: -30, rotate: 7, z: -80 },
   },
@@ -42,7 +42,7 @@ const plates = [
   },
 ];
 
-const systems = ["Kinestra", "Orbit AI", "CropDrive", "AI Assistant"];
+const systems = ["Kinestra", "Soda+", "CropDrive", "AI Assistant"];
 
 export default function OriginScene() {
   const ref = useRef<HTMLElement>(null);
@@ -147,7 +147,7 @@ export default function OriginScene() {
             <em>to working systems.</em>
           </h2>
           <p>
-            Kinestra, Orbit AI, CropDrive, and an AI Assistant — product stills
+            Kinestra, Soda+, CropDrive, and an AI Assistant — product stills
             and shipped software people can actually use.
           </p>
           <ul className="origin-systems">

@@ -31,20 +31,6 @@ export const siteConfig = {
   ],
   projects: [
     {
-      title: "Orbit AI",
-      description:
-        "An AI-powered personal life OS for tasks, habits, bills, medications, goals, projects, focus sessions, mood check-ins, notes, and daily planning. Orbit understands typed or spoken requests, drafts schedules around each user's profile, and syncs data across web, PWA, iOS, and Android experiences through Firebase with offline support.",
-      tag: "Life OS + AI",
-      lanes: ["ai", "web"],
-      stack: ["React", "JavaScript", "Capacitor", "Firebase", "PWA"],
-      github: "https://github.com/Markishime/ORBIT-AI",
-      live: "https://gen-lang-client-0890430729.web.app/",
-      gradient: "from-indigo-500/25 to-cyan-500/20",
-      icon: "🛰️",
-      image: "/media/orbit-ai.jpg",
-      video: "/media/orbit-ai.mp4",
-    },
-    {
       title: "Kinestra",
       description:
         "An AI-powered fitness platform built with React Native and Expo. It combines personalized Gemini-powered workout and nutrition coaching, conversational and voice guidance, computer-vision exercise analysis with pose estimation, progress tracking, and Firebase-backed authentication, storage, notifications, and cloud services.",
@@ -167,7 +153,7 @@ export const siteConfig = {
       live: "https://soda-plus.vercel.app/",
       gradient: "from-pink-500/25 to-rose-500/20",
       icon: "🥤",
-      image: "/media/soda-plus.svg",
+      image: "/media/soda-plus.jpg",
       video: null,
     },
   ],

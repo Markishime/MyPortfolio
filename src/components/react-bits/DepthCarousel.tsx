@@ -12,7 +12,7 @@ export type DepthCarouselItem = {
 };
 
 const DEFAULT_ITEMS: DepthCarouselItem[] = [
-  { image: "/media/orbit-ai.jpg", alt: "Orbit AI", title: "Orbit AI" },
+  { image: "/media/soda-plus.jpg", alt: "Soda+", title: "Soda+" },
   { image: "/media/kinestra.jpg", alt: "Kinestra", title: "Kinestra" },
 ];
 

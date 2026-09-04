@@ -378,7 +378,7 @@ export default function Projects() {
               <ProjectCard
                 key={project.title}
                 project={project}
-                featured={project.title === "Orbit AI" || project.title === "Kinestra"}
+                featured={project.title === "Soda+" || project.title === "Kinestra"}
                 open={openTitle === project.title}
                 previewing={previewTitle === project.title}
                 activeTech={tech}
