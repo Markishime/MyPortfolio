@@ -88,7 +88,7 @@ const works: Work[] = [
   },
   {
     kind: "bleed",
-    src: "/media/soda-plus.jpg",
+    src: "/media/soda-hero.png",
     video: null,
     objectPosition: "50% 42%",
     overlayClassName:

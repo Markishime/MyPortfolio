@@ -17,7 +17,7 @@ const plates = [
     from: { x: -80, y: -40, rotate: -8, z: -120 },
   },
   {
-    src: "/media/soda-plus.jpg",
+    src: "/media/soda-hero.png",
     kicker: "Web Experience",
     label: "Soda+",
     href: "https://soda-plus.vercel.app/",
