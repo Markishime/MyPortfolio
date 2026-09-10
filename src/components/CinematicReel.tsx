@@ -103,6 +103,22 @@ const works: Work[] = [
     hrefLabel: "soda-plus.vercel.app",
   },
   {
+    kind: "bleed",
+    src: "/media/datum-estimating.jpg",
+    video: null,
+    objectPosition: "68% 42%",
+    overlayClassName:
+      "bg-gradient-to-r from-[#101116]/88 via-[#101116]/42 to-[#101116]/12",
+    align: "start",
+    alt: "DATUM Estimating homepage with 3D quantity model and takeoff worksheet",
+    kicker: "DATUM",
+    title: "Takeoff.",
+    line: "Plans in. Quantities out.",
+    detail: "GSAP, Three.js, and a bid-ready estimating site in one scroll.",
+    href: "https://datum-estimating.vercel.app/",
+    hrefLabel: "datum-estimating.vercel.app",
+  },
+  {
     kind: "still",
     src: "/media/cropdrive.jpg",
     objectPosition: "50% 42%",

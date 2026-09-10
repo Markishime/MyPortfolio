@@ -10,6 +10,7 @@ import OptionWheel from "./react-bits/OptionWheel";
 const CATEGORIES = [
   "Languages",
   "Frontend",
+  "UI Libraries",
   "Backend",
   "AI & ML",
   "Mobile",
@@ -23,6 +24,7 @@ const CATEGORIES = [
 const CATEGORY_SKILLS = {
   Languages: siteConfig.skills.languages,
   Frontend: siteConfig.skills.frontend,
+  "UI Libraries": siteConfig.skills.uiLibraries,
   Backend: siteConfig.skills.backend,
   "AI & ML": siteConfig.skills.artificialIntelligence,
   Mobile: siteConfig.skills.mobile,
@@ -37,6 +39,10 @@ const CORE_STACK = [
   "Next.js",
   "React",
   "Tailwind CSS",
+  "shadcn/ui",
+  "Framer Motion",
+  "GSAP",
+  "Three.js",
   "TypeScript",
   "Python",
   "JavaScript (ES6+)",
@@ -66,7 +72,7 @@ export default function Skills() {
         <SectionHeading
           badge="Expertise"
           title="Skills & Technologies"
-          subtitle="The stack I ship with — spin the wheel for the rest of the toolkit"
+          subtitle="Frameworks, UI libraries, and motion tools from the products I ship"
         />
 
         <div className="core-stack mb-10">

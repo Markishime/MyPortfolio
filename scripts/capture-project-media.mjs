@@ -6,6 +6,7 @@ const projects = [
   ["teambuilder.jpg", "https://mcteambuilder.streamlit.app/"],
   ["simplabots.jpg", "https://simplabots.com/"],
   ["masbate.jpg", "https://masbatetoday.web.app/"],
+  ["datum-estimating.jpg", "https://datum-estimating.vercel.app/"],
 ];
 
 const browser = await chromium.launch({ channel: "msedge", headless: true });

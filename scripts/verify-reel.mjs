@@ -36,6 +36,8 @@ const required = [
   "Agents",
   "Crews",
   "Coasts",
+  "Takeoff",
+  "DATUM Estimating",
 ];
 
 async function snapshot(name, size) {
