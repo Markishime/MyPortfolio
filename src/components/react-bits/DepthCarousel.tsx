@@ -228,26 +228,40 @@ export default function DepthCarousel({
       wheelTimerRef.current = setTimeout(() => setFocus(Math.round(posRef.current), true), 130);
     };
     el.addEventListener("wheel", onWheel, { passive: false });
+    const onAuxClick = (e: MouseEvent) => {
+      if (e.button === 3 || e.button === 4) e.preventDefault();
+    };
+    el.addEventListener("auxclick", onAuxClick);
     return () => {
       el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("auxclick", onAuxClick);
       if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
     };
   }, [layout, setFocus]);
 
-  const onPointerDown = useCallback((e: React.PointerEvent) => {
-    const cfg = cfgRef.current;
-    if (cfg.count < 2) return;
-    tweenRef.current?.kill();
-    dragRef.current = {
-      x: e.clientX,
-      startPos: posRef.current,
-      lastX: e.clientX,
-      lastT: performance.now(),
-      v: 0,
-      moved: false,
-      id: e.pointerId,
-    };
-  }, []);
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      const cfg = cfgRef.current;
+      if (e.button === 3 || e.button === 4) {
+        e.preventDefault();
+        if (cfg.count > 1) navigateBy(e.button === 3 ? -1 : 1);
+        return;
+      }
+
+      if (cfg.count < 2) return;
+      tweenRef.current?.kill();
+      dragRef.current = {
+        x: e.clientX,
+        startPos: posRef.current,
+        lastX: e.clientX,
+        lastT: performance.now(),
+        v: 0,
+        moved: false,
+        id: e.pointerId,
+      };
+    },
+    [navigateBy]
+  );
 
   const onPointerMove = useCallback(
     (e: React.PointerEvent) => {
@@ -364,6 +378,7 @@ export default function DepthCarousel({
     <div
       ref={rootRef}
       className={`depth-carousel ${className}`.trim()}
+      data-lenis-prevent
       style={{ "--dc-perspective": `${perspective}px` } as React.CSSProperties}
       role="group"
       aria-roledescription="carousel"

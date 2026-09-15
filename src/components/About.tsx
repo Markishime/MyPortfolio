@@ -12,7 +12,7 @@ const stats = [
   { value: 6, suffix: "+", label: "Projects Built" },
   { value: 3, suffix: "", label: "Hackathons" },
   { value: 11, suffix: "+", label: "Certifications" },
-  { value: 2, suffix: "", label: "Years Experience" },
+  { value: 1, suffix: "", label: "Year & 4 Months Experience" },
 ];
 
 const copyLines = [

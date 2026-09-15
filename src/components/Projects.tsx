@@ -28,6 +28,18 @@ function GitHubIcon({ className }: { className?: string }) {
   );
 }
 
+function FigmaIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 38 57" fill="none" aria-hidden>
+      <path fill="currentColor" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" />
+      <path fill="currentColor" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" opacity=".85" />
+      <path fill="currentColor" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" opacity=".7" />
+      <path fill="currentColor" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" opacity=".55" />
+      <path fill="currentColor" d="M0 28.5A9.5 9.5 0 0 1 9.5 19H19v19H9.5A9.5 9.5 0 0 1 0 28.5z" opacity=".4" />
+    </svg>
+  );
+}
+
 function LiveIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 20 20" aria-hidden>
@@ -156,6 +168,17 @@ function ProjectCard({
           >
             <LiveIcon className="h-3.5 w-3.5" />
             Live
+          </a>
+        )}
+        {project.figma && (
+          <a
+            href={project.figma}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-cta"
+          >
+            <FigmaIcon className="h-3.5 w-3.5" />
+            Figma
           </a>
         )}
       </div>
@@ -294,6 +317,17 @@ export default function Projects() {
                   >
                     <GitHubIcon className="h-4 w-4" />
                     GitHub
+                  </a>
+                )}
+                {activeProject.figma && (
+                  <a
+                    href={activeProject.figma}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-cta"
+                  >
+                    <FigmaIcon className="h-3.5 w-3.5" />
+                    Figma
                   </a>
                 )}
               </div>
