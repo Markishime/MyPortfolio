@@ -188,7 +188,7 @@ export const siteConfig = {
       lanes: ["web"],
       stack: ["GSAP", "Lenis", "Motion One", "Three.js", "Embla"],
       github: "https://github.com/Mark-HolisticSEO/Construction-estimating-services",
-      live: "https://datum-estimating.vercel.app/",
+      live: "https://datum-construction-estimating.vercel.app/",
       figma: "https://www.figma.com/design/BIqEUgr1YoldreTlgq4Sp8/DATUM-ESTIMATING-%E2%80%94-Precision-Builds-Confidence?node-id=0-1&p=f&t=Wqysp43oAEZsZG3l-0",
       gradient: "from-amber-600/25 to-slate-500/20",
       icon: "📐",
