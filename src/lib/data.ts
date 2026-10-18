@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "Full Stack Developer, Computer Engineer & AI Developer",
   primaryRole: "Full Stack Developer",
   secondaryRole: "AI Developer",
-  projectsBuilt: 10,
+  projectsBuilt: 11,
   experience: [
     {
       type: "Personal",
@@ -166,12 +166,12 @@ export const siteConfig = {
     {
       title: "LifeFlow AI",
       description:
-        "A proposed AI-powered personal life management and automation platform for tasks, documents, deadlines, bills, and household responsibilities. The planned architecture combines React Native and Expo with FastAPI, LangGraph, RAG, and OCR to turn documents and goals into structured workflows. PostgreSQL with pgvector supports retrieval, while Celery and Redis power reminders and background jobs. Designed around user-approved automation and clear completion tracking.",
-      tag: "AI + Mobile Concept",
+        "An AI-powered personal life management and automation platform for tasks, documents, deadlines, bills, and household responsibilities. Built as a monorepo with an Expo React Native app, a FastAPI backend, and a Next.js operations console. LangGraph drives proposal and validation flows that turn documents and goals into structured workflows, with OCR extraction and explicit user approval before anything runs. PostgreSQL with pgvector powers scoped keyword and vector search, while Celery and Redis handle durable reminders and background jobs.",
+      tag: "AI + Mobile",
       lanes: ["ai", "web"],
-      stack: ["React Native", "Expo", "TypeScript", "NativeWind", "FastAPI", "LangGraph", "PostgreSQL"],
-      github: null,
-      live: null,
+      stack: ["React Native", "Expo", "TypeScript", "FastAPI", "LangGraph", "PostgreSQL", "Next.js"],
+      github: "https://github.com/Markishime/LifeFlow-AI",
+      live: "https://lifeflow-ai-six.vercel.app",
       figma: null,
       gradient: "from-emerald-500/20 to-cyan-500/20",
       icon: "🌱",
