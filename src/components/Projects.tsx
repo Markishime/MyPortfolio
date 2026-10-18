@@ -242,7 +242,7 @@ export default function Projects() {
         <SectionHeading
           badge="Work"
           title="Featured Projects"
-          subtitle="11 built projects and one design concept. Applied AI, useful products, and connected hardware."
+          subtitle={`${siteConfig.projectsBuilt} built projects and ${siteConfig.projects.length - siteConfig.projectsBuilt} concepts. Applied AI, useful products, and considered interfaces.`}
         />
 
         <motion.div
@@ -353,6 +353,7 @@ export default function Projects() {
                 : siteConfig.projects.filter((project) =>
                     (project.lanes as readonly string[]).includes(item.id)
                   ).length;
+            if (count === 0) return null;
             return (
               <button
                 key={item.id}

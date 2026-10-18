@@ -5,14 +5,16 @@ const projects = [
   ["cropdrive.jpg", "https://cropdrive.ai"],
   ["teambuilder.jpg", "https://mcteambuilder.streamlit.app/"],
   ["simplabots.jpg", "https://simplabots.com/"],
-  ["masbate.jpg", "https://masbatetoday.web.app/"],
+  ["masbate.jpg", "https://masbatetoday.vercel.app/"],
   ["datum-estimating.jpg", "https://datum-estimating.vercel.app/"],
+  ["cineverse.jpg", "https://cineverse-live.vercel.app/"],
 ];
 
 const browser = await chromium.launch({ channel: "msedge", headless: true });
 const results = [];
 
-for (const [filename, url] of projects) {
+const requested = process.argv.slice(2);
+for (const [filename, url] of projects.filter(([name]) => requested.length === 0 || requested.includes(name))) {
   const page = await browser.newPage({
     viewport: { width: 1600, height: 1000 },
     deviceScaleFactor: 1,
