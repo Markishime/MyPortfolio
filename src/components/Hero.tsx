@@ -1,14 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import { useTheme } from "./ThemeProvider";
-import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const reduceMotion = useReducedMotion();
   const { identity } = useTheme();
   const { scrollYProgress } = useScroll({
@@ -19,6 +19,18 @@ export default function Hero() {
   const mediaScale = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 36]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.22]);
+
+  useEffect(() => {
+    const section = containerRef.current;
+    const video = videoRef.current;
+    if (!section || !video) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !reduceMotion) video.play().catch(() => {});
+      else video.pause();
+    }, { threshold: 0.08 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [reduceMotion]);
 
   return (
     <section
@@ -36,13 +48,16 @@ export default function Hero() {
           }}
           aria-hidden="true"
         >
-          <Image
-            src="/media/coastal-structure.webp"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="hero-architecture"
+          <video
+            ref={videoRef}
+            src="/media/Pixelated.mp4"
+            poster={reduceMotion ? "/media/coastal-structure.webp" : undefined}
+            muted
+            autoPlay={!reduceMotion}
+            loop
+            playsInline
+            preload="auto"
+            className="hero-pixel-video"
           />
           <div className="hero-media-wash" />
         </motion.div>

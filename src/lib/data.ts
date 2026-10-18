@@ -126,7 +126,7 @@ export const siteConfig = {
       lanes: ["web"],
       stack: ["React", "Tailwind CSS", "shadcn/ui", "Framer Motion", "Firebase"],
       github: "https://github.com/Markishime/MasbateToday",
-      live: "https://masbatetoday.web.app/",
+      live: "https://masbatetoday.vercel.app/",
       figma: null,
       gradient: "from-sky-500/20 to-blue-500/20",
       icon: "🏝️",

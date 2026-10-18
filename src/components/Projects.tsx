@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import SectionHeading from "./SectionHeading";
 import CinematicMedia from "./CinematicMedia";
 import TiltCard from "./TiltCard";
+import DepthCarousel from "./react-bits/DepthCarousel";
 
 type Project = (typeof siteConfig.projects)[number];
 type Lane = "all" | "ai" | "embedded" | "web";
@@ -200,6 +201,16 @@ export default function Projects() {
     [lane, tech]
   );
 
+  const carouselItems = useMemo(
+    () => visible.map((project) => ({
+      image: project.image,
+      alt: project.title,
+      title: project.title,
+      tag: project.tag,
+    })),
+    [visible]
+  );
+
   const activeProject = visible[Math.min(activeIndex, Math.max(visible.length - 1, 0))];
 
   const techOptions = useMemo(() => {
@@ -234,13 +245,29 @@ export default function Projects() {
           subtitle="11 built projects and one design concept. Applied AI, useful products, and connected hardware."
         />
 
-        <div className="project-selection" role="group" aria-label="Select a featured project">
-          {visible.slice(0, 8).map((project, index) => (
-            <button key={project.title} type="button" aria-pressed={activeProject?.title === project.title} onClick={() => setActiveIndex(index)}>
-              <span>{String(index + 1).padStart(2, "0")}</span>{project.title}
-            </button>
-          ))}
-        </div>
+        <motion.div
+          className="projects-depth-stage glass-panel"
+          initial={reduce ? false : { opacity: 0, y: 28 }}
+          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+          viewport={inViewCard}
+          transition={{ duration: 0.6, ease: easeOutExpo }}
+        >
+          {carouselItems.length > 0 && (
+            <DepthCarousel
+              key={`${lane}-${tech ?? "all"}`}
+              items={carouselItems}
+              cardWidth={320}
+              cardHeight={420}
+              radius={22}
+              depth={240}
+              spread={96}
+              tilt={24}
+              autoplay={!reduce}
+              autoplayDelay={3800}
+              onChange={(index) => setActiveIndex(index)}
+            />
+          )}
+        </motion.div>
 
         {activeProject && (
           <motion.div

@@ -18,8 +18,8 @@ Use wide, open section containers rather than nested glass panels. The origin st
 
 ## Imagery
 
-One custom architectural coastal background establishes the opening. Actual project screenshots lead the remaining content. Preserve Mark's portrait and project assets.
+The original Pixelated.mp4 video establishes the opening, with a static architectural poster for reduced motion. Actual project screenshots lead the remaining content. Preserve Mark's portrait and project assets.
 
 ## Interaction
 
-Keep badge dragging and add native keyboard activation to the badge itself. Project previews, category filters, and technology filters remain usable. Respect reduced motion; avoid automatic palette changes.
+Keep badge dragging and native keyboard activation on the badge itself. Restore the depth carousel with slide controls and autoplay; its selected slide updates the featured project. Project previews, category filters, and technology filters remain usable. Respect reduced motion; avoid automatic palette changes.

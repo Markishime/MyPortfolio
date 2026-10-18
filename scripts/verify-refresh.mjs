@@ -55,10 +55,16 @@ try {
 
     await page.locator("#home h1").waitFor({ state: "visible", timeout: 15000 });
     await page.locator("#contact").waitFor({ state: "attached" });
-    await page.waitForFunction(() => document.querySelector(".hero-architecture")?.complete);
+    await page.waitForFunction(() => document.querySelector("#home video")?.readyState >= 2);
     await page.waitForTimeout(1100);
     await page.screenshot({ path: path.join(output, `${config.name}-hero.png`) });
-    assert.equal(await page.locator("#home video").count(), 0);
+    const heroVideo = page.locator("#home video");
+    assert.equal(await heroVideo.getAttribute("src"), "/media/Pixelated.mp4");
+    assert.equal(await heroVideo.evaluate((video) => video.paused), config.reducedMotion === "reduce");
+    const startTime = await heroVideo.evaluate((video) => video.currentTime);
+    await page.waitForTimeout(400);
+    const laterTime = await heroVideo.evaluate((video) => video.currentTime);
+    if (config.reducedMotion !== "reduce") assert(laterTime > startTime, "Hero video plays");
 
     for (const section of ["origin", "about", "projects", "skills", "certifications", "contact"]) {
       await page.locator(`#${section}`).evaluate((element) => element.scrollIntoView({ block: "start" }));
@@ -66,6 +72,7 @@ try {
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
       assert.equal(overflow, false, `${config.name}: no overflow at ${section}`);
       await page.screenshot({ path: path.join(output, `${config.name}-${section}.png`) });
+      if (section === "about") assert.equal(await heroVideo.evaluate((video) => video.paused), true, "Offscreen hero pauses");
     }
 
     const experience = await page.locator(".experience-track").allTextContents();
@@ -80,11 +87,22 @@ try {
     assert.deepEqual(titles.slice(0, 8), expected);
     assert.equal(titles.length, 12, "All built projects and the design concept are retained");
 
-    await page.locator("#projects").scrollIntoViewIfNeeded();
-    await page.getByRole("group", { name: "Select a featured project" }).getByRole("button", { name: /AGS AI Assistant/ }).click();
-    assert.equal(await page.locator(".project-feature-copy h3").innerText(), "AGS AI Assistant");
-    await page.getByRole("group", { name: "Select a featured project" }).getByRole("button", { name: /CropDrive/ }).click();
-    assert.equal(await page.locator(".project-feature-copy h3").innerText(), "CropDrive AI");
+    const carousel = page.getByRole("group", { name: "Depth carousel" });
+    await carousel.scrollIntoViewIfNeeded();
+    await carousel.focus();
+    await carousel.getByRole("tab", { name: "Go to slide 1", exact: true }).click();
+    await page.waitForFunction(() => document.querySelector(".project-feature-copy h3")?.textContent === "CropDrive AI");
+    await carousel.getByRole("button", { name: "Next slide", exact: true }).click();
+    await page.waitForFunction(() => document.querySelector(".project-feature-copy h3")?.textContent === "AGS AI Assistant");
+    assert.equal(await carousel.getByRole("tab", { name: "Go to slide 2", exact: true }).getAttribute("aria-selected"), "true");
+    await carousel.getByRole("button", { name: "Previous slide", exact: true }).click();
+    await page.waitForFunction(() => document.querySelector(".project-feature-copy h3")?.textContent === "CropDrive AI");
+    await carousel.focus();
+    await carousel.press("ArrowRight");
+    await page.waitForFunction(() => document.querySelector(".project-feature-copy h3")?.textContent === "AGS AI Assistant");
+    await carousel.press("ArrowLeft");
+    await page.waitForFunction(() => document.querySelector(".project-feature-copy h3")?.textContent === "CropDrive AI");
+    await page.screenshot({ path: path.join(output, `${config.name}-carousel.png`) });
 
     const lanes = page.getByRole("toolbar", { name: "Filter projects", exact: true });
     const stack = page.getByRole("toolbar", { name: "Filter by stack" });
