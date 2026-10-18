@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { galada, inter, jetbrainsMono, manrope, outfit } from "./fonts";
 import "./globals.css";
+import "./portfolio.css";
 
 export const metadata: Metadata = {
   title: "Mark Lloyd Cuizon | Full Stack Developer & Computer Engineer",

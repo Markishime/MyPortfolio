@@ -14,15 +14,6 @@ const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
   ssr: false,
 });
 
-const CinematicCanvas = dynamic(
-  () => import("@/components/scene/CinematicCanvas"),
-  { ssr: false }
-);
-
-const ScrollCinema = dynamic(() => import("@/components/ScrollCinema"), {
-  ssr: false,
-});
-
 const OriginScene = dynamic(() => import("@/components/OriginScene"));
 const About = dynamic(() => import("@/components/About"));
 const Projects = dynamic(() => import("@/components/Projects"));
@@ -46,8 +37,6 @@ export default function Home() {
     <ThemeProvider>
       <CustomCursor />
       <SmoothScroll>
-        <CinematicCanvas />
-        <ScrollCinema />
         <Navbar />
         <main>
           <Hero />

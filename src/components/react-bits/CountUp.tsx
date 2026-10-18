@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useInView, useMotionValue, useSpring } from "framer-motion";
+import { useInView, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 
 export default function CountUp({
   to,
@@ -17,6 +17,7 @@ export default function CountUp({
   suffix?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
+  const reduce = useReducedMotion();
   const motionValue = useMotionValue(from);
   const springValue = useSpring(motionValue, {
     damping: 20 + 40 * (1 / duration),
@@ -25,19 +26,20 @@ export default function CountUp({
   const isInView = useInView(ref, { once: true, margin: "0px" });
 
   useEffect(() => {
-    if (isInView) motionValue.set(to);
-  }, [isInView, motionValue, to]);
+    if (isInView && !reduce) motionValue.set(to);
+  }, [isInView, motionValue, to, reduce]);
 
   useEffect(() => {
+    if (reduce) return;
     const unsub = springValue.on("change", (latest) => {
       if (ref.current) ref.current.textContent = `${Math.round(latest)}${suffix}`;
     });
     return () => unsub();
-  }, [springValue, suffix]);
+  }, [springValue, suffix, reduce]);
 
   return (
     <span className={className} ref={ref}>
-      {from}
+      {reduce ? to : from}
       {suffix}
     </span>
   );

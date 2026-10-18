@@ -14,11 +14,11 @@ export default function Certifications() {
   return (
     <section id="certifications" className="relative py-24 lg:py-28 overflow-hidden tone-emerald">
       <div className="absolute inset-0 section-tint pointer-events-none" />
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 relative glass-panel rounded-[2rem] p-6 sm:p-8">
+      <div className="portfolio-section-wrap">
         <SectionHeading
           badge="Recognition"
           title="Certifications & Hackathons"
-          subtitle="The paper trail — hackathons, courses, and the work they led to."
+          subtitle="Hackathons, courses, and the work they led to."
         />
 
         <motion.div
@@ -36,8 +36,8 @@ export default function Certifications() {
             containerWidth="100%"
             imageHeight="460px"
             imageWidth="100%"
-            rotateAmplitude={14}
-            scaleOnHover={1.06}
+            rotateAmplitude={reduce ? 0 : 6}
+            scaleOnHover={reduce ? 1 : 1.02}
             showMobileWarning={false}
             displayOverlayContent
             overlayContent={

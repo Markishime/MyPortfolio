@@ -68,7 +68,7 @@ export default function Skills() {
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
       <div className="absolute inset-0 section-tint pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 relative glass-panel rounded-[2rem] p-6 sm:p-8">
+      <div className="portfolio-section-wrap">
         <SectionHeading
           badge="Expertise"
           title="Skills & Technologies"
@@ -99,8 +99,8 @@ export default function Skills() {
               tilt={8}
               blur={1.4}
               fade={0.28}
-              textColor="#6b6560"
-              activeColor="#1b1915"
+              textColor="var(--ink-soft)"
+              activeColor="var(--theme-accent)"
               onChange={(_, item) => setCategory(item as (typeof CATEGORIES)[number])}
             />
           </div>
@@ -122,7 +122,7 @@ export default function Skills() {
                 {CATEGORY_SKILLS[category].map((skill) => (
                   <span
                     key={skill}
-                    className="px-4 py-2.5 rounded-2xl text-sm font-mono text-foreground/80 glass border border-white/60"
+                    className="px-4 py-2.5 rounded-2xl text-sm font-mono text-foreground/80 glass border border-foreground/10"
                   >
                     {skill}
                   </span>

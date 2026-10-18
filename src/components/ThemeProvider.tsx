@@ -17,7 +17,6 @@ import {
   type RGB,
   type ThemeId,
   lerpRgb,
-  nextTheme,
   writeThemeColors,
   writeThemeRgb,
 } from "@/lib/theme";
@@ -39,8 +38,6 @@ const fallbackTheme: ThemeContextValue = {
 export function useTheme() {
   return useContext(ThemeContext) ?? fallbackTheme;
 }
-
-const AUTO_CYCLE_MS = 9000;
 
 function paletteOf(id: ThemeId) {
   return THEMES[id];
@@ -117,7 +114,6 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     applyPerfDataset();
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let raf = 0;
     let running = false;
     let scrollQueued = false;
@@ -171,22 +167,8 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener("pointermove", onPointer, { passive: true });
 
-    let cycleTimer = 0;
-    if (!reduceMotion.matches) {
-      cycleTimer = window.setInterval(() => {
-        if (lockedRef.current) return;
-        const next = nextTheme(identityRef.current);
-        identityRef.current = next;
-        setIdentityState(next);
-        document.documentElement.dataset.identity = next;
-        commitIdentity(next);
-        kick();
-      }, AUTO_CYCLE_MS);
-    }
-
     return () => {
       cancelAnimationFrame(raf);
-      window.clearInterval(cycleTimer);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onPointer);
     };

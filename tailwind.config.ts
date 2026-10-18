@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         background: "var(--background)",
-        foreground: "var(--foreground)",
+        foreground: "rgb(var(--foreground-rgb) / <alpha-value>)",
         accent: {
           DEFAULT: "rgb(var(--theme-accent-rgb) / <alpha-value>)",
           50: "#fff1ed",

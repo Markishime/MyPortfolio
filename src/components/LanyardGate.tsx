@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 
 export default function LanyardGate({ onEnter }: { onEnter: () => void }) {
   const [phase, setPhase] = useState<"idle" | "swallow">("idle");
+  const reduce = useReducedMotion();
 
   const trigger = useCallback(() => {
     setPhase((current) => (current === "idle" ? "swallow" : current));
@@ -13,9 +14,9 @@ export default function LanyardGate({ onEnter }: { onEnter: () => void }) {
 
   useEffect(() => {
     if (phase !== "swallow") return;
-    const timer = window.setTimeout(onEnter, 1500);
+    const timer = window.setTimeout(onEnter, reduce ? 0 : 1500);
     return () => window.clearTimeout(timer);
-  }, [phase, onEnter]);
+  }, [phase, onEnter, reduce]);
 
   return (
     <div className={`void-gate ${phase === "swallow" ? "is-swallowing" : ""}`}>
@@ -35,7 +36,7 @@ export default function LanyardGate({ onEnter }: { onEnter: () => void }) {
           <div className="hanging-hook" aria-hidden="true" />
           <motion.div
             className="hanging-swing"
-            animate={{ rotate: [-7, 7, -5, 5, 0] }}
+            animate={reduce ? undefined : { rotate: [-7, 7, -5, 5, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             style={{ originY: 0, originX: 0.5 }}
           >
@@ -51,7 +52,11 @@ export default function LanyardGate({ onEnter }: { onEnter: () => void }) {
               onDragEnd={(_, info) => {
                 if (info.offset.y > 90 || info.velocity.y > 380) trigger();
               }}
+              onClick={(event) => {
+                if (event.detail === 0) trigger();
+              }}
               aria-label="Pull the badge to enter"
+              aria-describedby="badge-instructions"
             >
               <img src="/mark.jpeg" alt={siteConfig.name} />
               <div className="hanging-card-meta">
@@ -64,9 +69,9 @@ export default function LanyardGate({ onEnter }: { onEnter: () => void }) {
         </div>
       </div>
 
-      <button type="button" className="void-skip" onClick={trigger}>
-        Enter the site
-      </button>
+      <p id="badge-instructions" className="sr-only">
+        Drag the badge down, or focus it and press Enter or Space.
+      </p>
       <p className="void-hint">{siteConfig.primaryRole} · Cebu</p>
     </div>
   );

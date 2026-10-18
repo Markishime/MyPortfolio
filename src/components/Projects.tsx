@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import SectionHeading from "./SectionHeading";
 import CinematicMedia from "./CinematicMedia";
 import TiltCard from "./TiltCard";
-import DepthCarousel from "./react-bits/DepthCarousel";
 
 type Project = (typeof siteConfig.projects)[number];
 type Lane = "all" | "ai" | "embedded" | "web";
@@ -57,6 +56,7 @@ function matchesProject(project: Project, lane: Lane, tech: string | null) {
 
 function ProjectCard({
   project,
+  number,
   featured,
   open,
   previewing,
@@ -67,6 +67,7 @@ function ProjectCard({
   onTech,
 }: {
   project: Project;
+  number: number;
   featured: boolean;
   open: boolean;
   previewing: boolean;
@@ -107,7 +108,7 @@ function ProjectCard({
           />
           <div className="relative flex flex-1 flex-col p-6 sm:p-8 pb-20 sm:pb-24">
             <div className="mb-4 flex items-start justify-between">
-              <span className="text-3xl">{project.icon}</span>
+              <span className="project-number">{String(number).padStart(2, "0")}</span>
               <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-accent/80">
                 {project.tag}
               </span>
@@ -137,7 +138,7 @@ function ProjectCard({
                     "rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider",
                     activeTech === item
                       ? "border-accent/50 bg-accent/15 text-accent"
-                      : "border-foreground/10 bg-white/40 text-foreground/55 hover:border-accent/30 hover:text-accent"
+                      : "border-foreground/10 bg-foreground/5 text-foreground/70 hover:border-accent/30 hover:text-accent"
                   )}
                 >
                   {item}
@@ -199,17 +200,6 @@ export default function Projects() {
     [lane, tech]
   );
 
-  const carouselItems = useMemo(
-    () =>
-      visible.map((project) => ({
-        image: project.image,
-        alt: project.title,
-        title: project.title,
-        tag: project.tag,
-      })),
-    [visible]
-  );
-
   const activeProject = visible[Math.min(activeIndex, Math.max(visible.length - 1, 0))];
 
   const techOptions = useMemo(() => {
@@ -227,6 +217,7 @@ export default function Projects() {
 
   const toggleTech = (value: string) => {
     setTech((current) => (current === value ? null : value));
+    setActiveIndex(0);
   };
 
   return (
@@ -236,36 +227,20 @@ export default function Projects() {
       <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
       <div className="absolute inset-0 section-tint pointer-events-none" />
 
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-8 glass-panel rounded-[2rem] p-6 sm:p-8">
+      <div className="portfolio-section-wrap">
         <SectionHeading
           badge="Work"
           title="Featured Projects"
-          subtitle="From connected systems to life OS and adaptive fitness platforms"
+          subtitle="11 built projects and one design concept. Applied AI, useful products, and connected hardware."
         />
 
-        <motion.div
-          className="projects-depth-stage glass-panel"
-          initial={reduce ? false : { opacity: 0, y: 28 }}
-          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-          viewport={inViewCard}
-          transition={{ duration: 0.6, ease: easeOutExpo }}
-        >
-          {carouselItems.length > 0 && (
-            <DepthCarousel
-              key={`${lane}-${tech ?? "all"}`}
-              items={carouselItems}
-              cardWidth={320}
-              cardHeight={420}
-              radius={22}
-              depth={240}
-              spread={96}
-              tilt={24}
-              autoplay={!reduce}
-              autoplayDelay={3800}
-              onChange={(index) => setActiveIndex(index)}
-            />
-          )}
-        </motion.div>
+        <div className="project-selection" role="group" aria-label="Select a featured project">
+          {visible.slice(0, 8).map((project, index) => (
+            <button key={project.title} type="button" aria-pressed={activeProject?.title === project.title} onClick={() => setActiveIndex(index)}>
+              <span>{String(index + 1).padStart(2, "0")}</span>{project.title}
+            </button>
+          ))}
+        </div>
 
         {activeProject && (
           <motion.div
@@ -357,6 +332,7 @@ export default function Projects() {
                 type="button"
                 onClick={() => {
                   setLane(item.id);
+                  setTech(null);
                   setActiveIndex(0);
                 }}
                 aria-pressed={lane === item.id}
@@ -364,7 +340,7 @@ export default function Projects() {
                   "min-h-11 rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider backdrop-blur-xl",
                   lane === item.id
                     ? "border-accent/40 bg-accent/15 text-accent"
-                    : "border-foreground/10 bg-white/50 text-foreground/55 hover:border-accent/25 hover:text-accent"
+                    : "border-foreground/10 bg-foreground/5 text-foreground/70 hover:border-accent/25 hover:text-accent"
                 )}
               >
                 {item.label}
@@ -393,7 +369,7 @@ export default function Projects() {
                 "rounded-full border px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider backdrop-blur-xl",
                 tech === item
                   ? "border-accent/40 bg-accent/10 text-accent"
-                  : "border-foreground/10 bg-white/50 text-foreground/50 hover:border-accent/25 hover:text-accent"
+                  : "border-foreground/10 bg-foreground/5 text-foreground/70 hover:border-accent/25 hover:text-accent"
               )}
             >
               {item}
@@ -403,15 +379,16 @@ export default function Projects() {
         </motion.div>
 
         {visible.length === 0 ? (
-          <p className="rounded-2xl border border-foreground/10 bg-white/50 px-6 py-10 text-sm text-foreground/55">
+          <p className="rounded-2xl border border-foreground/10 bg-foreground/5 px-6 py-10 text-sm text-foreground/70">
             No projects match that mix. Clear the stack filter or pick another lane.
           </p>
         ) : (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 glass-stage">
+          <div className="project-grid grid grid-cols-1 gap-6 md:grid-cols-2 glass-stage">
             {visible.map((project, i) => (
               <ProjectCard
                 key={project.title}
                 project={project}
+                number={siteConfig.projects.indexOf(project) + 1}
                 featured={
                   project.title === "Soda+" ||
                   project.title === "Kinestra" ||

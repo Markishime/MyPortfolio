@@ -47,7 +47,7 @@ export default function Contact() {
       <div className="absolute inset-0 cinematic-depth-fog pointer-events-none" />
       <div className="absolute inset-0 section-tint pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 relative glass-panel rounded-[2rem] p-6 sm:p-10">
+      <div className="portfolio-section-wrap">
         <SectionHeading
           badge="Contact"
           title="Let's Connect"
