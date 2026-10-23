@@ -180,17 +180,6 @@ footer .text-gray-500, footer .text-gray-600 { color: var(--ink-soft); }
 footer .flex.items-center.gap-6 { flex-wrap: wrap; justify-content: center; gap: 1rem 1.5rem; }
 footer > .glass-panel { display: none; }
 
-/* Badge entry */
-.void-gate { grid-template-rows: auto 1fr auto; background: var(--background); color: var(--foreground); }
-.void-copy h1 { font-weight: 500; }
-.void-copy p { color: var(--theme-accent); }
-.hanging-card { border: 1px solid var(--line); background: var(--surface); }
-.hanging-card-meta { background: var(--surface); }
-.hanging-card-meta small { color: var(--theme-accent); }
-.hanging-strap { background: repeating-linear-gradient(180deg, oklch(73% 0.09 55) 0 8px, oklch(28% 0.015 65) 8px 16px); }
-.void-ring { border-color: rgb(var(--theme-accent-rgb) / 0.1); }
-.void-hint { margin: 1rem 0 1.5rem; }
-
 @media (max-width: 1023px) {
   .hero-location-note { display: none; }
   .origin-layout { grid-template-columns: 1fr; gap: 3rem; }
@@ -237,21 +226,9 @@ footer > .glass-panel { display: none; }
   .project-feature-media { min-height: 17rem; }
   .project-feature-overlay { background: linear-gradient(0deg, oklch(25% 0.006 140 / 0.3), transparent 40%); }
   .section-display-title { font-size: clamp(2.1rem, 8vw, 3rem); }
-  .void-copy { padding-top: 2.5rem; }
-  .void-copy span { max-width: 28ch; margin-inline: auto; font-size: 0.8rem; }
-  .hanging-card { width: min(230px, 64vw); }
-  .hanging-card img { height: 250px; }
-  .hanging-strap { height: 65px; }
 }
 
 @media (max-height: 720px) {
-  .void-copy { padding-top: 1.25rem; }
-  .void-copy h1 { font-size: 1.8rem; }
-  .hanging-strap { height: 36px; }
-  .hanging-card { width: 190px; }
-  .hanging-card img { height: 195px; }
-  .hanging-card-meta { padding: 0.65rem 0.85rem; }
-  .hanging-card-meta strong { font-size: 0.9rem; }
   .hero-minimal .hero-overline { margin-top: 1.25rem; }
   .hero-minimal .hero-title { font-size: clamp(3.4rem, 12vh, 6rem); }
   .hero-minimal .hero-layout { padding-top: 5.25rem; padding-bottom: 2.5rem; }
@@ -260,9 +237,6 @@ footer > .glass-panel { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; }
-  .void-stars, .void-gate.is-swallowing .hanging-lanyard,
-  .void-gate.is-swallowing .blackhole, .void-gate.is-swallowing .void-copy,
-  .void-gate.is-swallowing .void-hint { animation: none; }
   .hero-scroll-cue i { animation: none; }
   .origin-project:hover img { transform: none; }
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import SmoothScroll from "@/components/SmoothScroll";
 import Navbar from "@/components/Navbar";
@@ -8,7 +7,6 @@ import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 import ThemeProvider from "@/components/ThemeProvider";
-import LanyardGate from "@/components/LanyardGate";
 
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
   ssr: false,
@@ -22,17 +20,6 @@ const Certifications = dynamic(() => import("@/components/Certifications"));
 const Contact = dynamic(() => import("@/components/Contact"));
 
 export default function Home() {
-  const [entered, setEntered] = useState(false);
-  const enter = useCallback(() => setEntered(true), []);
-
-  if (!entered) {
-    return (
-      <ThemeProvider>
-        <LanyardGate onEnter={enter} />
-      </ThemeProvider>
-    );
-  }
-
   return (
     <ThemeProvider>
       <CustomCursor />
