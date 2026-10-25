@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "Full Stack Developer, Computer Engineer & AI Developer",
   primaryRole: "Full Stack Developer",
   secondaryRole: "AI Developer",
-  projectsBuilt: 11,
+  projectsBuilt: 12,
   experience: [
     {
       type: "Personal",
@@ -176,6 +176,21 @@ export const siteConfig = {
       gradient: "from-emerald-500/20 to-cyan-500/20",
       icon: "🌱",
       image: "/media/lifeflow-concept.svg",
+      video: null,
+    },
+    {
+      title: "WonderVerse",
+      description:
+        "A playful, museum-style learning world for curious kids aged 5–12. Explorers onboard with an avatar, age group, and favourite subject, then roam seven themed rooms — Dinosaurs, Countries, Ocean, Space, Animals, Human Body, and History — collecting discoveries and completing daily quests. LUMI, a glowing AI companion, chats with kids, celebrates their wins, and points them toward the next adventure. XP drives levels, continent unlocks across a world map, streaks, and twelve achievements, with local progress backup through JSON export and import.",
+      tag: "EdTech + AI",
+      lanes: ["ai", "web"],
+      stack: ["React", "TypeScript", "Tailwind CSS", "Framer Motion", "Lovable AI"],
+      github: null,
+      live: "https://lumi-wonder-quest.lovable.app/",
+      figma: null,
+      gradient: "from-indigo-500/25 to-violet-500/20",
+      icon: "🌌",
+      image: "/media/wonderverse-concept.svg",
       video: null,
     },
     {
