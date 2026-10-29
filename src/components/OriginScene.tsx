@@ -1,6 +1,8 @@
 "use client";
+import Image from "next/image";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { siteConfig } from "@/lib/data";
 
@@ -48,7 +50,7 @@ export default function OriginScene() {
                 transition={{ duration: 0.7, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
                 aria-label={`${project.title}, open live project`}
               >
-                <div className="origin-project-image"><img src={project.image} alt={`${project.title} interface`} loading="lazy" /></div>
+                <div className="origin-project-image"><Image unoptimized width={1600} height={1000} src={project.image} alt={`${project.title} interface`} loading="lazy" /></div>
                 <div className="origin-project-caption">
                   <span><small>{project.tag}</small><strong>{project.title}</strong></span>
                   <ArrowUpRight size={18} aria-hidden="true" />

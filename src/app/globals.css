@@ -1773,13 +1773,6 @@ html[data-perf="medium"] .portrait-shell {
   to { transform: translate3d(0, -8px, 0); }
 }
 
-@media (max-width: 900px) {
-  main > section:not(#home):not(.cinematic-reel) {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 820px;
-  }
-}
-
 @media (max-width: 900px), (pointer: coarse) {
   .cinematic-webgl,
   .cinematic-rain,

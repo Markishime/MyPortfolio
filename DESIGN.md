@@ -2,7 +2,7 @@
 
 ## Scene
 
-A hiring manager reviews the portfolio on a laptop in the evening, moving from a coastal architectural opening to clear, quiet project surfaces.
+A hiring manager reviews the portfolio on a laptop in the evening, moving from a cinematic spatial opening to clear, quiet project surfaces.
 
 ## Palette
 
@@ -18,8 +18,10 @@ Use wide, open section containers rather than nested glass panels. The origin st
 
 ## Imagery
 
-The original Pixelated.mp4 video establishes the opening, with a static architectural poster for reduced motion. Actual project screenshots lead the remaining content. Preserve Mark's portrait and project assets.
+The original Pixelated.mp4 video provides subdued atmosphere behind an orbital Three.js sculpture and floating project previews. A static architectural poster, CSS orbital illustration, and project screenshots preserve the composition without WebGL. Preserve Mark's portrait and project assets.
 
 ## Interaction
 
 Keep badge dragging and native keyboard activation on the badge itself. Restore the depth carousel with slide controls and autoplay; its selected slide updates the featured project. Project previews, category filters, and technology filters remain usable. Respect reduced motion; avoid automatic palette changes.
+
+The opening uses GSAP entrance and scroll-linked depth, with an explicit pause/resume control. Pause video and continuous rendering offscreen and in hidden tabs. Render still, readable content during server rendering and hydration, then enable optional motion after reading the browser preference. Preserve native vertical scrolling on mobile; do not estimate section heights for anchor navigation.

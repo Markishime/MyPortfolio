@@ -1,7 +1,8 @@
 "use client";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 import { useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import { easeOutExpo, inViewCard } from "@/lib/motion";
 import { cn } from "@/lib/utils";

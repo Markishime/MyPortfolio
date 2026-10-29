@@ -1,5 +1,15 @@
 export type PerfTier = "high" | "medium" | "low";
 
+export function supportsWebGL2(): boolean {
+  if (typeof document === "undefined") return false;
+  try {
+    const context = document.createElement("canvas").getContext("webgl2");
+    const supported = Boolean(context);
+    context?.getExtension("WEBGL_lose_context")?.loseContext();
+    return supported;
+  } catch { return false; }
+}
+
 type NetworkNav = Navigator & {
   deviceMemory?: number;
   connection?: { saveData?: boolean; effectiveType?: string };

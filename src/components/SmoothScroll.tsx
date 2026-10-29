@@ -32,12 +32,18 @@ export default function SmoothScroll({
       const section = document.querySelector(href);
       if (!(section instanceof HTMLElement)) return;
       event.preventDefault();
+      if (event instanceof MouseEvent && event.detail === 0) {
+        if (!section.hasAttribute("tabindex")) section.setAttribute("tabindex", "-1");
+        section.focus({ preventScroll: true });
+      }
       const lenis = lenisRef.current;
       if (lenis) {
-        lenis.scrollTo(section, { offset: -80 });
+        // Lenis already accounts for the root's scroll-padding-top.
+        lenis.scrollTo(section);
         return;
       }
-      const top = section.getBoundingClientRect().top + window.scrollY - 80;
+      const padding = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 80;
+      const top = section.getBoundingClientRect().top + window.scrollY - padding;
       window.scrollTo({ top, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     };
     document.addEventListener("click", onAnchorClick);

@@ -1,6 +1,7 @@
 "use client";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { fadeUp, inView, staggerFast } from "@/lib/motion";
 

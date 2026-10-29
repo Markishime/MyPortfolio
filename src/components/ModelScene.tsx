@@ -26,12 +26,12 @@ function ScrollModel({ children }: { children: ReactNode }) {
   return <group ref={group}>{children}</group>;
 }
 
-class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+export class SceneBoundary extends Component<{ children: ReactNode; fallback?: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
   render() {
     return this.state.failed
-      ? <p className="model-fallback">3D rendering is unavailable. Explore the projects below.</p>
+      ? this.props.fallback !== undefined ? this.props.fallback : <p className="model-fallback">3D rendering is unavailable. Explore the projects below.</p>
       : this.props.children;
   }
 }

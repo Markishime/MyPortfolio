@@ -1,6 +1,7 @@
 "use client";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import { fadeUp, inView, staggerCards } from "@/lib/motion";
 import SectionHeading from "./SectionHeading";

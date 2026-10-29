@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Activity, Fingerprint, Lock } from "lucide-react";
@@ -138,7 +139,7 @@ export default function ReflectiveCard({
         style={{ opacity: live ? 0.9 : 0 }}
       />
       {!live && (
-        <img src={fallbackImage} alt="" className="reflective-still reflective-still--photo" />
+        <Image unoptimized width={1600} height={1000} src={fallbackImage} alt="" className="reflective-still reflective-still--photo" />
       )}
 
       <div className="reflective-noise" />

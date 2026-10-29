@@ -1,4 +1,5 @@
 "use client";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
@@ -111,6 +112,7 @@ export default function SpecularButton({
   const btnRef = useRef<HTMLButtonElement>(null);
   const fxRef = useRef<HTMLSpanElement>(null);
   const propsRef = useRef<any>({});
+  const reduced = useReducedMotion();
 
   propsRef.current = {
     radius,
@@ -129,10 +131,15 @@ export default function SpecularButton({
   useEffect(() => {
     const btn = btnRef.current;
     const fx = fxRef.current;
-    if (!btn || !fx) return;
+    if (!btn || !fx || reduced) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const canvas = document.createElement("canvas");
+    let renderer: Renderer;
+    try {
+      if (!canvas.getContext("webgl2") && !canvas.getContext("webgl")) return;
+      renderer = new Renderer({ canvas, alpha: true, premultipliedAlpha: true, antialias: true, dpr });
+    } catch { return; }
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
@@ -204,10 +211,12 @@ export default function SpecularButton({
     let bright = 0;
     let last = performance.now();
     let raf = 0;
+    let inView = false;
     const lineC = new Color();
     const baseC = new Color();
 
     const update = (now: number) => {
+      if (!inView || document.hidden) { raf = 0; return; }
       raf = requestAnimationFrame(update);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
@@ -231,16 +240,29 @@ export default function SpecularButton({
       program.uniforms.uThickness.value = p.thickness * dpr;
       renderer.render({ scene: mesh });
     };
-    raf = requestAnimationFrame(update);
+    const resume = () => {
+      if (inView && !document.hidden && !raf) {
+        last = performance.now();
+        raf = requestAnimationFrame(update);
+      }
+    };
+    const visibility = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      resume();
+    });
+    visibility.observe(btn);
+    document.addEventListener("visibilitychange", resume);
 
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      visibility.disconnect();
+      document.removeEventListener("visibilitychange", resume);
       window.removeEventListener("pointermove", onPointerMove);
       if (gl.canvas.parentNode === fx) fx.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, []);
+  }, [reduced]);
 
   return (
     <button

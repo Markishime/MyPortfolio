@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import "./ProfileCard.css";
@@ -313,7 +314,7 @@ const ProfileCardComponent = ({
             <div className="pc-shine" />
             <div className="pc-glare" />
             <div className="pc-content pc-avatar-content">
-              <img
+              <Image unoptimized width={1600} height={1000}
                 className="avatar"
                 src={avatarUrl}
                 alt={`${name || "User"} avatar`}
@@ -326,7 +327,7 @@ const ProfileCardComponent = ({
                 <div className="pc-user-info">
                   <div className="pc-user-details">
                     <div className="pc-mini-avatar">
-                      <img
+                      <Image unoptimized width={1600} height={1000}
                         src={miniAvatarUrl || avatarUrl}
                         alt={`${name || "User"} mini avatar`}
                         loading="lazy"

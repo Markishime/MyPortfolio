@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionHeading from "./SectionHeading";
+import { supportsWebGL2 } from "@/lib/perf";
 
 const ModelScene = dynamic(() => import("./ModelScene"), {
   ssr: false,
@@ -15,6 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function ModelViewer() {
   const root = useRef<HTMLElement>(null);
   const [near, setNear] = useState(false);
+  const [supported, setSupported] = useState<boolean | null>(null);
   const [model, setModel] = useState("architecture");
   const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -25,6 +27,7 @@ export default function ModelViewer() {
   useEffect(() => {
     const node = root.current;
     if (!node) return;
+    setSupported(supportsWebGL2());
     const observer = new IntersectionObserver(([entry]) => setNear(entry.isIntersecting), { rootMargin: "200px" });
     observer.observe(node);
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -59,7 +62,8 @@ export default function ModelViewer() {
           <span className="model-engine">THREE.JS / REAL-TIME 3D</span>
         </div>
         <div className="model-stage" role="img" aria-label={`Interactive 3D ${model === 'architecture' ? 'coastal pavilion' : 'embedded circuit board'}. Use the buttons below to rotate and zoom.`}>
-          {near && <ModelScene key={reset} model={model} rotation={rotation} zoom={zoom} spinning={spinning && !reduced} />}
+          {near && supported && <ModelScene key={reset} model={model} rotation={rotation} zoom={zoom} spinning={spinning && !reduced} />}
+          {supported === false && <p className="model-fallback">Interactive 3D needs WebGL 2. Explore the project previews above, or try a browser with hardware acceleration enabled.</p>}
           <span className="model-stage-label" aria-hidden="true">{model === 'architecture' ? '01 / SPACE & STRUCTURE' : '02 / CIRCUITS & SYSTEMS'}</span>
         </div>
         <div className="model-controls" role="group" aria-label="3D view controls">

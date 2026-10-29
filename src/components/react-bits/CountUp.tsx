@@ -1,7 +1,8 @@
 "use client";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 import { useEffect, useRef } from "react";
-import { useInView, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { useInView, useMotionValue, useSpring } from "framer-motion";
 
 export default function CountUp({
   to,

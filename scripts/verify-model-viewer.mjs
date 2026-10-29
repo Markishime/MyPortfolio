@@ -4,18 +4,19 @@ import { chromium } from 'playwright-core';
 
 await mkdir('scripts/verify-out', { recursive: true });
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
+const baseUrl = process.env.AUDIT_URL || 'http://localhost:3001';
 try {
   for (const mobile of process.argv.includes('--mobile') ? [true] : [false, true]) {
     const page = await browser.newPage({ viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 900 }, reducedMotion: mobile ? 'reduce' : 'no-preference' });
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
-    await page.goto('http://localhost:3001', { waitUntil: 'domcontentloaded', timeout: 120000 });
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 120000 });
     const projects = page.locator('#projects');
     await projects.waitFor({ timeout: 120000 });
     assert.ok(await projects.getByRole('heading', { name: 'Marci Metzger', exact: true }).count());
     assert.ok(await projects.locator('a[href="https://github.com/Markishime/marcimetzger"]').count());
     assert.ok(await projects.locator('a[href="https://marcimetzger-kohl.vercel.app/"]').count());
-    const image = await page.request.get('http://localhost:3001/media/marci-metzger.jpg');
+    const image = await page.request.get(`${baseUrl}/media/marci-metzger.jpg`);
     assert.equal(image.status(), 200);
     assert.match(await projects.textContent(), /13 built projects/);
     const lab = page.locator('#playground');

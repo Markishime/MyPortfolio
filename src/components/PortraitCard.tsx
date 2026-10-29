@@ -1,7 +1,9 @@
 "use client";
+import Image from "next/image";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { gsap } from "gsap";
 
 type PortraitCardProps = {
@@ -58,7 +60,7 @@ export default function PortraitCard({ src, name, role }: PortraitCardProps) {
       }}
     >
       <div className="hero-face-inner">
-        <img src={src} alt={name} width={640} height={800} decoding="async" />
+        <Image src={src} alt={name} width={640} height={800} decoding="async" />
         <div className="hero-face-meta">
           <small>{role}</small>
           <strong>{name}</strong>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import "./PixelCard.css";
 
 class Pixel {
@@ -148,7 +148,7 @@ export default function PixelCard({
   const finalColors = colors ?? variantCfg.colors;
   const finalNoFocus = noFocus ?? variantCfg.noFocus;
 
-  const initPixels = () => {
+  const initPixels = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const width = Math.floor(rect.width);
@@ -173,7 +173,7 @@ export default function PixelCard({
       }
     }
     pixelsRef.current = pxs;
-  };
+  }, [finalColors, finalGap, finalSpeed, reducedMotion]);
 
   const doAnimate = (fnName: "appear" | "disappear") => {
     animationRef.current = requestAnimationFrame(() => doAnimate(fnName));
@@ -206,7 +206,7 @@ export default function PixelCard({
       observer.disconnect();
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [finalGap, finalSpeed, finalColors, finalNoFocus]);
+  }, [initPixels]);
 
   return (
     <div

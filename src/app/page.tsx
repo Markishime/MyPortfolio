@@ -25,8 +25,9 @@ export default function Home() {
     <ThemeProvider>
       <CustomCursor />
       <SmoothScroll>
+        <a href="#main-content" className="skip-navigation">Skip to content</a>
         <Navbar />
-        <main>
+        <main id="main-content" tabIndex={-1}>
           <Hero />
           <OriginScene />
           <About />

@@ -1,7 +1,9 @@
 "use client";
+import Image from "next/image";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CinematicMedia from "./CinematicMedia";
@@ -440,7 +442,7 @@ function StillPanel({ work, index }: { work: StillWork; index: number }) {
         viewport={animateIn ? { once: true, amount: 0.4 } : undefined}
         transition={{ duration: 0.7, ease: easeOutExpo }}
       >
-        <img
+        <Image unoptimized width={1600} height={1000}
           src={work.src}
           alt={work.alt}
           className="reel-panel-media"

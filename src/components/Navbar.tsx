@@ -10,6 +10,19 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const menuToggle = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMobileOpen(false);
+        menuToggle.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
+  }, [isMobileOpen]);
 
   useEffect(() => {
     const nodes = siteConfig.navLinks
@@ -99,10 +112,13 @@ export default function Navbar() {
 
           {/* Mobile Toggle */}
           <button
+            ref={menuToggle}
+            type="button"
             onClick={() => setIsMobileOpen(!isMobileOpen)}
             className="portfolio-menu-toggle lg:hidden relative w-10 h-10 grid place-items-center"
             aria-label={isMobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileOpen}
+            aria-controls="mobile-navigation"
           >
             {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -112,6 +128,7 @@ export default function Navbar() {
         <AnimatePresence>
           {isMobileOpen && (
             <motion.div
+              id="mobile-navigation"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
@@ -404,7 +405,7 @@ export default function DepthCarousel({
             aria-hidden={active !== i}
             onClick={() => onCardClick(i)}
           >
-            <img className="depth-carousel__img" src={item.image} alt={item.alt || item.title || ""} draggable={false} />
+            <Image unoptimized width={1600} height={1000} className="depth-carousel__img" src={item.image} alt={item.alt || item.title || ""} draggable={false} />
             <span
               className="depth-carousel__tint"
               ref={(el) => {
