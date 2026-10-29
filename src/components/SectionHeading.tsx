@@ -29,6 +29,8 @@ export default function SectionHeading({
     >
       {badge && (
         <motion.span
+          animate={reduce ? { opacity: 1, y: 0 } : undefined}
+          transition={reduce ? { duration: 0 } : undefined}
           variants={reduce ? undefined : fadeUp}
           className="section-kicker inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs mb-4"
         >
@@ -37,6 +39,8 @@ export default function SectionHeading({
         </motion.span>
       )}
       <motion.h2
+        animate={reduce ? { opacity: 1, y: 0 } : undefined}
+        transition={reduce ? { duration: 0 } : undefined}
         variants={reduce ? undefined : fadeUp}
         className="section-display-title"
       >
@@ -44,6 +48,8 @@ export default function SectionHeading({
       </motion.h2>
       {subtitle && (
         <motion.p
+          animate={reduce ? { opacity: 1, y: 0 } : undefined}
+          transition={reduce ? { duration: 0 } : undefined}
           variants={reduce ? undefined : fadeUp}
           className="section-subtitle"
         >

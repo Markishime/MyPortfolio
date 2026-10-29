@@ -15,6 +15,7 @@ const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
 const OriginScene = dynamic(() => import("@/components/OriginScene"));
 const About = dynamic(() => import("@/components/About"));
 const Projects = dynamic(() => import("@/components/Projects"));
+const ModelViewer = dynamic(() => import("@/components/ModelViewer"));
 const Skills = dynamic(() => import("@/components/Skills"));
 const Certifications = dynamic(() => import("@/components/Certifications"));
 const Contact = dynamic(() => import("@/components/Contact"));
@@ -30,6 +31,7 @@ export default function Home() {
           <OriginScene />
           <About />
           <Projects />
+          <ModelViewer />
           <Skills />
           <Certifications />
           <Contact />

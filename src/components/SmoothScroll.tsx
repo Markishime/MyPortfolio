@@ -38,7 +38,7 @@ export default function SmoothScroll({
         return;
       }
       const top = section.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top, behavior: "smooth" });
+      window.scrollTo({ top, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     };
     document.addEventListener("click", onAnchorClick);
 

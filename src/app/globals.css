@@ -2691,3 +2691,59 @@ html[data-perf="medium"] .portrait-shell {
     display: none;
   }
 }
+
+/* Interactive model workbench */
+.model-workbench {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2rem;
+  border: 1px solid rgb(var(--theme-accent-rgb) / 0.22);
+}
+.model-toolbar, .model-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 1.25rem;
+}
+.model-toolbar button, .model-controls button {
+  min-height: 44px;
+  padding: 0.6rem 0.95rem;
+  border: 1px solid rgb(var(--theme-accent-rgb) / 0.25);
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgb(var(--theme-accent-rgb) / 0.04);
+  font-size: 0.78rem;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+.model-toolbar button[aria-pressed="true"], .model-controls button[aria-pressed="true"] {
+  background: rgb(var(--theme-accent-rgb) / 0.18);
+  border-color: var(--theme-accent);
+}
+.model-toolbar button:hover, .model-controls button:hover { background: rgb(var(--theme-accent-rgb) / 0.12); }
+.model-toolbar button:focus-visible, .model-controls button:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 3px;
+}
+.model-controls button:disabled { opacity: 0.4; cursor: default; }
+.model-engine { margin-left: auto; font-family: var(--font-nav); font-size: 0.65rem; letter-spacing: 0.12em; color: var(--ink-soft); }
+.model-stage {
+  position: relative;
+  height: clamp(300px, 44vw, 480px);
+  background: radial-gradient(ellipse at 50% 65%, rgb(var(--theme-accent-rgb) / 0.12), transparent 65%);
+  cursor: grab;
+}
+.model-stage:active { cursor: grabbing; }
+.model-stage canvas { touch-action: pan-y; }
+.model-stage-label { position: absolute; bottom: 1rem; left: 1.5rem; pointer-events: none; font-family: var(--font-nav); font-size: 0.62rem; letter-spacing: 0.15em; color: var(--ink-soft); }
+.model-controls { border-top: 1px solid rgb(var(--theme-accent-rgb) / 0.12); }
+.model-controls p { flex: 1 1 100%; color: var(--ink-soft); font-size: 0.78rem; margin-bottom: 0.25rem; }
+.model-fallback { display: grid; place-items: center; height: 100%; padding: 2rem; color: var(--ink-soft); text-align: center; }
+.model-scroll-line { height: 3px; background: var(--theme-accent); transform-origin: left; }
+@media (max-width: 600px) {
+  .model-engine { flex-basis: 100%; margin: 0.5rem 0 0; }
+  .model-toolbar, .model-controls { padding: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .model-toolbar button, .model-controls button { transition: none; }
+}

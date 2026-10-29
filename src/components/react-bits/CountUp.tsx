@@ -30,16 +30,19 @@ export default function CountUp({
   }, [isInView, motionValue, to, reduce]);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce) {
+      if (ref.current) ref.current.textContent = `${to}${suffix}`;
+      return;
+    }
     const unsub = springValue.on("change", (latest) => {
       if (ref.current) ref.current.textContent = `${Math.round(latest)}${suffix}`;
     });
     return () => unsub();
-  }, [springValue, suffix, reduce]);
+  }, [springValue, suffix, reduce, to]);
 
   return (
     <span className={className} ref={ref}>
-      {reduce ? to : from}
+      {from}
       {suffix}
     </span>
   );

@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "Full Stack Developer, Computer Engineer & AI Developer",
   primaryRole: "Full Stack Developer",
   secondaryRole: "AI Developer",
-  projectsBuilt: 12,
+  projectsBuilt: 13,
   experience: [
     {
       type: "Personal",
@@ -43,6 +43,21 @@ export const siteConfig = {
     { label: "Contact", href: "#contact" },
   ],
   projects: [
+    {
+      title: "Marci Metzger",
+      description:
+        "A real estate website for Marci Metzger and The Ridge Realty Group in Pahrump, Nevada. Combines property search, a photo gallery, local area guides, buyer and seller services, and an interactive architectural 3D concept in a responsive web experience.",
+      tag: "Web Development",
+      lanes: ["web"],
+      stack: ["Web Design"],
+      github: "https://github.com/Markishime/marcimetzger",
+      live: "https://marcimetzger-kohl.vercel.app/",
+      figma: null,
+      gradient: "from-amber-600/25 to-stone-500/20",
+      icon: "",
+      image: "/media/marci-metzger.jpg",
+      video: null,
+    },
     {
       title: "CropDrive AI",
       description:
