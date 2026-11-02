@@ -1,15 +1,14 @@
 # Mark Lloyd Cuizon Portfolio
 
 A static portfolio built with HTML, CSS, and JavaScript. The complete page is
-in `index.html`; no build step or package installation is required.
+in `public/index.html`; no build step or package installation is required.
 
 ## Run locally
 
-Serve the repository root over HTTP so the browser can load the JavaScript
-modules:
+Serve `public/` over HTTP so the browser can load the page and its assets:
 
 ```powershell
-python -m http.server 8000
+python -m http.server 8000 --directory public
 ```
 
 Open [http://localhost:8000](http://localhost:8000).
@@ -20,4 +19,4 @@ provides smooth scrolling. These libraries load from CDNs, so the background
 needs an internet connection and WebGL. The rest of the portfolio remains
 usable if WebGL is unavailable. Portfolio images are stored in `public/`.
 
-Vercel serves the static page directly from the repository root.
+Vercel serves the static page and assets from `public/`.
