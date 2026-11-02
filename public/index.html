@@ -286,11 +286,6 @@
         font-weight: 650;
         letter-spacing: .01em;
       }
-      .typewriter-cursor {
-        width: 1px;
-        height: 1.1em;
-        background: currentColor;
-      }
       .sr-only {
         position: absolute;
         overflow: hidden;
@@ -860,7 +855,6 @@
           <h1 class="hero-title" data-reveal style="--rd:60ms">Mark Lloyd<br><em>Cuizon</em></h1>
           <p class="hero-role" data-reveal style="--rd:130ms" aria-label="Full-stack developer, computer engineer, and AI developer">
             <span id="typed-role" aria-hidden="true">Full-stack developer</span>
-            <span class="typewriter-cursor" aria-hidden="true"></span>
             <span class="sr-only">Full-stack developer, computer engineer, and AI developer</span>
           </p>
           <p class="hero-sub" data-reveal style="--rd:200ms">Building practical software across web, mobile, AI, and connected systems.</p>
@@ -1378,7 +1372,6 @@
       const entryMotion = { y: -6.5 };
       const resizeUniforms = [];
       const circuitTraces = [];
-      const circuitStreams = [];
       const pointerTarget = { x: 0, y: 0 };
       const pointerOffset = { x: 0, y: 0 };
 
@@ -1682,10 +1675,8 @@
           amber: new THREE.MeshStandardMaterial({
             color: 0x92774b, emissive: 0x3c2913, emissiveIntensity: .32, metalness: .82, roughness: .29
           }),
-          led: new THREE.MeshBasicMaterial({ color: 0x65d4dc })
         };
         const traceList = [];
-        const dataStreams = [];
         const detailY = .015;
 
         function addBox(parent, material, dimensions, position) {
@@ -1697,7 +1688,7 @@
           return mesh;
         }
 
-        function addTrace(points, stream = false, index = 0) {
+        function addTrace(points, index = 0) {
           const vectors = points.map(([x, y, z]) => new THREE.Vector3(x, y, z));
           const baseGeometry = new THREE.BufferGeometry().setFromPoints(vectors);
           const base = new THREE.Line(
@@ -1716,17 +1707,6 @@
           addLayer(active, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
           technologyGroup.add(active);
           traceList.push({ geometry: activeGeometry, count: vectors.length, delay: index * .075 });
-
-          if (stream) {
-            const curve = new THREE.CatmullRomCurve3(vectors);
-            const particle = new THREE.Mesh(
-              new THREE.SphereGeometry(.026, 8, 6),
-              materials.led
-            );
-            addLayer(particle, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-            technologyGroup.add(particle);
-            dataStreams.push({ curve, particle, phase: (index % 5) / 5 });
-          }
         }
 
         addBox(technologyGroup, materials.substrate, [5.8, .2, 4.25], [0, -.16, 0]);
@@ -1794,7 +1774,7 @@
               [side * 1.24, detailY, z],
               [side * (1.38 + (i % 3) * .12), detailY, bend],
               [side * (2.43 - (i % 2) * .14), detailY, bend]
-            ], i % 3 === 0, routeIndex++);
+            ], routeIndex++);
           }
         }
         for (const side of [-1, 1]) {
@@ -1806,7 +1786,7 @@
               [x, detailY, side * 1.22],
               [bend, detailY, side * 1.39],
               [bend, detailY, side * 1.82]
-            ], i % 4 === 0, routeIndex++);
+            ], routeIndex++);
           }
         }
 
@@ -1830,7 +1810,6 @@
         }
 
         circuitTraces.push(...traceList);
-        circuitStreams.push(...dataStreams);
       }
 
       function makeComposer(renderToScreen) {
@@ -1875,7 +1854,7 @@
         technologyGroup.scale.setScalar(innerWidth < 768 ? .39 : .5);
         worldGroup.add(technologyGroup);
         bloomComposer = makeComposer(false);
-        bloomComposer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), .28, .34, .18));
+        bloomComposer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), .18, .34, .3));
         bloomComposer.addPass(new ShaderPass(GammaCorrectionShader));
         finalComposer = makeComposer(true);
         const finalPass = new ShaderPass(FinalPass);
@@ -1943,10 +1922,6 @@
           for (const trace of circuitTraces) {
             const progress = clamp((motionClock - trace.delay) / 2.8, 0, 1);
             trace.geometry.setDrawRange(0, Math.floor(trace.count * progress));
-          }
-          for (const stream of circuitStreams) {
-            const progress = (motionClock * .055 + stream.phase) % 1;
-            stream.particle.position.copy(stream.curve.getPointAt(progress));
           }
         }
         controls.update();
