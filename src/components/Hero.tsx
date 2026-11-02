@@ -1,15 +1,12 @@
 "use client";
 import Image from "next/image";
 
-import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, ArrowUpRight, Pause, Play } from "lucide-react";
 import { siteConfig } from "@/lib/data";
-import { supportsWebGL2 } from "@/lib/perf";
 
-const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
@@ -20,7 +17,6 @@ export default function Hero() {
   const [reduced, setReduced] = useState(true);
   const [active, setActive] = useState(false);
   const [visible, setVisible] = useState(true);
-  const [allow3D, setAllow3D] = useState(false);
   const moving = !paused && !reduced && active && visible;
 
   useEffect(() => {
@@ -35,8 +31,6 @@ export default function Hero() {
     const visibility = () => setVisible(!document.hidden);
     visibility();
     document.addEventListener("visibilitychange", visibility);
-    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    setAllow3D(!connection?.saveData && supportsWebGL2());
     return () => { preference.removeEventListener("change", sync); observer.disconnect(); document.removeEventListener("visibilitychange", visibility); };
   }, []);
 
@@ -53,17 +47,15 @@ export default function Hero() {
         gsap.from(".hero-reveal", { y: 26, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out", clearProps: "all" });
         introduced.current = true;
       }
-      gsap.to(".hero-spatial-art", { y: 90, rotateX: 8, scale: 0.94, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: 0.8 } });
       gsap.to(".hero-film", { yPercent: 15, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: 1 } });
     }, root);
     return () => media.revert();
   }, [paused]);
 
-  return <section ref={root} id="home" className={`hero-spatial${paused ? " is-paused" : ""}`}>
+  return <section ref={root} id="home" className="hero-spatial">
     <div className="hero-film" aria-hidden="true">
       <video ref={video} src="/media/Pixelated.mp4" poster="/media/coastal-structure.webp" muted loop playsInline preload="none" />
     </div>
-    <div className="hero-spatial-grid" aria-hidden="true" />
     <div className="hero-spatial-layout">
       <div className="hero-spatial-copy">
         <p className="hero-spatial-eyebrow hero-reveal"><span /> Independent developer / Cebu, PH</p>
@@ -76,10 +68,7 @@ export default function Hero() {
         </div>
         <div className="hero-spatial-proof hero-reveal"><strong>{siteConfig.projectsBuilt}<span>built projects</span></strong><i /><p>Software. Hardware. Intelligence.<br /><span>One curious mind behind it all.</span></p></div>
       </div>
-      <div className="hero-spatial-art" aria-label="Orbital sculpture with floating previews of selected projects" role="group">
-        <div className="hero-art-coordinates" aria-hidden="true"><span>EXPERIMENT 001</span><span>FORM × FUNCTION</span></div>
-        <div className="hero-orbit-fallback" aria-hidden="true"><div /><div /><div /><span /></div>
-        {allow3D && <HeroScene moving={moving} />}
+      <div className="hero-spatial-art" aria-label="Selected project previews" role="group">
         <a className="hero-project-plane hero-plane-one" href="https://marcimetzger-kohl.vercel.app/" target="_blank" rel="noopener noreferrer">
           <Image src="/media/marci-metzger.jpg" alt="Marci Metzger real estate website" width="1600" height="1000" sizes="(max-width: 650px) 160px, 300px" />
           <span><small>01 / WEB EXPERIENCE</small>Marci Metzger <ArrowUpRight size={15} aria-hidden="true" /></span>
@@ -88,7 +77,6 @@ export default function Hero() {
           <Image src="/media/cropdrive.jpg" alt="CropDrive AI agriculture platform" width="1600" height="1000" sizes="(max-width: 650px) 160px, 300px" />
           <span><small>02 / APPLIED INTELLIGENCE</small>CropDrive AI <ArrowUpRight size={15} aria-hidden="true" /></span>
         </a>
-        <span className="hero-orbit-label" aria-hidden="true">BUILT TO EXPLORE</span>
       </div>
     </div>
     <div className="hero-spatial-bottom">
