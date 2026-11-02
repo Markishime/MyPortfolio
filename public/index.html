@@ -1371,7 +1371,6 @@
       const scrollMotion = { progress: 0 };
       const entryMotion = { y: -6.5 };
       const resizeUniforms = [];
-      const circuitTraces = [];
       const pointerTarget = { x: 0, y: 0 };
       const pointerOffset = { x: 0, y: 0 };
 
@@ -1676,7 +1675,6 @@
             color: 0x92774b, emissive: 0x3c2913, emissiveIntensity: .32, metalness: .82, roughness: .29
           }),
         };
-        const traceList = [];
         const detailY = .015;
 
         function addBox(parent, material, dimensions, position) {
@@ -1690,23 +1688,12 @@
 
         function addTrace(points, index = 0) {
           const vectors = points.map(([x, y, z]) => new THREE.Vector3(x, y, z));
-          const baseGeometry = new THREE.BufferGeometry().setFromPoints(vectors);
-          const base = new THREE.Line(
-            baseGeometry,
-            new THREE.LineBasicMaterial({ color: 0x183630, transparent: true, opacity: .72, depthWrite: false })
+          const trace = new THREE.Line(
+            new THREE.BufferGeometry().setFromPoints(vectors),
+            new THREE.LineBasicMaterial({ color: index % 4 === 0 ? 0x826b47 : 0x477f83, transparent: true, opacity: .56, depthWrite: false })
           );
-          addLayer(base, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-          technologyGroup.add(base);
-
-          const activeGeometry = new THREE.BufferGeometry().setFromPoints(vectors);
-          activeGeometry.setDrawRange(0, reduceMotion ? vectors.length : 0);
-          const active = new THREE.Line(
-            activeGeometry,
-            new THREE.LineBasicMaterial({ color: index % 4 === 0 ? 0xb08d55 : 0x6bbec4, transparent: true, opacity: .76, depthWrite: false })
-          );
-          addLayer(active, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-          technologyGroup.add(active);
-          traceList.push({ geometry: activeGeometry, count: vectors.length, delay: index * .075 });
+          addLayer(trace, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+          technologyGroup.add(trace);
         }
 
         addBox(technologyGroup, materials.substrate, [5.8, .2, 4.25], [0, -.16, 0]);
@@ -1809,7 +1796,6 @@
           connector.rotation.y = x < 0 ? .04 : -.04;
         }
 
-        circuitTraces.push(...traceList);
       }
 
       function makeComposer(renderToScreen) {
@@ -1889,7 +1875,6 @@
           composer.setPixelRatio(pixelRatio);
           composer.setSize(width, height);
         }
-        setResolutionUniforms(width, height);
         if (!reduceMotion && backgroundScrollTween) ScrollTrigger.refresh();
         if (reduceMotion) renderFrame();
       }
@@ -1919,10 +1904,6 @@
           );
           camera.position.set(pointerOffset.x * .12, pointerOffset.y * .08, cameraDistance);
           camera.lookAt(0, 0, 0);
-          for (const trace of circuitTraces) {
-            const progress = clamp((motionClock - trace.delay) / 2.8, 0, 1);
-            trace.geometry.setDrawRange(0, Math.floor(trace.count * progress));
-          }
         }
         controls.update();
         camera.layers.set(LAYERS.BLOOM_SCENE); bloomComposer.render();
