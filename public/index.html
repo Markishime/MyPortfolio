@@ -93,7 +93,7 @@
         display: block;
         width: 100%;
         height: 100%;
-        filter: brightness(.52) saturate(.9);
+        filter: brightness(.68) saturate(.96);
         pointer-events: none;
       }
       .page { position: relative; z-index: 1; isolation: isolate; }
@@ -105,24 +105,36 @@
         padding: clamp(80px, 12vw, 160px) 24px;
       }
       [data-reveal] {
-        opacity: 0;
-        transform: translateY(26px);
+        opacity: 1;
+        transform: none;
         transition:
           opacity .7s cubic-bezier(.22, .7, .2, 1),
           transform .7s cubic-bezier(.22, .7, .2, 1);
         transition-delay: var(--rd, 0ms);
-        will-change: opacity, transform;
       }
-      [data-reveal].in { opacity: 1; transform: none; }
+      .motion-ready [data-reveal]:not(.in) {
+        opacity: 0;
+        transform: translate3d(0, 26px, 0);
+      }
+      .motion-ready [data-reveal].in { opacity: 1; transform: none; }
 
       .hero {
         position: relative;
         display: flex;
+        overflow: hidden;
         min-height: 100vh;
         min-height: 100svh;
         flex-direction: column;
         padding-top: 76px;
         background: radial-gradient(125% 62% at 50% -10%, rgba(4, 6, 15, .82) 0%, rgba(4, 6, 15, .28) 44%, transparent 68%);
+      }
+      .hero::after {
+        position: absolute;
+        z-index: 0;
+        inset: 76px 0 0;
+        background: linear-gradient(90deg, rgba(4, 6, 15, .94) 0%, rgba(4, 6, 15, .82) 34%, rgba(4, 6, 15, .38) 57%, transparent 82%);
+        content: "";
+        pointer-events: none;
       }
       .nav {
         position: fixed;
@@ -234,15 +246,20 @@
       }
       .btn-ghost:hover { background: rgba(255, 255, 255, .1); }
       .hero-inner {
-        display: flex;
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
         flex: 1;
-        flex-direction: column;
+        align-content: center;
         align-items: center;
-        justify-content: center;
+        width: min(100%, var(--maxw));
+        margin-inline: auto;
         padding: 36px 24px 70px;
-        text-align: center;
-        transform: translateY(-8vh);
+        text-align: left;
+        transform: translateY(-3vh);
       }
+      .hero-title, .hero-role, .hero-sub, .hero-actions { grid-column: 1; }
       .hero-title {
         max-width: 15ch;
         font-size: clamp(34px, 5.2vw, 62px);
@@ -259,9 +276,36 @@
         -webkit-background-clip: text;
         font-style: normal;
       }
+      .hero-role {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        color: var(--accent);
+        font-size: clamp(15px, 1.5vw, 18px);
+        font-weight: 650;
+        letter-spacing: .01em;
+      }
+      .typewriter-cursor {
+        width: 1px;
+        height: 1.1em;
+        background: currentColor;
+      }
+      .sr-only {
+        position: absolute;
+        overflow: hidden;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        border: 0;
+        margin: -1px;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        clip-path: inset(50%);
+      }
       .hero-sub {
-        max-width: 560px;
-        margin-top: 24px;
+        max-width: 490px;
+        margin-top: 14px;
         color: var(--muted);
         font-size: clamp(16px, 2vw, 19px);
         line-height: 1.6;
@@ -271,12 +315,13 @@
       .hero-actions {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 14px;
-        margin-top: 38px;
+        margin-top: 30px;
       }
       .logos {
         position: relative;
+        z-index: 1;
         isolation: isolate;
         padding: 0 24px clamp(36px, 6vw, 64px);
         text-align: center;
@@ -742,7 +787,18 @@
         .nav { padding-inline: 20px; }
         .nav-links { padding-inline: 20px; }
         .section { padding: clamp(64px, 16vw, 110px) 20px; }
-        .hero-inner { padding-inline: 20px; }
+        .hero::after {
+          background: linear-gradient(180deg, rgba(4, 6, 15, .82) 0%, rgba(4, 6, 15, .72) 58%, rgba(4, 6, 15, .64) 100%);
+        }
+        .hero-inner {
+          grid-template-columns: minmax(0, 1fr);
+          justify-items: center;
+          padding-inline: 20px;
+          text-align: center;
+        }
+        .hero-title, .hero-role, .hero-sub, .hero-actions { grid-column: 1; }
+        .hero-role, .hero-actions { justify-content: center; }
+        .hero-sub { max-width: 540px; }
       }
       @media (max-width: 560px) {
         .hero { min-height: 100svh; }
@@ -776,7 +832,7 @@
           transition-duration: .01ms !important;
           will-change: auto !important;
         }
-        [data-reveal] { opacity: 1; transform: none; }
+        .motion-ready [data-reveal] { opacity: 1; transform: none; }
       }
     </style>
   </head>
@@ -802,7 +858,12 @@
         </nav>
         <div class="hero-inner">
           <h1 class="hero-title" data-reveal style="--rd:60ms">Mark Lloyd<br><em>Cuizon</em></h1>
-          <p class="hero-sub" data-reveal style="--rd:180ms">Full-stack developer, computer engineer, and AI developer building practical tools for web, mobile, and embedded systems.</p>
+          <p class="hero-role" data-reveal style="--rd:130ms" aria-label="Full-stack developer, computer engineer, and AI developer">
+            <span id="typed-role" aria-hidden="true">Full-stack developer</span>
+            <span class="typewriter-cursor" aria-hidden="true"></span>
+            <span class="sr-only">Full-stack developer, computer engineer, and AI developer</span>
+          </p>
+          <p class="hero-sub" data-reveal style="--rd:200ms">Building practical software across web, mobile, AI, and connected systems.</p>
           <div class="hero-actions" data-reveal style="--rd:300ms">
             <a class="btn btn-primary" href="#projects">View Projects
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -868,7 +929,7 @@
             </div>
           </div>
           <div class="stats" aria-label="Portfolio highlights">
-            <div class="stat" data-reveal style="--rd:0ms"><div class="stat-value">13</div><p class="stat-label">Projects showcased</p></div>
+            <div class="stat" data-reveal style="--rd:0ms"><div class="stat-value">14</div><p class="stat-label">Projects showcased</p></div>
             <div class="stat" data-reveal style="--rd:80ms"><div class="stat-value">3</div><p class="stat-label">Hackathons</p></div>
             <div class="stat" data-reveal style="--rd:160ms"><div class="stat-value">11</div><p class="stat-label">Certificates</p></div>
             <div class="stat" data-reveal style="--rd:240ms"><div class="stat-value">2021-25</div><p class="stat-label">Computer Engineering</p></div>
@@ -1145,8 +1206,8 @@
         bgColor: "#05090d", spin: .025, initRotation: .18, tilt: .52
       };
       const LAYERS = { BLOOM_SCENE: 1, ENTIRE_SCENE: 2 };
-      const STOPS_X = [{ p: 0, v: 0 }, { p: .32, v: -3.1 }, { p: .64, v: 3.2 }, { p: 1, v: 0 }];
-      const STOPS_Y = [{ p: 0, v: -2 }, { p: .32, v: .25 }, { p: .64, v: .15 }, { p: 1, v: -.15 }];
+      const STOPS_X = [{ p: 0, v: .95 }, { p: .32, v: -3.1 }, { p: .64, v: 3.2 }, { p: 1, v: .55 }];
+      const STOPS_Y = [{ p: 0, v: .15 }, { p: .32, v: .25 }, { p: .64, v: .15 }, { p: 1, v: -.15 }];
       const STOPS_S = [{ p: 0, v: 2.15 }, { p: .32, v: 1 }, { p: .64, v: .92 }, { p: 1, v: 1.12 }];
       const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const canvas = document.querySelector(".tech-canvas");
@@ -1154,6 +1215,8 @@
       year.textContent = String(new Date().getFullYear());
       const nav = document.querySelector(".nav");
       const navToggle = document.querySelector(".nav-toggle");
+      let typewriterTimer = 0;
+      let revealObserver;
 
       function setNavOpen(open) {
         nav.classList.toggle("is-open", open);
@@ -1173,6 +1236,61 @@
           navToggle.focus();
         }
       });
+
+      function startHeroTypewriter() {
+        if (reduceMotion) return;
+        const role = document.querySelector("#typed-role");
+        const roles = ["Full-stack developer", "Computer engineer", "AI developer"];
+        let roleIndex = 0;
+        let characterCount = roles[0].length;
+        let deleting = true;
+
+        function tick() {
+          const currentRole = roles[roleIndex];
+          characterCount += deleting ? -1 : 1;
+          role.textContent = currentRole.slice(0, characterCount);
+          let delay = deleting ? 38 : 68;
+
+          if (deleting && characterCount === 0) {
+            deleting = false;
+            roleIndex = (roleIndex + 1) % roles.length;
+            characterCount = 1;
+            role.textContent = roles[roleIndex].slice(0, characterCount);
+            delay = 68;
+          } else if (!deleting && characterCount === roles[roleIndex].length) {
+            deleting = true;
+            delay = 1500;
+          }
+          typewriterTimer = window.setTimeout(tick, delay);
+        }
+
+        typewriterTimer = window.setTimeout(tick, 1800);
+      }
+
+      function initializeReveals() {
+        const items = [...document.querySelectorAll("[data-reveal]")];
+        if (reduceMotion) {
+          items.forEach((item) => item.classList.add("in"));
+          return;
+        }
+
+        revealObserver = new IntersectionObserver((entries, observer) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            entry.target.classList.add("in");
+            observer.unobserve(entry.target);
+          }
+        }, { threshold: .18, rootMargin: "0px 0px -8% 0px" });
+
+        for (const item of items) {
+          const rect = item.getBoundingClientRect();
+          if (rect.top < innerHeight * .92 && rect.bottom > 0) item.classList.add("in");
+          revealObserver.observe(item);
+        }
+        document.documentElement.classList.add("motion-ready");
+      }
+
+      startHeroTypewriter();
 
       function escapeHTML(value) {
         return String(value).replace(/[&<>"']/g, (character) => ({
@@ -1216,6 +1334,7 @@
       }
 
       renderPortfolioContent();
+      initializeReveals();
 
       const lerp = (a, b, t) => a + (b - a) * t;
       const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
@@ -1554,7 +1673,12 @@
             color: 0x10232b, metalness: .58, roughness: .19, transparent: true, opacity: .86,
             clearcoat: .8, clearcoatRoughness: .16
           }),
-          die: new THREE.MeshStandardMaterial({ color: 0x071016, metalness: .64, roughness: .3 }),
+          die: new THREE.MeshStandardMaterial({
+            color: 0x071016, emissive: 0x071a20, emissiveIntensity: .28, metalness: .64, roughness: .3
+          }),
+          core: new THREE.MeshStandardMaterial({
+            color: 0x18333a, emissive: 0x0d5259, emissiveIntensity: .34, metalness: .76, roughness: .24
+          }),
           amber: new THREE.MeshStandardMaterial({
             color: 0x92774b, emissive: 0x3c2913, emissiveIntensity: .32, metalness: .82, roughness: .29
           }),
@@ -1621,7 +1745,16 @@
         addBox(chip, materials.aluminum, [1.76, .07, 1.76], [0, .12, 0]);
         addBox(chip, materials.die, [1.62, .14, 1.62], [0, .205, 0]);
         addBox(chip, materials.glass, [1.39, .025, 1.39], [0, .29, 0]);
-        addBox(chip, materials.chrome, [1.13, .025, 1.13], [0, .315, 0]);
+        addBox(chip, materials.core, [1.13, .025, 1.13], [0, .315, 0]);
+
+        const signalLoop = new THREE.Mesh(
+          new THREE.TorusGeometry(1.48, .012, 6, mobile ? 64 : 128),
+          new THREE.MeshBasicMaterial({ color: 0x56b6bd, transparent: true, opacity: .34, depthWrite: false })
+        );
+        signalLoop.rotation.x = Math.PI / 2;
+        signalLoop.position.y = .008;
+        addLayer(signalLoop, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+        technologyGroup.add(signalLoop);
 
         const finCount = mobile ? 5 : 9;
         for (let i = 0; i < finCount; i++) {
@@ -1718,25 +1851,28 @@
         camera.layers.enable(LAYERS.BLOOM_SCENE);
         camera.layers.enable(LAYERS.ENTIRE_SCENE);
         scene.add(camera);
-        const ambient = new THREE.AmbientLight(0xa7bbc2, .8);
+        const ambient = new THREE.AmbientLight(0xa7bbc2, .88);
         const directional = new THREE.DirectionalLight(0xd7e3e5, 1.7);
         directional.position.set(-3, 7, 5);
-        const cyanLight = new THREE.PointLight(0x4d9eae, 1.7, 7);
+        const cyanLight = new THREE.PointLight(0x4d9eae, 2, 7);
         cyanLight.position.set(-2.2, 1.3, 2.8);
-        const coolLight = new THREE.PointLight(0xc3d2d7, .9, 6);
+        const coolLight = new THREE.PointLight(0xc3d2d7, 1.1, 6);
         coolLight.position.set(2.4, 1.7, -1.5);
+        const amberLight = new THREE.PointLight(0x8e7048, .42, 5);
+        amberLight.position.set(2.7, .35, 3.6);
         addLayer(ambient, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
         addLayer(directional, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
         addLayer(cyanLight, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
         addLayer(coolLight, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-        scene.add(ambient, directional, cyanLight, coolLight);
+        addLayer(amberLight, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+        scene.add(ambient, directional, cyanLight, coolLight, amberLight);
         worldGroup = new THREE.Group();
         worldGroup.position.set(STOPS_X[0].v, STOPS_Y[0].v, 0);
         worldGroup.scale.setScalar(STOPS_S[0].v);
         scene.add(worldGroup);
         technologyGroup = new THREE.Group();
         technologyGroup.rotation.z = CONFIG.tilt;
-        technologyGroup.scale.setScalar(innerWidth < 768 ? .34 : .46);
+        technologyGroup.scale.setScalar(innerWidth < 768 ? .39 : .5);
         worldGroup.add(technologyGroup);
         bloomComposer = makeComposer(false);
         bloomComposer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), .28, .34, .18));
@@ -1762,8 +1898,8 @@
       function resize() {
         if (!renderer) return;
         const width = Math.max(1, document.documentElement.clientWidth), height = Math.max(1, innerHeight);
-        technologyGroup?.scale.setScalar(width < 768 ? .34 : .46);
-        cameraDistance = width < 768 ? 14 : 8;
+        technologyGroup?.scale.setScalar(width < 768 ? .39 : .5);
+        cameraDistance = width < 768 ? 12 : 8;
         const pixelRatio = Math.min(devicePixelRatio, width < 768 ? 1 : 1.5);
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
@@ -1829,18 +1965,6 @@
         if (!reduceMotion) {
           addEventListener("pointermove", handlePointerMove, { passive: true });
         }
-        if (reduceMotion) {
-          document.querySelectorAll("[data-reveal]").forEach((item) => item.classList.add("in"));
-        } else {
-          const revealObserver = new IntersectionObserver((entries, observer) => {
-            for (const entry of entries) {
-              if (!entry.isIntersecting) continue;
-              entry.target.classList.add("in");
-              observer.unobserve(entry.target);
-            }
-          }, { threshold: .18, rootMargin: "0px 0px -8% 0px" });
-          document.querySelectorAll("[data-reveal]").forEach((item) => revealObserver.observe(item));
-        }
         createTechnologyScene();
         if (reduceMotion) renderFrame();
         else if (gsap && ScrollTrigger) {
@@ -1892,6 +2016,8 @@
       addEventListener("pagehide", () => {
         cancelAnimationFrame(animationFrame);
         cancelAnimationFrame(lenisRaf);
+        clearTimeout(typewriterTimer);
+        revealObserver?.disconnect();
         backgroundScrollTween?.scrollTrigger?.kill();
         backgroundScrollTween?.kill();
         backgroundEntryTween?.kill();
