@@ -1537,7 +1537,6 @@
       let lenisRaf = 0;
       let lastTime = 0, spinPhase = 0;
       let curP = 0, curX = 0, curY = STOPS_Y[0].v, curS = STOPS_S[0].v, animationFrame = 0;
-      const currentPackets = [];
       const ambientFloaters = [];
       const orbitingRelays = [];
       const scrollMotion = { progress: 0 };
@@ -1866,24 +1865,6 @@
           );
           addLayer(trace, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
           technologyGroup.add(trace);
-
-          const curve = new THREE.CatmullRomCurve3(vectors);
-          const phase = (index * .137) % 1;
-          const core = new THREE.Mesh(
-            new THREE.SphereGeometry(.035, 8, 8),
-            new THREE.MeshBasicMaterial({ color: 0x75ffc0 })
-          );
-          const halo = new THREE.Mesh(
-            new THREE.SphereGeometry(.085, 8, 8),
-            new THREE.MeshBasicMaterial({ color: 0x4fe9a1, transparent: true, opacity: .22, depthWrite: false })
-          );
-          for (const pulse of [core, halo]) {
-            addLayer(pulse, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-            technologyGroup.add(pulse);
-          }
-          curve.getPointAt(phase, core.position);
-          halo.position.copy(core.position);
-          currentPackets.push({ curve, core, halo, phase, speed: .12 + (index % 5) * .012 });
         }
 
         addBox(technologyGroup, materials.substrate, [5.8, .2, 4.25], [0, -.16, 0]);
@@ -2271,11 +2252,6 @@
           for (const floater of ambientFloaters) {
             floater.assembly.position.y = floater.baseY + Math.sin(time * .65 + floater.phase) * .11;
             floater.assembly.rotation.y = Math.sin(time * .3 + floater.phase) * .08;
-          }
-          for (const packet of currentPackets) {
-            const progress = (packet.phase + time * packet.speed) % 1;
-            packet.curve.getPointAt(progress, packet.core.position);
-            packet.halo.position.copy(packet.core.position);
           }
           camera.position.set(pointerOffset.x * .12, pointerOffset.y * .08, cameraDistance);
           camera.lookAt(0, 0, 0);
