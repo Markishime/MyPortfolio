@@ -32,8 +32,8 @@
         --accent: #5df0a8;
         --accent-2: #2fd38a;
         --accent-ink: #032018;
-        --glass: rgba(12, 18, 38, .55);
-        --glass-2: rgba(16, 24, 48, .65);
+        --glass: rgba(8, 13, 27, .82);
+        --glass-2: rgba(10, 16, 32, .9);
         --radius: 18px;
         --radius-lg: 26px;
         --maxw: 1180px;
@@ -132,7 +132,7 @@
         position: absolute;
         z-index: 0;
         inset: 76px 0 0;
-        background: linear-gradient(90deg, rgba(4, 6, 15, .94) 0%, rgba(4, 6, 15, .82) 34%, rgba(4, 6, 15, .38) 57%, transparent 82%);
+        background: linear-gradient(90deg, rgba(4, 6, 15, .97) 0%, rgba(4, 6, 15, .91) 32%, rgba(4, 6, 15, .6) 55%, rgba(4, 6, 15, .12) 100%);
         content: "";
         pointer-events: none;
       }
@@ -1328,10 +1328,14 @@
       let renderer, camera, scene, worldGroup, technologyGroup;
       let bloomComposer, finalComposer, controls;
       let finalPassRef, lenisInstance, backgroundScrollTween, backgroundEntryTween;
+      let orbitalGroup, relayGroup, starfield;
       let cameraDistance = 8;
       let lenisRaf = 0;
       let lastTime = 0, spinPhase = 0;
       let curP = 0, curX = 0, curY = STOPS_Y[0].v, curS = STOPS_S[0].v, animationFrame = 0;
+      const currentPackets = [];
+      const ambientFloaters = [];
+      const orbitingRelays = [];
       const scrollMotion = { progress: 0 };
       const entryMotion = { y: -6.5 };
       const resizeUniforms = [];
@@ -1658,6 +1662,24 @@
           );
           addLayer(trace, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
           technologyGroup.add(trace);
+
+          const curve = new THREE.CatmullRomCurve3(vectors);
+          const phase = (index * .137) % 1;
+          const core = new THREE.Mesh(
+            new THREE.SphereGeometry(.035, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0x75ffc0 })
+          );
+          const halo = new THREE.Mesh(
+            new THREE.SphereGeometry(.085, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0x4fe9a1, transparent: true, opacity: .22, depthWrite: false })
+          );
+          for (const pulse of [core, halo]) {
+            addLayer(pulse, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+            technologyGroup.add(pulse);
+          }
+          curve.getPointAt(phase, core.position);
+          halo.position.copy(core.position);
+          currentPackets.push({ curve, core, halo, phase, speed: .12 + (index % 5) * .012 });
         }
 
         addBox(technologyGroup, materials.substrate, [5.8, .2, 4.25], [0, -.16, 0]);
@@ -1760,6 +1782,175 @@
           connector.rotation.y = x < 0 ? .04 : -.04;
         }
 
+        const platform = new THREE.Mesh(
+          new THREE.CylinderGeometry(3.28, 3.38, .16, 64),
+          new THREE.MeshStandardMaterial({ color: 0x101a20, metalness: .82, roughness: .32 })
+        );
+        platform.position.y = -.34;
+        addLayer(platform, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+        technologyGroup.add(platform);
+
+        const platformRing = new THREE.Mesh(
+          new THREE.TorusGeometry(3.36, .018, 6, mobile ? 80 : 144),
+          new THREE.MeshBasicMaterial({ color: 0x4a9b91, transparent: true, opacity: .3, depthWrite: false })
+        );
+        platformRing.rotation.x = Math.PI / 2;
+        platformRing.position.y = -.245;
+        addLayer(platformRing, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+        technologyGroup.add(platformRing);
+      }
+
+      function createEnvironmentScene() {
+        const starCount = matchMedia("(max-width: 767px)").matches ? 140 : 260;
+        const positions = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+          positions[i * 3] = (Math.random() - .5) * 28;
+          positions[i * 3 + 1] = (Math.random() - .5) * 16;
+          positions[i * 3 + 2] = -12 - Math.random() * 32;
+        }
+        const starGeometry = new THREE.BufferGeometry();
+        starGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        starfield = new THREE.Points(
+          starGeometry,
+          new THREE.PointsMaterial({
+            color: 0x8db7b1,
+            size: .055,
+            sizeAttenuation: true,
+            transparent: true,
+            opacity: .38,
+            depthWrite: false
+          })
+        );
+        starfield.frustumCulled = false;
+        addLayer(starfield, LAYERS.ENTIRE_SCENE);
+        scene.add(starfield);
+
+        orbitalGroup = new THREE.Group();
+        orbitalGroup.rotation.set(.72, .12, -.16);
+        worldGroup.add(orbitalGroup);
+        const orbitMaterial = new THREE.MeshBasicMaterial({
+          color: 0x438981,
+          transparent: true,
+          opacity: .19,
+          depthWrite: false
+        });
+        for (const [radius, tilt, opacity] of [[3.75, .12, .8], [4.25, -.18, .55]]) {
+          const orbit = new THREE.Mesh(
+            new THREE.TorusGeometry(radius, .009, 5, matchMedia("(max-width: 767px)").matches ? 64 : 112),
+            orbitMaterial.clone()
+          );
+          orbit.material.opacity *= opacity;
+          orbit.rotation.set(tilt, 0, 0);
+          addLayer(orbit, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+          orbitalGroup.add(orbit);
+        }
+
+        relayGroup = new THREE.Group();
+        relayGroup.position.set(1.45, 1.05, -2.2);
+        relayGroup.scale.setScalar(.62);
+        worldGroup.add(relayGroup);
+        const relayCore = new THREE.Mesh(
+          new THREE.IcosahedronGeometry(.48, 2),
+          new THREE.MeshStandardMaterial({
+            color: 0x172b32,
+            emissive: 0x0b382e,
+            emissiveIntensity: .34,
+            metalness: .8,
+            roughness: .27,
+            flatShading: true
+          })
+        );
+        const relayShell = new THREE.Mesh(
+          new THREE.IcosahedronGeometry(.54, 1),
+          new THREE.MeshBasicMaterial({
+            color: 0x6bb2a0,
+            wireframe: true,
+            transparent: true,
+            opacity: .24,
+            depthWrite: false
+          })
+        );
+        for (const part of [relayCore, relayShell]) {
+          addLayer(part, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+          relayGroup.add(part);
+        }
+        for (const [radius, tilt] of [[.82, .28], [1.02, -.38]]) {
+          const ring = new THREE.Mesh(
+            new THREE.TorusGeometry(radius, .012, 6, 72),
+            new THREE.MeshBasicMaterial({
+              color: 0x68c8a9,
+              transparent: true,
+              opacity: .48,
+              depthWrite: false
+            })
+          );
+          ring.rotation.set(tilt, .3, -.18);
+          addLayer(ring, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+          relayGroup.add(ring);
+        }
+        const relayLight = new THREE.Mesh(
+          new THREE.SphereGeometry(.11, 12, 12),
+          new THREE.MeshBasicMaterial({ color: 0xa2ffd0 })
+        );
+        addLayer(relayLight, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+        relayGroup.add(relayLight);
+
+        for (let i = 0; i < 3; i++) {
+          const satellite = new THREE.Group();
+          const body = new THREE.Mesh(
+            new THREE.OctahedronGeometry(.105, 0),
+            new THREE.MeshStandardMaterial({
+              color: 0x8b9b9b,
+              emissive: 0x174c3d,
+              emissiveIntensity: .28,
+              metalness: .78,
+              roughness: .24
+            })
+          );
+          const beacon = new THREE.Mesh(
+            new THREE.SphereGeometry(.035, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0x9cffca })
+          );
+          beacon.position.y = .12;
+          for (const part of [body, beacon]) {
+            addLayer(part, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+            satellite.add(part);
+          }
+          worldGroup.add(satellite);
+          relayGroup.add(satellite);
+          orbitingRelays.push({ satellite, phase: i * (Math.PI * 2 / 3), radius: .9 + i * .1 });
+        }
+
+        const mobile = matchMedia("(max-width: 767px)").matches;
+        const floaterMaterial = new THREE.MeshStandardMaterial({ color: 0x34444b, metalness: .78, roughness: .34 });
+        const insetMaterial = new THREE.MeshStandardMaterial({
+          color: 0x102521,
+          emissive: 0x126044,
+          emissiveIntensity: .42,
+          metalness: .56,
+          roughness: .35
+        });
+        const floaterPositions = mobile
+          ? [[-3.55, .82, .35], [3.5, -.8, -.3]]
+          : [[-3.55, .84, .35], [3.55, .82, -.35], [-3.5, -.84, -.35], [3.55, -.82, .3]];
+        floaterPositions.forEach(([x, y, z], index) => {
+          const assembly = new THREE.Group();
+          const base = new THREE.Mesh(new THREE.BoxGeometry(.52, .12, .38), floaterMaterial);
+          const inset = new THREE.Mesh(new THREE.BoxGeometry(.31, .035, .22), insetMaterial);
+          inset.position.y = .08;
+          const beacon = new THREE.Mesh(
+            new THREE.SphereGeometry(.045, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0x75ffc0 })
+          );
+          beacon.position.set(index % 2 ? .16 : -.16, .12, .12);
+          for (const part of [base, inset, beacon]) {
+            addLayer(part, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
+            assembly.add(part);
+          }
+          assembly.position.set(x, y, z);
+          worldGroup.add(assembly);
+          ambientFloaters.push({ assembly, baseY: y, phase: index * 1.7 });
+        });
       }
 
       function makeComposer(renderToScreen) {
@@ -1857,6 +2048,31 @@
             CONFIG.initRotation + spinPhase + curP * Math.PI * 1.6 + pointerOffset.x * .08,
             .035 + pointerOffset.x * .025
           );
+          const time = now * .001;
+          if (orbitalGroup) orbitalGroup.rotation.y = .12 + time * .045;
+          if (relayGroup) {
+            relayGroup.rotation.y = time * .12;
+            relayGroup.rotation.x = .18 + Math.sin(time * .35) * .06;
+          }
+          if (starfield) starfield.rotation.y = time * .0018;
+          for (const relay of orbitingRelays) {
+            const angle = time * .16 + relay.phase;
+            relay.satellite.position.set(
+              Math.cos(angle) * relay.radius,
+              Math.sin(angle * .72) * relay.radius * .62,
+              Math.sin(angle) * relay.radius
+            );
+            relay.satellite.rotation.set(angle * .4, angle, angle * .3);
+          }
+          for (const floater of ambientFloaters) {
+            floater.assembly.position.y = floater.baseY + Math.sin(time * .65 + floater.phase) * .11;
+            floater.assembly.rotation.y = Math.sin(time * .3 + floater.phase) * .08;
+          }
+          for (const packet of currentPackets) {
+            const progress = (packet.phase + time * packet.speed) % 1;
+            packet.curve.getPointAt(progress, packet.core.position);
+            packet.halo.position.copy(packet.core.position);
+          }
           camera.position.set(pointerOffset.x * .12, pointerOffset.y * .08, cameraDistance);
           camera.lookAt(0, 0, 0);
         }
@@ -1877,6 +2093,7 @@
           addEventListener("pointermove", handlePointerMove, { passive: true });
         }
         createTechnologyScene();
+        createEnvironmentScene();
         if (reduceMotion) renderFrame();
         else if (gsap && ScrollTrigger) {
           backgroundEntryTween = gsap.to(entryMotion, { y: 0, duration: 1.9, ease: "power3.out" });
