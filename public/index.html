@@ -3,23 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#04060f">
+    <meta name="theme-color" content="#08080a">
     <meta name="description" content="Mark Lloyd Cuizon is a full-stack developer, computer engineer, and AI developer building web, mobile, and embedded software from Cebu, Philippines.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Mark Lloyd Cuizon | Full-Stack Developer">
     <meta property="og:description" content="Building practical tools across web, mobile, AI, and embedded systems.">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>Mark Lloyd Cuizon | Full-Stack Developer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@0.143.0/build/three.module.js",
-          "three/examples/jsm/": "https://unpkg.com/three@0.143.0/examples/jsm/"
-        }
-      }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
       :root {
         --bg: #04060f;
@@ -38,7 +31,7 @@
         --radius-lg: 26px;
         --maxw: 1180px;
         --shadow: 0 30px 80px -30px rgba(0, 0, 0, .75);
-        --font: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        --font: "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
         color-scheme: dark;
         font-family: var(--font);
         background: var(--bg);
@@ -51,7 +44,7 @@
 
       *, *::before, *::after { box-sizing: border-box; }
       * { margin: 0; }
-      html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+      html { scroll-behavior: smooth; scroll-padding-top: 96px; overflow-x: clip; }
       body {
         min-width: 0;
         min-height: 100%;
@@ -86,16 +79,7 @@
         background: var(--accent);
       }
       .skip-link:focus { transform: translateY(0); }
-      .tech-canvas {
-        position: fixed;
-        z-index: 0;
-        inset: 0;
-        display: block;
-        width: 100%;
-        height: 100%;
-        filter: brightness(.68) saturate(.96);
-        pointer-events: none;
-      }
+
       .page { position: relative; z-index: 1; isolation: isolate; }
       .section {
         position: relative;
@@ -986,12 +970,37 @@
         .interactive-surface:not([data-reveal]):hover,
         .interactive-surface:not([data-reveal]):focus-within { transform: none; }
       }
+
+      /* Cinematic depth, with readable foreground surfaces. */
+      :root { --muted: #a9b8c6; --muted-2: #8798aa; --line: rgba(151, 192, 183, .16); }
+      body { background: radial-gradient(ellipse at 85% 12%, #153330 0, transparent 48%), #05090d; }
+      .hero::after { background: linear-gradient(90deg, rgba(5,9,13,.98), rgba(5,9,13,.88) 33%, rgba(5,9,13,.3) 56%, rgba(5,9,13,.03) 78%); }
+      .section { perspective: 1400px; }
+      .section::before { inset: 0 -12%; background: radial-gradient(ellipse at 88% 30%, rgba(60,146,119,.16), transparent 52%), radial-gradient(ellipse at 4% 80%, rgba(42,88,104,.13), transparent 46%); }
+      .section-head h2, .showcase-copy h2, .cta-card h2 { letter-spacing: -.055em; text-wrap: balance; }
+      .section-head { border-top: 1px solid var(--line); padding-top: 28px; }
+      .eyebrow { letter-spacing: .15em; }
+      .project-card, .skill-card, .credential-card { background: linear-gradient(145deg, rgba(20,35,39,.91), rgba(7,14,20,.94)); box-shadow: inset 0 1px 0 rgba(191,231,218,.06), 0 26px 70px -45px #020908; }
+      .project-image { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-bottom: 1px solid var(--line); }
+      .project-links { margin-top: auto; padding-top: 22px; }
+      .project-body { display: flex; flex-direction: column; flex: 1; }
+      .project-card { display: flex; flex-direction: column; }
+      .nav-links a[aria-current="location"] { color: var(--accent); }
+      .btn:active { transform: translateY(1px) scale(.98); }
+      .motion-ready [data-reveal] { transition: opacity .95s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1), filter .95s ease, border-color .3s ease, box-shadow .3s ease; transition-delay: var(--rd, 0ms); transform-origin: 50% 90%; }
+      .motion-ready [data-reveal]:not(.in) { opacity: 0; transform: perspective(1400px) translate3d(0,56px,-32px) rotateX(5deg); filter: blur(3px); }
+      .motion-ready [data-reveal].in { filter: none; }
+      .motion-ready [data-reveal]:focus-within { opacity: 1; transform: none; filter: none; }
+      @media (max-width: 767px) { .hero::after { background: linear-gradient(180deg, rgba(5,9,13,.64), rgba(5,9,13,.83) 46%, rgba(5,9,13,.22)); } .section-head { padding-top: 22px; } }
+      @media (prefers-reduced-motion: reduce) { .ambient-haze { animation: none; } .motion-ready [data-reveal], .motion-ready [data-reveal]:not(.in) { opacity: 1; transform: none; filter: none; transition: none; } }
+
     </style>
-  </head>
+    <link rel="stylesheet" href="/editorial.css">
+    <link rel="stylesheet" href="/motion.css">
+</head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="page" id="top">
-      <canvas class="tech-canvas" aria-hidden="true"></canvas>
       <header class="hero">
         <nav class="nav" aria-label="Main navigation">
           <a class="brand" href="#top" aria-label="Mark Lloyd Cuizon home"><span class="brand-mark" aria-hidden="true">▲</span><span>Mark Cuizon</span></a>
@@ -1009,24 +1018,39 @@
           </button>
         </nav>
         <div class="hero-inner">
-          <h1 class="hero-title" data-reveal style="--rd:60ms">Mark Lloyd<br><em>Cuizon</em></h1>
-          <p class="hero-role" data-reveal style="--rd:130ms">Full-stack developer, computer engineer, and AI developer</p>
-          <p class="hero-sub" data-reveal style="--rd:200ms">Building practical software across web, mobile, AI, and connected systems.</p>
-          <div class="hero-actions" data-reveal style="--rd:300ms">
-            <a class="btn btn-primary" href="#projects">View Projects
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-            <a class="btn btn-outline" href="#about">About Me</a>
+          <div class="hero-copy">
+            <p class="hero-kicker" data-reveal>Computer engineer · software developer</p>
+            <h1 class="hero-title" data-reveal style="--rd:60ms"><span class="hero-title-line">Interfaces with intent.</span><em class="hero-title-line">Intelligence built in.</em></h1>
+            <p class="hero-role" data-reveal style="--rd:130ms">Mark Lloyd Cuizon · Full-stack, frontend &amp; AI developer</p>
+            <p class="hero-sub" data-reveal style="--rd:200ms">Building practical software across web, mobile, AI, and connected systems.</p>
+            <div class="hero-actions" data-reveal style="--rd:300ms">
+              <a class="btn btn-primary" href="#projects">View projects
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="btn btn-outline" href="#about">About me</a>
+            </div>
           </div>
-        </div>
-        <div class="logos" data-reveal style="--rd:420ms" aria-label="Areas of focus">
-          <p class="logos-label">From software to circuits</p>
-          <div class="logos-row">
-            <span class="logo">Web</span><span class="logo">AI</span><span class="logo">Mobile</span>
-            <span class="logo">Embedded</span><span class="logo">Automation</span>
-          </div>
+          <figure class="hero-visual" data-reveal aria-label="Computer engineering workspace">
+            <img src="/media/hero-studio.jpg" alt="A computer engineering workspace with a laptop and electronics overlooking the city" width="1280" height="720" fetchpriority="high">
+            <figcaption class="scene-caption">Hardware / software / AI</figcaption>
+          </figure>
         </div>
       </header>
+
+      <section class="discipline-strip" aria-label="Areas of focus">
+        <div class="discipline-track">
+          <span>Web development</span><i aria-hidden="true"></i>
+          <span>Applied AI</span><i aria-hidden="true"></i>
+          <span>Mobile products</span><i aria-hidden="true"></i>
+          <span>Embedded systems</span><i aria-hidden="true"></i>
+          <span>Product engineering</span><i aria-hidden="true"></i>
+          <span aria-hidden="true">Web development</span><i aria-hidden="true"></i>
+          <span aria-hidden="true">Applied AI</span><i aria-hidden="true"></i>
+          <span aria-hidden="true">Mobile products</span><i aria-hidden="true"></i>
+          <span aria-hidden="true">Embedded systems</span><i aria-hidden="true"></i>
+          <span aria-hidden="true">Product engineering</span><i aria-hidden="true"></i>
+        </div>
+      </section>
 
       <main id="main">
         <section class="section features" id="about" aria-labelledby="features-title">
@@ -1173,23 +1197,7 @@
       </main>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script type="module">
-      import * as THREE from "three";
-      import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-      import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-      import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
-      import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
-      import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectionShader.js";
-      import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-
-      const { gsap, ScrollTrigger } = window;
-      if (!gsap || !ScrollTrigger) {
-        console.error("GSAP ScrollTrigger could not load; background scroll choreography is unavailable.");
-      } else {
-        gsap.registerPlugin(ScrollTrigger);
-      }
 
       const PROJECTS = [
         {
@@ -1350,22 +1358,10 @@
         "Cloud Sync: Firebase 101 Certificate"
       ];
 
-      const CONFIG = {
-        bgColor: "#05090d", spin: .025, initRotation: .18, tilt: .52
-      };
-      const LAYERS = { BLOOM_SCENE: 1, ENTIRE_SCENE: 2 };
-      const STOPS_X = [{ p: 0, v: .95 }, { p: .32, v: -3.1 }, { p: .64, v: 3.2 }, { p: 1, v: .55 }];
-      const STOPS_Y = [{ p: 0, v: .15 }, { p: .32, v: .25 }, { p: .64, v: .15 }, { p: 1, v: -.15 }];
-      const STOPS_S = [{ p: 0, v: 2.15 }, { p: .32, v: 1 }, { p: .64, v: .92 }, { p: 1, v: 1.12 }];
-      const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const canvas = document.querySelector(".tech-canvas");
       const year = document.querySelector("#year");
       year.textContent = String(new Date().getFullYear());
       const nav = document.querySelector(".nav");
       const navToggle = document.querySelector(".nav-toggle");
-      let revealObserver;
-      let sectionLightingObserver;
-      const surfaceInteractionCleanup = [];
 
       function setNavOpen(open) {
         nav.classList.toggle("is-open", open);
@@ -1385,72 +1381,6 @@
           navToggle.focus();
         }
       });
-
-      function initializeReveals() {
-        const items = [...document.querySelectorAll("[data-reveal]")];
-        if (reduceMotion) {
-          items.forEach((item) => item.classList.add("in"));
-          return;
-        }
-
-        revealObserver = new IntersectionObserver((entries, observer) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            entry.target.classList.add("in");
-            observer.unobserve(entry.target);
-          }
-        }, { threshold: .18, rootMargin: "0px 0px -8% 0px" });
-
-        for (const item of items) {
-          const rect = item.getBoundingClientRect();
-          if (rect.top < innerHeight * .92 && rect.bottom > 0) item.classList.add("in");
-          revealObserver.observe(item);
-        }
-        document.documentElement.classList.add("motion-ready");
-      }
-
-      function initializeSurfaceInteractions() {
-        if (reduceMotion || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-
-        document.querySelectorAll(".interactive-surface").forEach((surface) => {
-          const handleMove = (event) => {
-            const bounds = surface.getBoundingClientRect();
-            if (!bounds.width || !bounds.height) return;
-            const x = clamp((event.clientX - bounds.left) / bounds.width, 0, 1);
-            const y = clamp((event.clientY - bounds.top) / bounds.height, 0, 1);
-            surface.style.setProperty("--pointer-x", `${x * 100}%`);
-            surface.style.setProperty("--pointer-y", `${y * 100}%`);
-            surface.style.setProperty("--tilt-x", `${(x - .5) * 5}deg`);
-            surface.style.setProperty("--tilt-y", `${(.5 - y) * 4}deg`);
-          };
-          const reset = () => {
-            surface.style.removeProperty("--pointer-x");
-            surface.style.removeProperty("--pointer-y");
-            surface.style.removeProperty("--tilt-x");
-            surface.style.removeProperty("--tilt-y");
-          };
-          surface.addEventListener("pointermove", handleMove, { passive: true });
-          surface.addEventListener("pointerleave", reset, { passive: true });
-          surfaceInteractionCleanup.push(() => {
-            surface.removeEventListener("pointermove", handleMove);
-            surface.removeEventListener("pointerleave", reset);
-          });
-        });
-      }
-
-      function initializeSectionLighting() {
-        const sections = document.querySelectorAll("main .section");
-        if (reduceMotion) {
-          sections.forEach((section) => section.classList.add("is-active"));
-          return;
-        }
-        sectionLightingObserver = new IntersectionObserver((entries) => {
-          for (const entry of entries) {
-            entry.target.classList.toggle("is-active", entry.isIntersecting);
-          }
-        }, { threshold: 0, rootMargin: "-18% 0px -24% 0px" });
-        sections.forEach((section) => sectionLightingObserver.observe(section));
-      }
 
       function escapeHTML(value) {
         return String(value).replace(/[&<>"']/g, (character) => ({
@@ -1494,849 +1424,21 @@
       }
 
       renderPortfolioContent();
-      initializeReveals();
-      initializeSurfaceInteractions();
-      initializeSectionLighting();
+      document.querySelectorAll("[data-reveal]").forEach(item => item.classList.add("in"));
 
-      const lerp = (a, b, t) => a + (b - a) * t;
-      const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
-      const hexToVec3 = (hex) => {
-        const color = new THREE.Color(hex);
-        return new THREE.Vector3(color.r, color.g, color.b);
-      };
-      function sample(stops, p) {
-        if (p <= stops[0].p) return stops[0].v;
-        for (let i = 1; i < stops.length; i++) {
-          if (p <= stops[i].p) {
-            const prev = stops[i - 1], next = stops[i];
-            const raw = (p - prev.p) / (next.p - prev.p);
-            const t = raw * raw * (3 - 2 * raw);
-            return lerp(prev.v, next.v, t);
-          }
-        }
-        return stops[stops.length - 1].v;
-      }
-
-      const FinalPass = {
-        uniforms: {
-          tDiffuse: { value: null }, bloomTexture: { value: null },
-          uBg: { value: hexToVec3(CONFIG.bgColor) }
-        },
-        vertexShader: `varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,1.0);}`,
-        fragmentShader: `
-          uniform sampler2D tDiffuse;uniform sampler2D bloomTexture;uniform vec3 uBg;varying vec2 vUv;
-          void main(){vec3 base=texture2D(tDiffuse,vUv).rgb;vec3 bloom=texture2D(bloomTexture,vUv).rgb;
-            gl_FragColor=vec4(uBg+base+bloom,1.0);}`
-      };
-
-      let renderer, camera, scene, worldGroup, technologyGroup;
-      let bloomComposer, finalComposer, controls;
-      let finalPassRef, lenisInstance, backgroundScrollTween, backgroundEntryTween;
-      let orbitalGroup, relayGroup, starfield;
-      let cameraDistance = 8;
-      let lenisRaf = 0;
-      let lastTime = 0, spinPhase = 0;
-      let curP = 0, curX = 0, curY = STOPS_Y[0].v, curS = STOPS_S[0].v, animationFrame = 0;
-      const ambientFloaters = [];
-      const orbitingRelays = [];
-      const scrollMotion = { progress: 0 };
-      const entryMotion = { y: -6.5 };
-      const resizeUniforms = [];
-      const pointerTarget = { x: 0, y: 0 };
-      const pointerOffset = { x: 0, y: 0 };
-
-      function setResolutionUniforms(width, height) {
-        for (const uniform of resizeUniforms) uniform.value.set(width, height);
-      }
-
-      function addLayer(object, ...layers) {
-        object.layers.set(layers[0]);
-        for (const layer of layers.slice(1)) object.layers.enable(layer);
-      }
-
-      function makeStarfield() {
-        const positions = new Float32Array(CONFIG.starCount * 3);
-        const seeds = new Float32Array(CONFIG.starCount);
-        const bright = new Float32Array(CONFIG.starCount);
-        for (let i = 0; i < CONFIG.starCount; i++) {
-          const z = Math.random() * 2 - 1, angle = Math.random() * Math.PI * 2;
-          const radius = Math.sqrt(1 - z * z) * 90;
-          positions[i * 3] = Math.cos(angle) * radius;
-          positions[i * 3 + 1] = Math.sin(angle) * radius;
-          positions[i * 3 + 2] = z * 90;
-          seeds[i] = Math.random() * Math.PI * 2;
-          bright[i] = .35 + Math.random() * .65;
-        }
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute("seed", new THREE.BufferAttribute(seeds, 1));
-        geometry.setAttribute("bright", new THREE.BufferAttribute(bright, 1));
-        const material = new THREE.ShaderMaterial({
-          uniforms: {
-            uTime: { value: 0 }, uSize: { value: CONFIG.starSize }, uFlicker: { value: CONFIG.starFlicker },
-            uColor: { value: hexToVec3(CONFIG.starColor) }, uRes: { value: new THREE.Vector2(innerWidth, innerHeight) }
-          },
-          vertexShader: `
-            attribute float seed;attribute float bright;uniform float uTime;uniform float uSize;uniform float uFlicker;uniform vec2 uRes;varying float vTw;
-            void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);float tw=.6+.4*sin(uTime*uFlicker+seed);vTw=bright*tw;
-              gl_PointSize=max(uSize*uRes.y/900.0*(90.0/max(-mv.z,1.0)),1.0);gl_Position=projectionMatrix*mv;}`,
-          fragmentShader: `
-            uniform vec3 uColor;varying float vTw;
-            void main(){vec2 p=gl_PointCoord-.5;float l=length(p);if(l>.5)discard;float core=1.0-smoothstep(0.0,.5,l);gl_FragColor=vec4(uColor,core*vTw);}`,
-          transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending
+      const navSections = [...document.querySelectorAll('main .section[id]')];
+      const navObserver = new IntersectionObserver(entries => {
+        const current = entries.find(entry => entry.isIntersecting)?.target;
+        if (!current) return;
+        nav.querySelectorAll('.nav-links a').forEach(link => {
+          if (link.hash === `#${current.id}`) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
         });
-        resizeUniforms.push(material.uniforms.uRes);
-        const points = new THREE.Points(geometry, material);
-        points.frustumCulled = false;
-        addLayer(points, LAYERS.ENTIRE_SCENE);
-        scene.add(points);
-        return points;
-      }
+      }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+      navSections.forEach(section => navObserver.observe(section));
 
-      function makeMotes() {
-        const positions = new Float32Array(CONFIG.atmoCount * 3);
-        const sizes = new Float32Array(CONFIG.atmoCount);
-        const seeds = new Float32Array(CONFIG.atmoCount);
-        for (let i = 0; i < CONFIG.atmoCount; i++) {
-          positions[i * 3] = Math.random() * 2 - 1;
-          positions[i * 3 + 1] = Math.random() * 2 - 1;
-          positions[i * 3 + 2] = Math.random() * 2 - 1;
-          sizes[i] = CONFIG.atmoSize * (.4 + Math.random());
-          seeds[i] = Math.random() * Math.PI * 2;
-        }
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
-        geometry.setAttribute("seed", new THREE.BufferAttribute(seeds, 1));
-        const material = new THREE.ShaderMaterial({
-          uniforms: { uTime: { value: 0 }, uRes: { value: new THREE.Vector2(innerWidth, innerHeight) }, uColor: { value: hexToVec3(CONFIG.atmoColor) } },
-          vertexShader: `
-            attribute float size;attribute float seed;uniform float uTime;uniform vec2 uRes;varying float vA;
-            vec3 warp(vec3 p,float t){float c=.9,a=1.9,b=.02,s=.05;p*=2.;p.x+=c*sin(s*t+a*p.y)+t*b;p.y+=c*cos(s*t+a*p.x);
-              p.y+=c*sin(s*t+a*p.z)+t*b;p.z+=c*cos(s*t+a*p.y);p.z+=c*sin(s*t+a*p.x)+t*b;p.x+=c*cos(s*t+a*p.z);return cos(p+vec3(1,2,4));}
-            void main(){vec3 v=position*4.0+warp(position,uTime)*1.2;vec4 mv=modelViewMatrix*vec4(v,1.0);float r=length(v);
-              float farF=1.0-smoothstep(5.0,6.5,r);float nearF=smoothstep(0.0,.5,-mv.z);vA=farF*nearF;
-              gl_PointSize=size*uRes.y/900.0/-mv.z;gl_PointSize=max(gl_PointSize,1.0);gl_Position=projectionMatrix*mv;}`,
-          fragmentShader: `
-            uniform vec3 uColor;varying float vA;
-            void main(){vec2 p=gl_PointCoord-.5;float l=length(p);if(l>.5)discard;float tex=1.0-smoothstep(0.0,.5,l);gl_FragColor=vec4(uColor*tex,tex*vA*.55);}`,
-          transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending
-        });
-        resizeUniforms.push(material.uniforms.uRes);
-        const points = new THREE.Points(geometry, material);
-        points.frustumCulled = false;
-        addLayer(points, LAYERS.ENTIRE_SCENE);
-        scene.add(points);
-        return points;
-      }
-
-      function findFirstMesh(root) {
-        let found = null;
-        root.traverse((object) => { if (!found && object.isMesh) found = object; });
-        return found;
-      }
-
-      function injectPlanetShader(material, nightTexture, sharedTime) {
-        material.extensions = { derivatives: true };
-        material.onBeforeCompile = (shader) => {
-          shader.uniforms.time = { value: 0 };
-          shader.uniforms.noiseScale = { value: 30 };
-          shader.uniforms.speedX = { value: 1.5 };
-          shader.uniforms.speedY = { value: 2 };
-          shader.uniforms.speedZ = { value: 2.5 };
-          shader.uniforms.rimColor = { value: hexToVec3(CONFIG.rimColor) };
-          shader.uniforms.rimPower = { value: CONFIG.rimPower };
-          shader.uniforms.nightBlendTexture = { value: nightTexture };
-          shader.uniforms.nightLights = { value: CONFIG.nightLights };
-          shader.uniforms.terrainDepth = { value: CONFIG.terrainDepth };
-          shader.uniforms.terrainShade = { value: CONFIG.terrainShade };
-          shader.uniforms.oceanGlint = { value: CONFIG.oceanGlint };
-          shader.uniforms.oceanDeep = { value: CONFIG.oceanDeep };
-          shader.uniforms.oceanFlow = { value: CONFIG.oceanFlow };
-          shader.uniforms.oceanFlowSpeed = { value: CONFIG.oceanFlowSpeed };
-          shader.uniforms.oceanFlowScale = { value: CONFIG.oceanFlowScale };
-          sharedTime.push(shader.uniforms.time);
-          shader.vertexShader = `varying vec2 vCustomUv;\n${shader.vertexShader}`;
-          shader.vertexShader = shader.vertexShader.replace("void main() {", "void main() {\n vCustomUv = uv;");
-          shader.fragmentShader = `
-            varying vec2 vCustomUv;
-            uniform float time;uniform float noiseScale;uniform float speedX;uniform float speedY;uniform float speedZ;
-            uniform vec3 rimColor;uniform float rimPower;uniform sampler2D nightBlendTexture;uniform float nightLights;
-            uniform float terrainDepth;uniform float terrainShade;uniform float oceanGlint;uniform float oceanDeep;
-            uniform float oceanFlow;uniform float oceanFlowSpeed;uniform float oceanFlowScale;
-            ${SNOISE}
-            ${shader.fragmentShader}`;
-          shader.fragmentShader = shader.fragmentShader.replace("#include <dithering_fragment>", `
-            #include <dithering_fragment>
-            vec3 normalizedNormal=normalize(vNormal);vec3 viewDir=normalize(vViewPosition);
-            float rim=1.0-max(dot(viewDir,normalizedNormal),0.0);rim=pow(rim,rimPower);rim=pow(rim,1.5);rim*=.7;
-            float blueDom=gl_FragColor.b-max(gl_FragColor.r,gl_FragColor.g);
-            float waterMask=clamp(smoothstep(-.005,.03,blueDom),0.0,1.0);
-            float shimmer=snoise(vec3(vCustomUv.x*noiseScale+time*speedX,vCustomUv.y*noiseScale-time*speedY,time*speedZ));
-            gl_FragColor.rgb+=waterMask*shimmer*.025;
-            float fT=time*oceanFlowSpeed*4.0;float fS=4.0*oceanFlowScale;
-            float warp=snoise(vec3(vCustomUv.x*fS-fT*.5,vCustomUv.y*fS+fT*.4,fT*.5));
-            float flow=snoise(vec3(vCustomUv.x*fS*2.0+fT*.6+warp,vCustomUv.y*fS*2.0-fT*.5,fT*.7));
-            flow=warp*.6+flow*.4;gl_FragColor.rgb+=waterMask*flow*.12*oceanFlow;
-            gl_FragColor.rgb=mix(gl_FragColor.rgb,vec3(.01,.06,.16),waterMask*oceanDeep);
-            vec3 finalColor=mix(gl_FragColor.rgb,rimColor,rim);gl_FragColor=vec4(finalColor,1.0);
-            vec3 surfPos=-vViewPosition;float terrH=dot(texture2D(map,vCustomUv).rgb,vec3(.299,.587,.114));
-            vec3 sigX=dFdx(surfPos),sigY=dFdy(surfPos);vec3 vR1=cross(sigY,normalizedNormal),vR2=cross(normalizedNormal,sigX);
-            float fDet=dot(sigX,vR1);vec3 vGrad=sign(fDet)*(dFdx(terrH)*vR1+dFdy(terrH)*vR2);
-            vec3 bumpedNormal=normalize(abs(fDet)*normalizedNormal-terrainDepth*vGrad);
-            vec3 shadeNormal=mix(bumpedNormal,normalizedNormal,waterMask);
-            vec3 cityLights=texture2D(nightBlendTexture,vCustomUv).rgb*gl_FragColor.rgb*nightLights;
-            vec3 viewSunDir=normalize(vec3(-.9,.18,.4));float ndl=dot(normalizedNormal,viewSunDir);
-            float dayAmt=smoothstep(-.05,.35,ndl);float relief=dot(shadeNormal,viewSunDir)-ndl;
-            gl_FragColor.rgb*=clamp(1.0+relief*terrainShade*dayAmt,.55,1.6);
-            float nightFactor=1.0-smoothstep(-.30,.18,ndl);float lightsFactor=1.0-smoothstep(-.35,.30,ndl);
-            gl_FragColor.rgb=mix(gl_FragColor.rgb,gl_FragColor.rgb*.08,nightFactor);gl_FragColor.rgb+=cityLights*lightsFactor;
-            vec3 halfDir=normalize(viewSunDir+viewDir);float ripple=snoise(vec3(vCustomUv*240.0,time*4.0));
-            float ndh=max(dot(normalizedNormal,halfDir)+ripple*.02,0.0);float glint=pow(ndh,140.0);
-            gl_FragColor.rgb+=glint*waterMask*dayAmt*oceanGlint*vec3(1.0,.97,.88);
-          `);
-        };
-        material.customProgramCacheKey = () => "ascend-planet-v1";
-        material.needsUpdate = true;
-      }
-
-      function injectCloudShader(material, uniforms, cloudTimeUniforms) {
-        material.onBeforeCompile = (shader) => {
-          shader.uniforms.uTime = { value: 0 };
-          shader.uniforms.noiseScale = { value: 20 };
-          shader.uniforms.uSpeedX = { value: 1 };
-          shader.uniforms.uSpeedY = { value: 2 };
-          shader.uniforms.uSpeedZ = { value: 2 };
-          shader.uniforms.uOpacity = { value: uniforms.opacity };
-          shader.uniforms.uPhase = { value: uniforms.phase };
-          cloudTimeUniforms.push(shader.uniforms.uTime);
-          shader.vertexShader = `varying vec2 vCloudUv;\n${shader.vertexShader}`;
-          shader.vertexShader = shader.vertexShader.replace("void main() {", "void main() {\n vCloudUv = uv;");
-          shader.fragmentShader = `
-            varying vec2 vCloudUv;uniform float uTime;uniform float noiseScale;uniform float uSpeedX;uniform float uSpeedY;
-            uniform float uSpeedZ;uniform float uOpacity;uniform float uPhase;${SNOISE}${shader.fragmentShader}`;
-          shader.fragmentShader = shader.fragmentShader.replace("#include <dithering_fragment>", `
-            #include <dithering_fragment>
-            gl_FragColor.rgb=vec3(1.0);
-            float cloudNoise=snoise(vec3(vCloudUv.x*noiseScale+uTime*uSpeedX+uPhase,vCloudUv.y*noiseScale-uTime*uSpeedY+uPhase,uTime*uSpeedZ+uPhase));
-            float cloudNdv=max(dot(normalize(vNormal),normalize(vViewPosition)),0.0);
-            float cloudEdge=pow(1.0-cloudNdv,3.0);float cloudMod=mix(cloudNoise,1.0,cloudEdge);
-            float cloudNdl=dot(normalize(vNormal),normalize(vec3(-.9,.18,.4)));
-            float cloudDay=.1+.9*smoothstep(-.30,.30,cloudNdl);gl_FragColor.a*=cloudMod*uOpacity*cloudDay*.4;
-          `);
-        };
-        material.customProgramCacheKey = () => `ascend-cloud-${uniforms.phase}`;
-        material.needsUpdate = true;
-      }
-
-      function addMarkers(mesh, map, uniforms) {
-        const geometry = mesh.geometry;
-        const position = geometry.getAttribute("position");
-        const uv = geometry.getAttribute("uv");
-        if (!position || !uv) return;
-        const index = geometry.index;
-        const triangleCount = index ? index.count / 3 : position.count / 3;
-        const areas = new Float64Array(triangleCount);
-        let totalArea = 0;
-        const va = new THREE.Vector3(), vb = new THREE.Vector3(), vc = new THREE.Vector3();
-        const cross = new THREE.Vector3();
-        const vertexAt = (triangle, corner) => index ? index.getX(triangle * 3 + corner) : triangle * 3 + corner;
-        for (let tri = 0; tri < triangleCount; tri++) {
-          va.fromBufferAttribute(position, vertexAt(tri, 0));
-          vb.fromBufferAttribute(position, vertexAt(tri, 1));
-          vc.fromBufferAttribute(position, vertexAt(tri, 2));
-          areas[tri] = cross.subVectors(vb, va).cross(vc.clone().sub(va)).length() * .5;
-          totalArea += areas[tri];
-        }
-        const cumulative = new Float64Array(triangleCount);
-        let sum = 0;
-        for (let i = 0; i < triangleCount; i++) cumulative[i] = sum += areas[i];
-        let pixels = null, imageWidth = 0, imageHeight = 0;
-        try {
-          const image = map?.image;
-          if (image?.width && image?.height) {
-            const texCanvas = document.createElement("canvas");
-            texCanvas.width = image.width; texCanvas.height = image.height;
-            const context = texCanvas.getContext("2d", { willReadFrequently: true });
-            context.drawImage(image, 0, 0);
-            pixels = context.getImageData(0, 0, texCanvas.width, texCanvas.height).data;
-            imageWidth = texCanvas.width; imageHeight = texCanvas.height;
-          }
-        } catch (error) {
-          console.warn("The planet texture could not be sampled for land markers.", error);
-          pixels = null;
-        }
-        const coords = [], seeds = [];
-        for (let attempt = 0; attempt < CONFIG.markerCount * 120 && coords.length < CONFIG.markerCount * 3; attempt++) {
-          let pick = Math.random() * totalArea, low = 0, high = triangleCount - 1;
-          while (low < high) {
-            const mid = (low + high) >> 1;
-            if (cumulative[mid] < pick) low = mid + 1;
-            else high = mid;
-          }
-          const ids = [vertexAt(low, 0), vertexAt(low, 1), vertexAt(low, 2)];
-          let r1 = Math.random(), r2 = Math.random();
-          if (r1 + r2 > 1) { r1 = 1 - r1; r2 = 1 - r2; }
-          const weights = [1 - r1 - r2, r1, r2];
-          const texU = weights.reduce((v, w, i) => v + uv.getX(ids[i]) * w, 0);
-          const texV = weights.reduce((v, w, i) => v + uv.getY(ids[i]) * w, 0);
-          if (pixels) {
-            const px = clamp(Math.floor(texU * imageWidth), 0, imageWidth - 1);
-            const py = clamp(Math.floor((1 - texV) * imageHeight), 0, imageHeight - 1);
-            const offset = (py * imageWidth + px) * 4;
-            const cr = pixels[offset], cg = pixels[offset + 1], cb = pixels[offset + 2];
-            if (cb > cr + 6 && cb > cg + 6) continue;
-          }
-          va.fromBufferAttribute(position, ids[0]).multiplyScalar(weights[0]);
-          vb.fromBufferAttribute(position, ids[1]).multiplyScalar(weights[1]);
-          vc.fromBufferAttribute(position, ids[2]).multiplyScalar(weights[2]);
-          const point = va.add(vb).add(vc).multiplyScalar(1.012);
-          coords.push(point.x, point.y, point.z);
-          seeds.push(Math.random());
-        }
-        if (!coords.length) return;
-        const markerGeometry = new THREE.BufferGeometry();
-        markerGeometry.setAttribute("position", new THREE.Float32BufferAttribute(coords, 3));
-        markerGeometry.setAttribute("seed", new THREE.Float32BufferAttribute(seeds, 1));
-        const material = new THREE.ShaderMaterial({
-          uniforms: {
-            uTime: { value: 0 }, uColor: { value: hexToVec3(CONFIG.markerColor) }, uSize: { value: CONFIG.markerSize },
-            uSpeed: { value: CONFIG.markerSpeed }, uRes: { value: new THREE.Vector2(innerWidth, innerHeight) }
-          },
-          vertexShader: `
-            attribute float seed;uniform float uSize;uniform vec2 uRes;varying float vSeed;varying float vFade;
-            void main(){vSeed=seed;vec4 mv=modelViewMatrix*vec4(position,1.0);vec3 vn=normalize(normalMatrix*normalize(position));
-              vec3 vd=normalize(-mv.xyz);vFade=smoothstep(.15,.5,dot(vn,vd));
-              gl_PointSize=max(uSize*uRes.y/900.0*(7.0/max(-mv.z,1.0)),2.0);gl_Position=projectionMatrix*mv;}`,
-          fragmentShader: `
-            uniform vec3 uColor;uniform float uTime;uniform float uSpeed;varying float vSeed;varying float vFade;
-            void main(){if(vFade<=.001)discard;vec2 p=gl_PointCoord-.5;float d=length(p)*2.0;if(d>1.0)discard;
-              float core=(1.0-smoothstep(0.0,.30,d))*1.2;float ph=fract(uTime*uSpeed+vSeed);
-              float ring=(1.0-smoothstep(0.0,.07,abs(d-ph)))*(1.0-ph);gl_FragColor=vec4(uColor,clamp(core+ring,0.0,1.0)*vFade);}`,
-          transparent: true, depthTest: true, depthWrite: false, blending: THREE.AdditiveBlending
-        });
-        resizeUniforms.push(material.uniforms.uRes);
-        const points = new THREE.Points(markerGeometry, material);
-        points.frustumCulled = false;
-        addLayer(points, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-        mesh.add(points);
-        uniforms.push(material.uniforms.uTime);
-      }
-
-      function createTechnologyScene() {
-        const mobile = matchMedia("(max-width: 767px)").matches;
-        const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const materials = {
-          substrate: new THREE.MeshStandardMaterial({ color: 0x10171c, metalness: .82, roughness: .38 }),
-          board: new THREE.MeshStandardMaterial({ color: 0x091014, metalness: .78, roughness: .52 }),
-          titanium: new THREE.MeshStandardMaterial({ color: 0x78858a, metalness: .72, roughness: .44 }),
-          aluminum: new THREE.MeshStandardMaterial({ color: 0xb4c0c2, metalness: .76, roughness: .38 }),
-          chrome: new THREE.MeshStandardMaterial({ color: 0x384950, metalness: .78, roughness: .4 }),
-          glass: new THREE.MeshPhysicalMaterial({
-            color: 0x10232b, metalness: .48, roughness: .42, transparent: true, opacity: .86,
-            clearcoat: .35, clearcoatRoughness: .4
-          }),
-          die: new THREE.MeshStandardMaterial({
-            color: 0x071016, emissive: 0x071a20, emissiveIntensity: .28, metalness: .56, roughness: .42
-          }),
-          core: new THREE.MeshStandardMaterial({
-            color: 0x18333a, emissive: 0x0d5259, emissiveIntensity: .24, metalness: .58, roughness: .4
-          }),
-          amber: new THREE.MeshStandardMaterial({
-            color: 0x92774b, emissive: 0x3c2913, emissiveIntensity: .2, metalness: .66, roughness: .4
-          }),
-        };
-        const detailY = .015;
-
-        function addBox(parent, material, dimensions, position) {
-          const mesh = new THREE.Mesh(boxGeometry, material);
-          mesh.scale.set(...dimensions);
-          mesh.position.set(...position);
-          addLayer(mesh, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-          parent.add(mesh);
-          return mesh;
-        }
-
-        function addTrace(points, index = 0) {
-          const vectors = points.map(([x, y, z]) => new THREE.Vector3(x, y, z));
-          const trace = new THREE.Line(
-            new THREE.BufferGeometry().setFromPoints(vectors),
-            new THREE.LineBasicMaterial({ color: index % 4 === 0 ? 0x826b47 : 0x477f83, transparent: true, opacity: .56, depthWrite: false })
-          );
-          addLayer(trace, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-          technologyGroup.add(trace);
-        }
-
-        addBox(technologyGroup, materials.substrate, [5.8, .2, 4.25], [0, -.16, 0]);
-        addBox(technologyGroup, materials.board, [5.58, .035, 4.03], [0, -.04, 0]);
-
-        for (const x of [-2.7, 2.7]) {
-          addBox(technologyGroup, materials.titanium, [.075, .055, 4.08], [x, -.025, 0]);
-        }
-        for (const z of [-1.98, 1.98]) {
-          addBox(technologyGroup, materials.titanium, [5.48, .055, .075], [0, -.025, z]);
-        }
-
-        const chip = new THREE.Group();
-        technologyGroup.add(chip);
-        addBox(chip, materials.chrome, [1.92, .11, 1.92], [0, .035, 0]);
-        addBox(chip, materials.aluminum, [1.76, .07, 1.76], [0, .12, 0]);
-        addBox(chip, materials.die, [1.62, .14, 1.62], [0, .205, 0]);
-        addBox(chip, materials.glass, [1.39, .025, 1.39], [0, .29, 0]);
-        addBox(chip, materials.core, [1.13, .025, 1.13], [0, .315, 0]);
-
-        const signalLoop = new THREE.Mesh(
-          new THREE.TorusGeometry(1.48, .012, 6, mobile ? 64 : 128),
-          new THREE.MeshBasicMaterial({ color: 0x56b6bd, transparent: true, opacity: .34, depthWrite: false })
-        );
-        signalLoop.rotation.x = Math.PI / 2;
-        signalLoop.position.y = .008;
-        addLayer(signalLoop, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-        technologyGroup.add(signalLoop);
-
-        const finCount = mobile ? 5 : 9;
-        for (let i = 0; i < finCount; i++) {
-          const x = (i - (finCount - 1) / 2) * .112;
-          addBox(chip, i % 2 ? materials.aluminum : materials.titanium, [.027, .11, .86], [x, .38, 0]);
-        }
-
-        const pinCount = mobile ? 8 : 13;
-        for (let i = 0; i < pinCount; i++) {
-          const offset = (i - (pinCount - 1) / 2) * .125;
-          for (const side of [-1, 1]) {
-            addBox(chip, materials.amber, [.17, .035, .045], [side * 1.02, .012, offset]);
-            addBox(chip, materials.amber, [.045, .035, .17], [offset, .012, side * 1.02]);
-          }
-        }
-
-        const modules = [
-          [-1.72, -.94], [1.72, -.94], [-1.72, .94], [1.72, .94]
-        ];
-        modules.forEach(([x, z], index) => {
-          addBox(technologyGroup, materials.chrome, [.72, .09, .54], [x, .018, z]);
-          addBox(technologyGroup, materials.die, [.56, .075, .38], [x, .095, z]);
-          addBox(technologyGroup, index % 2 ? materials.glass : materials.substrate, [.43, .018, .25], [x, .142, z]);
-          for (let pin = -2; pin <= 2; pin++) {
-            addBox(technologyGroup, materials.amber, [.065, .018, .025], [x + pin * .075, .008, z + (z < 0 ? .29 : -.29)]);
-          }
-        });
-
-        const routeCount = mobile ? 4 : 8;
-        let routeIndex = 0;
-        for (const side of [-1, 1]) {
-          for (let i = 0; i < routeCount; i++) {
-            const z = (i - (routeCount - 1) / 2) * .19;
-            const bend = z + (i % 2 ? .18 : -.18);
-            addTrace([
-              [side * 1.04, detailY, z],
-              [side * 1.24, detailY, z],
-              [side * (1.38 + (i % 3) * .12), detailY, bend],
-              [side * (2.43 - (i % 2) * .14), detailY, bend]
-            ], routeIndex++);
-          }
-        }
-        for (const side of [-1, 1]) {
-          for (let i = 0; i < routeCount; i++) {
-            const x = (i - (routeCount - 1) / 2) * .19;
-            const bend = x + (i % 2 ? .18 : -.18);
-            addTrace([
-              [x, detailY, side * 1.04],
-              [x, detailY, side * 1.22],
-              [bend, detailY, side * 1.39],
-              [bend, detailY, side * 1.82]
-            ], routeIndex++);
-          }
-        }
-
-        for (const x of [-2.53, 2.53]) {
-          for (const z of [-1.79, 1.79]) {
-            const screw = new THREE.Mesh(new THREE.CylinderGeometry(.075, .075, .055, 16), materials.aluminum);
-            screw.position.set(x, .012, z);
-            addLayer(screw, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-            technologyGroup.add(screw);
-            addBox(technologyGroup, materials.chrome, [.09, .012, .012], [x, .044, z]);
-          }
-        }
-
-        for (const x of [-2.38, 2.38]) {
-          const connector = addBox(technologyGroup, materials.titanium, [.34, .18, .64], [x, .045, 0]);
-          addBox(technologyGroup, materials.substrate, [.19, .035, .45], [x, .145, 0]);
-          for (let pin = -2; pin <= 2; pin++) {
-            addBox(technologyGroup, materials.amber, [.1, .02, .035], [x, .018, pin * .075]);
-          }
-          connector.rotation.y = x < 0 ? .04 : -.04;
-        }
-
-        const platform = new THREE.Mesh(
-          new THREE.CylinderGeometry(3.28, 3.38, .16, 64),
-          new THREE.MeshStandardMaterial({ color: 0x101a20, metalness: .82, roughness: .32 })
-        );
-        platform.position.y = -.34;
-        addLayer(platform, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-        technologyGroup.add(platform);
-
-        const platformRing = new THREE.Mesh(
-          new THREE.TorusGeometry(3.36, .018, 6, mobile ? 80 : 144),
-          new THREE.MeshBasicMaterial({ color: 0x4a9b91, transparent: true, opacity: .3, depthWrite: false })
-        );
-        platformRing.rotation.x = Math.PI / 2;
-        platformRing.position.y = -.245;
-        addLayer(platformRing, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-        technologyGroup.add(platformRing);
-      }
-
-      function createEnvironmentScene() {
-        const starCount = matchMedia("(max-width: 767px)").matches ? 140 : 260;
-        const positions = new Float32Array(starCount * 3);
-        for (let i = 0; i < starCount; i++) {
-          positions[i * 3] = (Math.random() - .5) * 28;
-          positions[i * 3 + 1] = (Math.random() - .5) * 16;
-          positions[i * 3 + 2] = -12 - Math.random() * 32;
-        }
-        const starGeometry = new THREE.BufferGeometry();
-        starGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-        starfield = new THREE.Points(
-          starGeometry,
-          new THREE.PointsMaterial({
-            color: 0x8db7b1,
-            size: .055,
-            sizeAttenuation: true,
-            transparent: true,
-            opacity: .38,
-            depthWrite: false
-          })
-        );
-        starfield.frustumCulled = false;
-        addLayer(starfield, LAYERS.ENTIRE_SCENE);
-        scene.add(starfield);
-
-        orbitalGroup = new THREE.Group();
-        orbitalGroup.rotation.set(.72, .12, -.16);
-        worldGroup.add(orbitalGroup);
-        const orbitMaterial = new THREE.MeshBasicMaterial({
-          color: 0x438981,
-          transparent: true,
-          opacity: .19,
-          depthWrite: false
-        });
-        for (const [radius, tilt, opacity] of [[3.75, .12, .8], [4.25, -.18, .55]]) {
-          const orbit = new THREE.Mesh(
-            new THREE.TorusGeometry(radius, .009, 5, matchMedia("(max-width: 767px)").matches ? 64 : 112),
-            orbitMaterial.clone()
-          );
-          orbit.material.opacity *= opacity;
-          orbit.rotation.set(tilt, 0, 0);
-          addLayer(orbit, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-          orbitalGroup.add(orbit);
-        }
-
-        relayGroup = new THREE.Group();
-        relayGroup.position.set(1.45, 1.05, -2.2);
-        relayGroup.scale.setScalar(.62);
-        worldGroup.add(relayGroup);
-        const relayCore = new THREE.Mesh(
-          new THREE.IcosahedronGeometry(.48, 2),
-          new THREE.MeshStandardMaterial({
-            color: 0x172b32,
-            emissive: 0x0b382e,
-            emissiveIntensity: .34,
-            metalness: .8,
-            roughness: .27,
-            flatShading: true
-          })
-        );
-        const relayShell = new THREE.Mesh(
-          new THREE.IcosahedronGeometry(.54, 1),
-          new THREE.MeshBasicMaterial({
-            color: 0x6bb2a0,
-            wireframe: true,
-            transparent: true,
-            opacity: .24,
-            depthWrite: false
-          })
-        );
-        for (const part of [relayCore, relayShell]) {
-          addLayer(part, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-          relayGroup.add(part);
-        }
-        for (const [radius, tilt] of [[.82, .28], [1.02, -.38]]) {
-          const ring = new THREE.Mesh(
-            new THREE.TorusGeometry(radius, .012, 6, 72),
-            new THREE.MeshBasicMaterial({
-              color: 0x68c8a9,
-              transparent: true,
-              opacity: .48,
-              depthWrite: false
-            })
-          );
-          ring.rotation.set(tilt, .3, -.18);
-          addLayer(ring, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-          relayGroup.add(ring);
-        }
-        const relayLight = new THREE.Mesh(
-          new THREE.SphereGeometry(.11, 12, 12),
-          new THREE.MeshBasicMaterial({ color: 0xa2ffd0 })
-        );
-        addLayer(relayLight, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-        relayGroup.add(relayLight);
-
-        for (let i = 0; i < 3; i++) {
-          const satellite = new THREE.Group();
-          const body = new THREE.Mesh(
-            new THREE.OctahedronGeometry(.105, 0),
-            new THREE.MeshStandardMaterial({
-              color: 0x8b9b9b,
-              emissive: 0x174c3d,
-              emissiveIntensity: .28,
-              metalness: .78,
-              roughness: .24
-            })
-          );
-          const beacon = new THREE.Mesh(
-            new THREE.SphereGeometry(.035, 8, 8),
-            new THREE.MeshBasicMaterial({ color: 0x9cffca })
-          );
-          beacon.position.y = .12;
-          for (const part of [body, beacon]) {
-            addLayer(part, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-            satellite.add(part);
-          }
-          worldGroup.add(satellite);
-          relayGroup.add(satellite);
-          orbitingRelays.push({ satellite, phase: i * (Math.PI * 2 / 3), radius: .9 + i * .1 });
-        }
-
-        const mobile = matchMedia("(max-width: 767px)").matches;
-        const floaterMaterial = new THREE.MeshStandardMaterial({ color: 0x34444b, metalness: .78, roughness: .34 });
-        const insetMaterial = new THREE.MeshStandardMaterial({
-          color: 0x102521,
-          emissive: 0x126044,
-          emissiveIntensity: .42,
-          metalness: .56,
-          roughness: .35
-        });
-        const floaterPositions = mobile
-          ? [[-3.55, .82, .35], [3.5, -.8, -.3]]
-          : [[-3.55, .84, .35], [3.55, .82, -.35], [-3.5, -.84, -.35], [3.55, -.82, .3]];
-        floaterPositions.forEach(([x, y, z], index) => {
-          const assembly = new THREE.Group();
-          const base = new THREE.Mesh(new THREE.BoxGeometry(.52, .12, .38), floaterMaterial);
-          const inset = new THREE.Mesh(new THREE.BoxGeometry(.31, .035, .22), insetMaterial);
-          inset.position.y = .08;
-          const beacon = new THREE.Mesh(
-            new THREE.SphereGeometry(.045, 8, 8),
-            new THREE.MeshBasicMaterial({ color: 0x75ffc0 })
-          );
-          beacon.position.set(index % 2 ? .16 : -.16, .12, .12);
-          for (const part of [base, inset, beacon]) {
-            addLayer(part, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-            assembly.add(part);
-          }
-          assembly.position.set(x, y, z);
-          worldGroup.add(assembly);
-          ambientFloaters.push({ assembly, baseY: y, phase: index * 1.7 });
-        });
-      }
-
-      function makeComposer(renderToScreen) {
-        const composer = new EffectComposer(renderer);
-        composer.addPass(new RenderPass(scene, camera));
-        composer.renderToScreen = renderToScreen;
-        return composer;
-      }
-
-      function initRenderers() {
-        renderer = new THREE.WebGL1Renderer({ canvas, antialias: innerWidth >= 768, alpha: false });
-        renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 768 ? 1 : 1.5));
-        renderer.outputEncoding = THREE.sRGBEncoding;
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(CONFIG.bgColor);
-        camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, .1, 200);
-        camera.position.set(0, 0, 8);
-        camera.layers.enable(LAYERS.BLOOM_SCENE);
-        camera.layers.enable(LAYERS.ENTIRE_SCENE);
-        scene.add(camera);
-        const ambient = new THREE.AmbientLight(0xa7bbc2, .88);
-        const directional = new THREE.DirectionalLight(0xd7e3e5, 1.7);
-        directional.position.set(-3, 7, 5);
-        addLayer(ambient, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-        addLayer(directional, LAYERS.BLOOM_SCENE, LAYERS.ENTIRE_SCENE);
-        scene.add(ambient, directional);
-        worldGroup = new THREE.Group();
-        worldGroup.position.set(STOPS_X[0].v, STOPS_Y[0].v, 0);
-        worldGroup.scale.setScalar(STOPS_S[0].v);
-        scene.add(worldGroup);
-        technologyGroup = new THREE.Group();
-        technologyGroup.rotation.z = CONFIG.tilt;
-        technologyGroup.scale.setScalar(innerWidth < 768 ? .39 : .5);
-        worldGroup.add(technologyGroup);
-        bloomComposer = makeComposer(false);
-        bloomComposer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), .18, .34, .3));
-        bloomComposer.addPass(new ShaderPass(GammaCorrectionShader));
-        finalComposer = makeComposer(true);
-        const finalPass = new ShaderPass(FinalPass);
-        finalPassRef = finalPass;
-        finalPass.uniforms.bloomTexture.value = bloomComposer.renderTarget1.texture;
-        finalComposer.addPass(finalPass);
-        controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = .06;
-        controls.enablePan = false;
-        controls.enabled = false;
-        controls.autoRotate = false;
-        controls.minDistance = 3.5;
-        controls.maxDistance = 16;
-        controls.target.set(0, 0, 0);
-        controls.update();
-        resize();
-      }
-
-      function resize() {
-        if (!renderer) return;
-        const width = Math.max(1, document.documentElement.clientWidth), height = Math.max(1, innerHeight);
-        technologyGroup?.scale.setScalar(width < 768 ? .39 : .5);
-        cameraDistance = width < 768 ? 12 : 8;
-        const pixelRatio = Math.min(devicePixelRatio, width < 768 ? 1 : 1.5);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        camera.position.z = cameraDistance;
-        renderer.setPixelRatio(pixelRatio);
-        renderer.setSize(width, height);
-        for (const composer of [bloomComposer, finalComposer]) {
-          composer.setPixelRatio(pixelRatio);
-          composer.setSize(width, height);
-        }
-        setResolutionUniforms(width, height);
-        if (!reduceMotion && backgroundScrollTween) ScrollTrigger.refresh();
-        if (reduceMotion) renderFrame();
-      }
-
-      function renderFrame(now = performance.now()) {
-        if (!renderer || !finalComposer) return;
-        const dt = lastTime ? Math.min((now - lastTime) / 1000, .05) : 0;
-        lastTime = now;
-        if (!reduceMotion) {
-          const pTarget = clamp(scrollMotion.progress, 0, 1);
-          curP += (pTarget - curP) * Math.min(1, dt * 4.5);
-          const sideScale = clamp(innerWidth / 1200, .5, 1);
-          const k = Math.min(1, dt * 3.2);
-          curX += (sample(STOPS_X, curP) * sideScale - curX) * k;
-          curY += (sample(STOPS_Y, curP) - curY) * k;
-          curS += (sample(STOPS_S, curP) - curS) * k;
-          worldGroup.position.set(curX, curY + entryMotion.y, 0);
-          worldGroup.scale.setScalar(curS);
-          spinPhase += dt * CONFIG.spin;
-          pointerOffset.x += (pointerTarget.x - pointerOffset.x) * Math.min(1, dt * 1.4);
-          pointerOffset.y += (pointerTarget.y - pointerOffset.y) * Math.min(1, dt * 1.4);
-          technologyGroup.rotation.set(
-            CONFIG.tilt + pointerOffset.y * .045,
-            CONFIG.initRotation + spinPhase + curP * Math.PI * 1.6 + pointerOffset.x * .08,
-            .035 + pointerOffset.x * .025
-          );
-          const time = now * .001;
-          if (orbitalGroup) orbitalGroup.rotation.y = .12 + time * .045;
-          if (relayGroup) {
-            relayGroup.rotation.y = time * .12;
-            relayGroup.rotation.x = .18 + Math.sin(time * .35) * .06;
-          }
-          if (starfield) starfield.rotation.y = time * .0018;
-          for (const relay of orbitingRelays) {
-            const angle = time * .16 + relay.phase;
-            relay.satellite.position.set(
-              Math.cos(angle) * relay.radius,
-              Math.sin(angle * .72) * relay.radius * .62,
-              Math.sin(angle) * relay.radius
-            );
-            relay.satellite.rotation.set(angle * .4, angle, angle * .3);
-          }
-          for (const floater of ambientFloaters) {
-            floater.assembly.position.y = floater.baseY + Math.sin(time * .65 + floater.phase) * .11;
-            floater.assembly.rotation.y = Math.sin(time * .3 + floater.phase) * .08;
-          }
-          camera.position.set(pointerOffset.x * .12, pointerOffset.y * .08, cameraDistance);
-          camera.lookAt(0, 0, 0);
-        }
-        controls.update();
-        camera.layers.set(LAYERS.BLOOM_SCENE); bloomComposer.render();
-        camera.layers.set(LAYERS.ENTIRE_SCENE); finalComposer.render();
-      }
-
-      function handlePointerMove(event) {
-        pointerTarget.x = clamp((event.clientX / innerWidth - .5) * 2, -1, 1);
-        pointerTarget.y = clamp((.5 - event.clientY / innerHeight) * 2, -1, 1);
-      }
-
-      try {
-        initRenderers();
-        addEventListener("resize", resize, { passive: true });
-        if (!reduceMotion) {
-          addEventListener("pointermove", handlePointerMove, { passive: true });
-        }
-        createTechnologyScene();
-        createEnvironmentScene();
-        if (reduceMotion) renderFrame();
-        else if (gsap && ScrollTrigger) {
-          backgroundEntryTween = gsap.to(entryMotion, { y: 0, duration: 1.9, ease: "power3.out" });
-          backgroundScrollTween = gsap.to(scrollMotion, {
-            progress: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: document.documentElement,
-              start: "top top",
-              end: "bottom bottom",
-              scrub: 1,
-              invalidateOnRefresh: true
-            }
-          });
-          ScrollTrigger.refresh();
-        }
-        if (reduceMotion) renderFrame();
-      } catch (error) {
-        console.error("WebGL is unavailable. The page will continue without the technology background.", error);
-        canvas.hidden = true;
-        document.querySelectorAll("[data-reveal]").forEach((item) => item.classList.add("in"));
-      }
-
-      if (!reduceMotion) {
-        const loop = (time) => {
-          animationFrame = requestAnimationFrame(loop);
-          renderFrame(time);
-        };
-        if (renderer) {
-          cancelAnimationFrame(animationFrame);
-          animationFrame = requestAnimationFrame(loop);
-        }
-        import("https://unpkg.com/lenis@1.3.23/dist/lenis.mjs")
-          .then(({ default: Lenis }) => {
-            if (reduceMotion) return;
-            lenisInstance = new Lenis({ duration: 1.15, smoothWheel: true, touchMultiplier: 1.5 });
-            if (ScrollTrigger) lenisInstance.on("scroll", ScrollTrigger.update);
-            const raf = (time) => {
-              if (!lenisInstance) return;
-              lenisInstance.raf(time);
-              lenisRaf = requestAnimationFrame(raf);
-            };
-            lenisRaf = requestAnimationFrame(raf);
-          })
-          .catch((error) => console.warn("Lenis could not load; native scrolling remains available.", error));
-      }
-
-      addEventListener("pagehide", () => {
-        cancelAnimationFrame(animationFrame);
-        cancelAnimationFrame(lenisRaf);
-        revealObserver?.disconnect();
-        backgroundScrollTween?.scrollTrigger?.kill();
-        backgroundScrollTween?.kill();
-        backgroundEntryTween?.kill();
-        for (const cleanup of surfaceInteractionCleanup) cleanup();
-        sectionLightingObserver?.disconnect();
-        removeEventListener("pointermove", handlePointerMove);
-        removeEventListener("resize", resize);
-        lenisInstance?.destroy();
-        controls?.dispose();
-        for (const composer of [bloomComposer, finalComposer]) composer?.dispose();
-        renderer?.dispose();
-      }, { once: true });
     </script>
-  </body>
+  <button class="motion-toggle" type="button" aria-pressed="false">Pause ambient motion</button>
+<script src="/editorial.js" defer></script>
+</body>
 </html>
