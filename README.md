@@ -15,9 +15,11 @@ Open [http://localhost:8000](http://localhost:8000).
 
 The cinematic processor and circuit-board environment is built with Three.js.
 Traveling signal pulses, orbital hardware, and depth particles add motion and
-space around the board. GSAP ScrollTrigger choreographs its movement as the
-page scrolls, and Lenis provides smooth scrolling. Motion respects reduced
-motion preferences. These libraries load from CDNs, so the background needs an
+space around the board. Portfolio cards and content panels respond to pointer
+movement with restrained 3D tilt and a moving highlight, while section lighting
+follows scrolling. GSAP ScrollTrigger choreographs the background as the page
+scrolls, and Lenis provides smooth scrolling. Motion respects reduced motion
+preferences. These libraries load from CDNs, so the background needs an
 internet connection and WebGL. The rest of the portfolio remains usable if
 WebGL is unavailable. Portfolio images are stored in `public/`.
 
