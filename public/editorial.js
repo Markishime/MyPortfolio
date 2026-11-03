@@ -1,8 +1,5 @@
 // Motion uses its vanilla API to keep the portfolio framework-free.
 const preference = matchMedia('(prefers-reduced-motion: reduce)');
-const motionButton = document.querySelector('.motion-toggle');
-let userPaused = preference.matches;
-try { userPaused ||= localStorage.getItem('portfolio-motion-paused') === 'true'; } catch {}
 let motionAPI;
 const ambient = [];
 const transient = new Set();
@@ -10,15 +7,9 @@ const typeJobs = new Map();
 const headingCharacters = new Map();
 let frame = 0;
 let revealObserver;
-const isPaused = () => userPaused || preference.matches || document.hidden;
-function finishTitles() {
-  typeJobs.clear();
-  headingCharacters.forEach(chars => chars.forEach(char => char.classList.add('typed')));
-}
+const isPaused = () => preference.matches || document.hidden;
 function refreshMotion() {
   const pause = isPaused();
-  motionButton.textContent = pause ? 'Enable motion' : 'Pause motion';
-  motionButton.setAttribute('aria-pressed', String(pause));
   document.documentElement.classList.toggle('motion-paused',pause);
   ambient.forEach(animation => pause ? animation.pause() : animation.play());
   if(pause) {
@@ -27,20 +18,16 @@ function refreshMotion() {
     transient.clear();
   }
 }
-motionButton.addEventListener('click',()=>{
-  userPaused = !userPaused;
-  // A user's OS reduced-motion preference always takes precedence.
-  if(preference.matches) userPaused = true;
-  try{localStorage.setItem('portfolio-motion-paused',String(userPaused));}catch{}
-  refreshMotion();
-});
 preference.addEventListener('change',refreshMotion);
 document.addEventListener('visibilitychange',refreshMotion);
 refreshMotion();
 
-// Wrap words separately to preserve natural wrapping and the full accessible name.
+// Typewriter: wrap words separately to preserve natural wrapping. A visually
+// hidden copy keeps the full accessible text while the visible letters type.
+const TYPE_SELECTOR='h1,h2,h3,.eyebrow,.hero-kicker,[data-type]';
 function prepareHeading(heading) {
-  heading.setAttribute('aria-label',heading.innerText.replace(/\s+/g,' ').trim());
+  const full=(heading.innerText||heading.textContent).replace(/\s+/g,' ').trim();
+  if(!full)return;
   const walker = document.createTreeWalker(heading,NodeFilter.SHOW_TEXT);
   const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
   for(const node of nodes) {
@@ -54,35 +41,65 @@ function prepareHeading(heading) {
     }
     node.replaceWith(fragment);
   }
+  const label=document.createElement('span');label.className='sr-only';label.textContent=full;
+  heading.prepend(label);
+  heading.classList.add('type-ready');
   const chars=[...heading.querySelectorAll('.type-char')];
   headingCharacters.set(heading,chars);
   if(isPaused()) chars.forEach(char=>char.classList.add('typed'));
 }
+function finishTitles() {
+  typeJobs.clear();
+  headingCharacters.forEach((chars,heading)=>{
+    chars.forEach(char=>{char.classList.add('typed');char.classList.remove('caret');});
+    if(heading.matches('h1')&&chars.length)chars[chars.length-1].classList.add('caret');
+    heading.classList.remove('is-typing');
+  });
+}
 function tickTitles(now) {
   frame=0;
   for(const [heading,job] of typeJobs) {
+    if(now<job.start)continue;
     const count=Math.min(job.chars.length,Math.floor((now-job.start)/job.interval)+1);
-    for(let i=job.shown;i<count;i++) job.chars[i].classList.add('typed');
-    job.shown=count;
-    if(count>=job.chars.length)typeJobs.delete(heading);
+    if(count>job.shown){
+      job.chars[job.shown-1]?.classList.remove('caret');
+      for(let i=job.shown;i<count;i++) job.chars[i].classList.add('typed');
+      job.chars[count-1].classList.add('caret');
+      job.shown=count;
+    }
+    if(count>=job.chars.length){
+      typeJobs.delete(heading);
+      heading.classList.remove('is-typing');
+      // The hero title keeps a steady caret; other titles drop it after a beat.
+      if(!heading.matches('h1')){const last=job.chars[count-1];setTimeout(()=>last.classList.remove('caret'),650);}
+    }
   }
   if(typeJobs.size)frame=requestAnimationFrame(tickTitles);
 }
 const titleObserver = new IntersectionObserver(entries=>{
   for(const entry of entries)if(entry.isIntersecting){
-    const chars=headingCharacters.get(entry.target);
-    if(!isPaused()) {typeJobs.set(entry.target,{chars,shown:0,start:performance.now(),interval:Math.min(38,1200/Math.max(1,chars.length))});if(!frame)frame=requestAnimationFrame(tickTitles);}
-    else chars.forEach(char=>char.classList.add('typed'));
-    titleObserver.unobserve(entry.target);
+    const heading=entry.target;
+    const chars=headingCharacters.get(heading);
+    if(!chars){titleObserver.unobserve(heading);continue;}
+    if(!isPaused()) {
+      const small=!heading.matches('h1,h2');
+      const interval=Math.max(small?14:22,Math.min(small?34:48,(small?700:1250)/Math.max(1,chars.length)));
+      const delay=Number(heading.dataset.typeDelay||0);
+      heading.classList.add('is-typing');
+      typeJobs.set(heading,{chars,shown:0,start:performance.now()+delay,interval});
+      if(!frame)frame=requestAnimationFrame(tickTitles);
+    }
+    else {chars.forEach(char=>char.classList.add('typed'));if(heading.matches('h1'))chars.at(-1)?.classList.add('caret');}
+    titleObserver.unobserve(heading);
   }
-},{threshold:0,rootMargin:'0px 0px -3% 0px'});
-document.querySelectorAll('h1,h2,h3').forEach(heading=>{prepareHeading(heading);titleObserver.observe(heading);});
+},{threshold:0,rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll(TYPE_SELECTOR).forEach(heading=>{prepareHeading(heading);titleObserver.observe(heading);});
 function observeHeadings(root) {
   const headings=[];
-  if(root.nodeType===Node.ELEMENT_NODE&&root.matches('h1,h2,h3'))headings.push(root);
-  if(root.querySelectorAll)headings.push(...root.querySelectorAll('h1,h2,h3'));
+  if(root.nodeType===Node.ELEMENT_NODE&&root.matches(TYPE_SELECTOR))headings.push(root);
+  if(root.querySelectorAll)headings.push(...root.querySelectorAll(TYPE_SELECTOR));
   headings.forEach(heading=>{
-    if(headingCharacters.has(heading))return;
+    if(headingCharacters.has(heading)||heading.closest('.sr-only'))return;
     prepareHeading(heading);
     titleObserver.observe(heading);
   });
@@ -109,7 +126,8 @@ document.querySelectorAll('.project-filter').forEach(button=>button.addEventList
   let count=0;
   document.querySelectorAll('.project-card').forEach(card=>{
     const shown=button.dataset.filter==='all'||card.dataset.category.includes(button.dataset.filter);
-    card.hidden=!shown;if(shown)count++;
+    card.hidden=!shown;
+    if(shown){count++;if(motionAPI&&!isPaused()){const a=motionAPI.animate(card,{opacity:[0,1],y:[18,0]},{duration:.45,delay:Math.min(count,8)*.04,ease:[.16,1,.3,1]});transient.add(a);a.then(()=>transient.delete(a));}}
   });
   document.querySelector('.project-count').textContent=`${count} project${count===1?'':'s'}`;
 }));
@@ -117,9 +135,15 @@ document.querySelectorAll('.skill-card').forEach((card,index)=>{
   const title=card.querySelector('h3');const tags=card.querySelector('.skill-tags');
   const button=document.createElement('button');button.type='button';button.className='skill-toggle';
   const label=document.createElement('span');while(title.firstChild)label.append(title.firstChild);button.append(label);title.append(button);
-  button.setAttribute('aria-label',title.getAttribute('aria-label'));title.removeAttribute('aria-label');
   tags.id=`skill-panel-${index}`;button.setAttribute('aria-controls',tags.id);button.setAttribute('aria-expanded',String(index===0));tags.hidden=index!==0;
-  button.addEventListener('click',()=>{const open=button.getAttribute('aria-expanded')==='true';button.setAttribute('aria-expanded',String(!open));tags.hidden=open;});
+  button.addEventListener('click',()=>{
+    const open=button.getAttribute('aria-expanded')==='true';
+    button.setAttribute('aria-expanded',String(!open));tags.hidden=open;
+    if(!open&&motionAPI&&!isPaused()){
+      const a=motionAPI.animate([...tags.children],{opacity:[0,1],y:[10,0]},{duration:.35,delay:motionAPI.stagger(.018),ease:[.16,1,.3,1]});
+      transient.add(a);a.then(()=>transient.delete(a));
+    }
+  });
 });
 
 async function startMotion() {

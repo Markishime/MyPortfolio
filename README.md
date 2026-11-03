@@ -14,9 +14,14 @@ python -m http.server 8000 --directory public
 Open [http://localhost:8000](http://localhost:8000).
 
 The portfolio is a static HTML site with locally stored project and hero images.
-Its cinematic hero uses a real engineering-workspace photo, CSS depth, and
-Motion-powered hover and scroll reveals. Headings type in as they enter view.
-The motion toggle and `prefers-reduced-motion` setting keep animations optional.
+A fixed Three.js background (`public/cinematic-scene.js`) renders a procedural
+CPU on a motherboard; scrolling flies the camera across the board and lifts the
+chip layers into an exploded view. If WebGL or the CDN fails, a static grid-and-glow
+background stays in place. Headings, eyebrows and the hero terminal type in with a
+caret, and `public/cinematic.js` adds magnetic buttons, project filters, card tilt,
+count-up stats and a timeline progress rail.
+The hero uses the live 3D chip as its visual. The `prefers-reduced-motion` setting
+keeps animations optional.
 Motion is loaded from a CDN; there is no build step or npm dependency.
 
 `scripts/audit.cjs` runs a local browser audit for desktop, mobile, and reduced

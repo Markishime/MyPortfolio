@@ -10,6 +10,7 @@
     <meta property="og:description" content="Building practical tools across web, mobile, AI, and embedded systems.">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>Mark Lloyd Cuizon | Full-Stack Developer</title>
+    <script>document.documentElement.classList.add('js');</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -997,9 +998,17 @@
     </style>
     <link rel="stylesheet" href="/editorial.css">
     <link rel="stylesheet" href="/motion.css">
+    <link rel="stylesheet" href="/cinematic.css">
+    <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    <div class="scene-layer" aria-hidden="true">
+      <canvas class="engine-canvas"></canvas>
+      <div class="scene-veil"></div>
+    </div>
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+    <div class="cursor-light" aria-hidden="true"></div>
     <div class="page" id="top">
       <header class="hero">
         <nav class="nav" aria-label="Main navigation">
@@ -1019,22 +1028,43 @@
         </nav>
         <div class="hero-inner">
           <div class="hero-copy">
-            <p class="hero-kicker" data-reveal>Computer engineer · software developer</p>
-            <h1 class="hero-title" data-reveal style="--rd:60ms"><span class="hero-title-line">Interfaces with intent.</span><em class="hero-title-line">Intelligence built in.</em></h1>
+            <p class="hero-kicker" data-reveal><span class="status-dot" aria-hidden="true"></span>Computer engineer · software developer</p>
+            <h1 class="hero-title" data-reveal style="--rd:60ms" data-type-delay="350"><span class="hero-title-line">Interfaces with intent.</span><em class="hero-title-line">Intelligence built in.</em></h1>
             <p class="hero-role" data-reveal style="--rd:130ms">Mark Lloyd Cuizon · Full-stack, frontend &amp; AI developer</p>
             <p class="hero-sub" data-reveal style="--rd:200ms">Building practical software across web, mobile, AI, and connected systems.</p>
             <div class="hero-actions" data-reveal style="--rd:300ms">
-              <a class="btn btn-primary" href="#projects">View projects
+              <a class="btn btn-primary magnetic" href="#projects">View projects
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
-              <a class="btn btn-outline" href="#about">About me</a>
+              <a class="btn btn-outline magnetic" href="#about">About me</a>
             </div>
+            <dl class="hero-metrics" data-reveal style="--rd:380ms">
+              <div><dt>Projects showcased</dt><dd data-count="14">14</dd></div>
+              <div><dt>Hackathons</dt><dd data-count="3">3</dd></div>
+              <div><dt>Certificates</dt><dd data-count="11">11</dd></div>
+            </dl>
           </div>
-          <figure class="hero-visual" data-reveal aria-label="Computer engineering workspace">
-            <img src="/media/hero-studio.jpg" alt="A computer engineering workspace with a laptop and electronics overlooking the city" width="1280" height="720" fetchpriority="high">
-            <figcaption class="scene-caption">Hardware / software / AI</figcaption>
-          </figure>
+          <div class="hero-stage" data-reveal style="--rd:180ms">
+            <div class="chip-frame" aria-hidden="true">
+              <span class="chip-corner chip-corner--tl"></span><span class="chip-corner chip-corner--tr"></span>
+              <span class="chip-corner chip-corner--bl"></span><span class="chip-corner chip-corner--br"></span>
+              <span class="chip-readout">CPU package · live 3D</span>
+            </div>
+            <div class="hero-terminal">
+              <p class="terminal-bar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><b>mark@workbench</b></p>
+              <p class="terminal-line" data-type data-type-delay="900"><i aria-hidden="true">$</i> focus --list</p>
+              <ul class="terminal-list">
+                <li data-type data-type-delay="1500">Web development</li>
+                <li data-type data-type-delay="1900">Applied AI</li>
+                <li data-type data-type-delay="2300">Mobile products</li>
+                <li data-type data-type-delay="2700">Embedded systems</li>
+              </ul>
+            </div>
+            <p class="hero-tag hero-tag--chip" aria-hidden="true">ESP32 · Arduino</p>
+            <p class="hero-tag hero-tag--stack" aria-hidden="true">Next.js · Three.js</p>
+          </div>
         </div>
+        <a class="scroll-cue" href="#about"><span class="scroll-cue-line" aria-hidden="true"></span>Scroll to explore</a>
       </header>
 
       <section class="discipline-strip" aria-label="Areas of focus">
@@ -1101,9 +1131,9 @@
             </div>
           </div>
           <div class="stats" aria-label="Portfolio highlights">
-            <div class="stat interactive-surface" data-reveal style="--rd:0ms"><div class="stat-value">14</div><p class="stat-label">Projects showcased</p></div>
-            <div class="stat interactive-surface" data-reveal style="--rd:80ms"><div class="stat-value">3</div><p class="stat-label">Hackathons</p></div>
-            <div class="stat interactive-surface" data-reveal style="--rd:160ms"><div class="stat-value">11</div><p class="stat-label">Certificates</p></div>
+            <div class="stat interactive-surface" data-reveal style="--rd:0ms"><div class="stat-value" data-count="14">14</div><p class="stat-label">Projects showcased</p></div>
+            <div class="stat interactive-surface" data-reveal style="--rd:80ms"><div class="stat-value" data-count="3">3</div><p class="stat-label">Hackathons</p></div>
+            <div class="stat interactive-surface" data-reveal style="--rd:160ms"><div class="stat-value" data-count="11">11</div><p class="stat-label">Certificates</p></div>
             <div class="stat interactive-surface" data-reveal style="--rd:240ms"><div class="stat-value">2021-25</div><p class="stat-label">Computer Engineering</p></div>
           </div>
         </section>
@@ -1134,7 +1164,15 @@
             <h2 id="projects-title" data-reveal style="--rd:80ms">Selected work across software and AI</h2>
             <p data-reveal style="--rd:160ms">Fourteen projects from web and mobile products to AI workflows and interactive experiences.</p>
           </div>
-          <div class="projects-grid" id="project-grid" aria-live="polite"></div>
+          <div class="project-toolbar" role="group" aria-label="Filter projects">
+            <button class="project-filter magnetic" type="button" data-filter="all" aria-pressed="true">All</button>
+            <button class="project-filter magnetic" type="button" data-filter="web" aria-pressed="false">Web</button>
+            <button class="project-filter magnetic" type="button" data-filter="ai" aria-pressed="false">AI</button>
+            <button class="project-filter magnetic" type="button" data-filter="mobile" aria-pressed="false">Mobile</button>
+            <button class="project-filter magnetic" type="button" data-filter="3d" aria-pressed="false">3D &amp; motion</button>
+            <p class="project-count" aria-live="polite">14 projects</p>
+          </div>
+          <div class="projects-grid" id="project-grid"></div>
         </section>
 
         <section class="section" id="skills" aria-labelledby="skills-title">
@@ -1397,10 +1435,15 @@
           ].filter(([key]) => project[key]).map(([key, label]) =>
             `<a href="${escapeHTML(project[key])}" target="_blank" rel="noopener noreferrer">${label}</a>`
           ).join("");
+          const tags = [];
+          if (/web/i.test(project.category)) tags.push("web");
+          if (/\bai\b/i.test(project.category)) tags.push("ai");
+          if (/mobile/i.test(project.category)) tags.push("mobile");
+          if (project.stack.some((item) => /three|3d|model-viewer|gsap|framer/i.test(item))) tags.push("3d");
           const stack = project.stack.map((item) => `<span class="stack-chip">${escapeHTML(item)}</span>`).join("");
           return `
-            <article class="project-card interactive-surface" data-reveal>
-              <img class="project-image" src="${escapeHTML(project.image)}" alt="${escapeHTML(project.title)} project preview" width="640" height="400" loading="lazy" decoding="async">
+            <article class="project-card interactive-surface tilt" data-reveal data-category="${tags.join(" ")}">
+              <div class="project-image-wrap"><img class="project-image" src="${escapeHTML(project.image)}" alt="${escapeHTML(project.title)} project preview" width="640" height="400" loading="lazy" decoding="async"></div>
               <div class="project-body">
                 <span class="project-category">${escapeHTML(project.category)}</span>
                 <h3>${escapeHTML(project.title)}</h3>
@@ -1438,7 +1481,19 @@
       navSections.forEach(section => navObserver.observe(section));
 
     </script>
-  <button class="motion-toggle" type="button" aria-pressed="false">Pause ambient motion</button>
 <script src="/editorial.js" defer></script>
+<script type="module" src="/cinematic.js"></script>
+<script type="module">
+  // Fallible 3D bootstrap: any failure leaves the static composition in place.
+  const root = document.documentElement;
+  const canvas = document.querySelector('.engine-canvas');
+  const fallback = () => { if (root.dataset.scene !== 'ready') root.dataset.scene = 'fallback'; };
+  root.dataset.scene = 'loading';
+  const timer = setTimeout(fallback, 9000);
+  canvas.addEventListener('webglcontextlost', () => { root.dataset.scene = 'fallback'; }, { once: true });
+  import('/cinematic-scene.js')
+    .then(({ start }) => { start(canvas); clearTimeout(timer); requestAnimationFrame(() => { root.dataset.scene = 'ready'; }); })
+    .catch((error) => { clearTimeout(timer); console.warn('3D scene unavailable; static background kept.', error); root.dataset.scene = 'fallback'; });
+</script>
 </body>
 </html>
