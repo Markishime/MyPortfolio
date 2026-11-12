@@ -999,6 +999,7 @@
     <link rel="stylesheet" href="/editorial.css">
     <link rel="stylesheet" href="/motion.css">
     <link rel="stylesheet" href="/cinematic.css">
+    <link rel="stylesheet" href="/refine.css?v=4">
     <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
   <body>
@@ -1060,6 +1061,59 @@
                 <li data-type data-type-delay="2700">Embedded systems</li>
               </ul>
             </div>
+            <figure class="hero-bot" aria-hidden="true">
+              <p class="bot-bubble"><span class="bot-bubble-dot"></span>build passing</p>
+              <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                <defs>
+                  <linearGradient id="bot-shell" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#44444d"/>
+                    <stop offset="1" stop-color="#1d1d22"/>
+                  </linearGradient>
+                  <radialGradient id="bot-glow" cx=".5" cy=".5" r=".5">
+                    <stop offset="0" stop-color="#ff3b1d" stop-opacity=".55"/>
+                    <stop offset="1" stop-color="#ff3b1d" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+                <ellipse class="bot-shadow" cx="100" cy="230" rx="52" ry="7"/>
+                <g class="bot-body">
+                  <circle cx="100" cy="11" r="14" fill="url(#bot-glow)" class="bot-antenna-glow"/>
+                  <line x1="100" y1="16" x2="100" y2="32" class="bot-line"/>
+                  <circle cx="100" cy="11" r="5" class="bot-led"/>
+                  <g class="bot-arm bot-arm--wave">
+                    <rect x="30" y="80" width="14" height="46" rx="7" class="bot-shell"/>
+                    <circle cx="37" cy="76" r="9" class="bot-shell"/>
+                    <path d="M33 71v-6M37 69v-7M41 71v-6" class="bot-line"/>
+                  </g>
+                  <rect x="44" y="52" width="12" height="28" rx="5" class="bot-shell"/>
+                  <rect x="144" y="52" width="12" height="28" rx="5" class="bot-shell"/>
+                  <path d="M50 80c0 12 8 18 20 18" class="bot-line"/>
+                  <circle cx="72" cy="98" r="3" class="bot-led bot-led--soft"/>
+                  <rect x="52" y="30" width="96" height="72" rx="24" class="bot-shell"/>
+                  <rect x="62" y="44" width="76" height="40" rx="17" class="bot-visor"/>
+                  <g class="bot-eyes">
+                    <rect x="78" y="56" width="12" height="16" rx="6" class="bot-eye"/>
+                    <rect x="110" y="56" width="12" height="16" rx="6" class="bot-eye"/>
+                  </g>
+                  <rect x="90" y="102" width="20" height="9" rx="3" class="bot-joint"/>
+                  <rect x="56" y="110" width="88" height="78" rx="20" class="bot-shell"/>
+                  <rect x="72" y="124" width="56" height="30" rx="7" class="bot-visor"/>
+                  <path d="M80 133h14l4 6h10M80 146h8l4-5h14" class="bot-trace"/>
+                  <circle cx="117" cy="133" r="2.6" class="bot-chip-led bot-chip-led--1"/>
+                  <circle cx="117" cy="146" r="2.6" class="bot-chip-led bot-chip-led--2"/>
+                  <rect x="72" y="188" width="18" height="26" rx="7" class="bot-joint"/>
+                  <rect x="110" y="188" width="18" height="26" rx="7" class="bot-joint"/>
+                  <rect x="64" y="210" width="32" height="12" rx="6" class="bot-shell"/>
+                  <rect x="104" y="210" width="32" height="12" rx="6" class="bot-shell"/>
+                  <rect x="146" y="118" width="14" height="42" rx="7" class="bot-shell"/>
+                  <g class="bot-tablet">
+                    <rect x="114" y="150" width="66" height="44" rx="6" class="bot-tablet-frame"/>
+                    <path d="M122 162h22M122 171h36M122 180h16" class="bot-code"/>
+                    <path d="M148 162h14" class="bot-code bot-code--accent"/>
+                  </g>
+                </g>
+              </svg>
+              <figcaption class="bot-label">mark.bot · on call</figcaption>
+            </figure>
             <p class="hero-tag hero-tag--chip" aria-hidden="true">ESP32 · Arduino</p>
             <p class="hero-tag hero-tag--stack" aria-hidden="true">Next.js · Three.js</p>
           </div>
@@ -1148,12 +1202,45 @@
             <article class="timeline-entry interactive-surface">
               <h3>Frontend Developer · Outrank Strategy</h3>
               <p class="timeline-meta">Apr 2025 – Oct 2026 · Remote, USA · Full-time · Simplabots</p>
-              <p>Translated Figma designs and UI/UX prototypes into responsive web pages with React.js, JavaScript, HTML, and CSS. Built reusable React components and frontend features for web apps and SaaS platforms, including Simplabots, an AI business automation platform. Integrated REST APIs, third-party services, and AI-powered features, and improved performance, accessibility, and maintainability with designers and backend developers.</p>
+              <p class="timeline-summary">Built production frontends for client web applications and SaaS products on a remote U.S. team, including Simplabots, an AI-powered business automation platform.</p>
+              <ul class="timeline-points">
+                <li>Converted Figma designs and UI/UX prototypes into pixel-accurate, responsive pages and reusable component libraries with React.js, Next.js, Tailwind CSS, shadcn/ui, and Radix UI.</li>
+                <li>Developed the Simplabots interface for its AI agents: website chat and lead capture, image generation, call handling, email assistance, ad copy, domain discovery, and recruitment workflows.</li>
+                <li>Integrated REST APIs, LLM services orchestrated with LangChain, and third-party tools into frontend features, with clear loading, error, and empty states.</li>
+                <li>Added Framer Motion interactions and improved page performance, accessibility, and code maintainability in close collaboration with designers and backend developers.</li>
+              </ul>
+              <ul class="stack-chips" aria-label="Simplabots tech stack">
+                <li>React.js</li><li>Next.js</li><li>JavaScript</li><li>HTML5</li><li>CSS3</li><li>Tailwind CSS</li><li>shadcn/ui</li><li>Radix UI</li><li>Framer Motion</li><li>LangChain</li><li>LLM APIs</li><li>REST APIs</li><li>Figma</li><li>Git</li>
+              </ul>
             </article>
             <article class="timeline-entry interactive-surface">
               <h3>Full-Stack Developer and AI Developer · AGS – Agriculture Global Solutions</h3>
               <p class="timeline-meta">Jul 2025 – Nov 2026 · Remote, Germany · Contract · CropDrive AI · AGS AI Assistant</p>
-              <p>Developed full-stack agricultural technology applications, including CropDrive AI, with React.js, Next.js, Firebase, and REST APIs. Created the AGS AI Assistant with Streamlit, Python, FastAPI, and generative AI for agricultural advisory, analysis, and decision support. Built analytics dashboards for crop monitoring and plantation performance, implemented Firebase Authentication with role-based access control, and integrated AI APIs, OCR, and AI-generated recommendations into reporting workflows.</p>
+              <p class="timeline-summary">Designed and built precision-agriculture software for Malaysian oil palm plantations, taking products from interface to backend, AI analysis, and reporting.</p>
+              <div class="timeline-project">
+                <h4>CropDrive AI <span>Full-stack web platform</span></h4>
+                <ul class="timeline-points">
+                  <li>Built a bilingual Next.js, React, and TypeScript platform where farmers upload soil and leaf laboratory reports and receive AI recommendations benchmarked against MPOB standards.</li>
+                  <li>Developed the document pipeline: OCR with Google Cloud Document AI and Tesseract.js, plus PDF, Excel, and Word parsing with pdf-parse, pdf-lib, ExcelJS, and Mammoth, feeding Google Gemini analysis.</li>
+                  <li>Implemented Firebase Authentication with role-based access control and TOTP two-factor sign-in, Firestore report history, Firebase Admin server routes, Stripe subscriptions, and transactional email with Resend and Nodemailer.</li>
+                  <li>Created analytics dashboards for crop and plantation performance, with motion and 3D UI in Tailwind CSS, Framer Motion, GSAP, Three.js, and React Three Fiber. Tested with Vitest, Testing Library, and Playwright, and deployed on Vercel.</li>
+                </ul>
+                <ul class="stack-chips" aria-label="CropDrive AI tech stack">
+                  <li>Next.js</li><li>React</li><li>TypeScript</li><li>Tailwind CSS</li><li>Firebase Auth</li><li>Firestore</li><li>Firebase Admin</li><li>Google Gemini</li><li>Document AI</li><li>Tesseract.js</li><li>Stripe</li><li>Resend</li><li>Framer Motion</li><li>GSAP</li><li>Three.js</li><li>Vitest</li><li>Playwright</li><li>Vercel</li>
+                </ul>
+              </div>
+              <div class="timeline-project">
+                <h4>AGS AI Assistant <span>AI advisory and analytics</span></h4>
+                <ul class="timeline-points">
+                  <li>Built a Python and Streamlit advisory application, backed by FastAPI services, that analyzes soil and leaf tissue data against MPOB 2022 standards for agronomic decision support.</li>
+                  <li>Used Google Gemini and LangChain to detect nutrient deficiencies, recommend tiered interventions, and forecast yield and three-year ROI.</li>
+                  <li>Extracted laboratory data from scanned reports and spreadsheets with Document AI, Tesseract, OpenCV, PyMuPDF, pandas, and openpyxl.</li>
+                  <li>Delivered interactive Plotly and Matplotlib dashboards and branded PDF reports with ReportLab. Firebase handles authentication, Firestore data, and storage, and the app is deployed on Hugging Face Spaces.</li>
+                </ul>
+                <ul class="stack-chips" aria-label="AGS AI Assistant tech stack">
+                  <li>Python</li><li>Streamlit</li><li>FastAPI</li><li>Google Gemini</li><li>LangChain</li><li>Document AI</li><li>Tesseract</li><li>OpenCV</li><li>PyMuPDF</li><li>pandas</li><li>NumPy</li><li>Plotly</li><li>Matplotlib</li><li>ReportLab</li><li>Firebase</li><li>Hugging Face Spaces</li>
+                </ul>
+              </div>
             </article>
             <article class="timeline-entry interactive-surface">
               <h3>Data Scientist Intern · Connext Global Solutions</h3>
@@ -1193,22 +1280,35 @@
           <div class="section-head">
             <span class="eyebrow" data-reveal>Education and recognition</span>
             <h2 id="learning-title" data-reveal style="--rd:80ms">Learning through study and practice</h2>
-            <p data-reveal style="--rd:160ms">Computer engineering, focused certificates, and participation in technical hackathons.</p>
+            <p data-reveal style="--rd:160ms">A computer engineering degree, focused certificates, and technical hackathons that keep the work current.</p>
           </div>
           <div class="credentials-grid">
             <article class="credential-card education-card interactive-surface" data-reveal>
-              <span class="eyebrow">Education</span>
+              <p class="credential-label">Education</p>
               <h3>BS Computer Engineering</h3>
-              <p>Cebu Institute of Technology - University</p>
-              <p>2021-2025</p>
+              <p class="credential-school">Cebu Institute of Technology - University</p>
+              <dl class="credential-facts">
+                <div><dt>Years</dt><dd>2021 – 2025</dd></div>
+                <div><dt>Location</dt><dd>Cebu, Philippines</dd></div>
+              </dl>
+              <ul class="stack-chips" aria-label="Areas of focus">
+                <li>Embedded systems</li><li>Software engineering</li><li>Applied AI</li><li>Hardware and IoT</li>
+              </ul>
             </article>
-            <article class="credential-card interactive-surface" data-reveal style="--rd:100ms">
+            <article class="credential-card hackathon-card interactive-surface" data-reveal style="--rd:100ms">
+              <p class="credential-label">Recognition</p>
               <h3>Hackathons</h3>
               <div class="hackathon-list" id="hackathon-list"></div>
             </article>
           </div>
-          <article class="credential-card certificate-card interactive-surface" data-reveal style="margin-top:18px">
-            <h3>Certificates</h3>
+          <article class="credential-card certificate-card interactive-surface" data-reveal>
+            <div class="certificate-head">
+              <div>
+                <p class="credential-label">Continuing study</p>
+                <h3>Certificates</h3>
+              </div>
+              <span class="certificate-count" data-count="11">11</span>
+            </div>
             <ul class="certificate-list" id="certificate-list"></ul>
           </article>
         </section>
@@ -1488,6 +1588,25 @@
     </script>
 <script src="/editorial.js" defer></script>
 <script type="module" src="/cinematic.js"></script>
+<script>
+  // Hero robot: eyes follow the pointer on devices with a fine pointer.
+  (() => {
+    const eyes = document.querySelector('.bot-eyes');
+    const bot = document.querySelector('.hero-bot');
+    if (!eyes || !bot || !matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let frame = 0;
+    addEventListener('pointermove', (event) => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const box = bot.getBoundingClientRect();
+        const dx = event.clientX - (box.left + box.width / 2);
+        const dy = event.clientY - (box.top + box.height * 0.25);
+        const len = Math.hypot(dx, dy) || 1;
+        eyes.style.transform = `translate(${(dx / len) * 5}px, ${(dy / len) * 4}px)`;
+      });
+    }, { passive: true });
+  })();
+</script>
 <script type="module">
   // Fallible 3D bootstrap: any failure leaves the static composition in place.
   const root = document.documentElement;
