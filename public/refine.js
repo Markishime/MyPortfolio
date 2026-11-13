@@ -55,6 +55,23 @@
     thumb.replaceWith(frame);
   });
 
+  // Featured (self-hosted) AI videos: play inline with native controls.
+  document.querySelectorAll(".featured-play").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".featured-card");
+      const video = card && card.querySelector("video");
+      if (!video) return;
+      document.querySelectorAll(".featured-card.is-playing video").forEach((other) => {
+        if (other !== video) other.pause();
+      });
+      card.classList.add("is-playing");
+      video.controls = true;
+      if (video.loop && video.muted) video.loop = false;
+      video.play().catch(() => {});
+      video.focus({ preventScroll: true });
+    });
+  });
+
   document.querySelectorAll(".rail-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       if (!shortsRail) return;
