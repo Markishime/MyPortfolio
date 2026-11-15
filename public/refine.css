@@ -785,3 +785,21 @@
 @media (max-width: 560px) {
   .featured-lead .featured-card--tall { grid-template-columns: 1fr; gap: 14px; }
 }
+
+/* Villa Aurelia is the main featured film: full-width lead, poster beside copy. */
+.featured-lead { grid-template-columns: minmax(0, 1fr); }
+.featured-lead .featured-card--tall {
+  display: grid;
+  grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+}
+.featured-lead .featured-card--tall .featured-copy { padding-top: 0; }
+.featured-lead .featured-card--tall .featured-copy h4 { font-size: clamp(24px, 2.6vw, 34px); }
+.featured-lead .featured-card--tall .featured-copy p:not(.featured-tag) { font-size: 15px; }
+@media (max-width: 767px) {
+  .featured-lead .featured-card--tall { grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 18px; }
+}
+@media (max-width: 480px) {
+  .featured-lead .featured-card--tall { grid-template-columns: 1fr; gap: 14px; }
+}
